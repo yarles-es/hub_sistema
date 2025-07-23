@@ -27,13 +27,16 @@ enum FormPagamento {
 }
 
 model Cliente {
-  id             Int              @id @default(autoincrement())
-  nome           String
-  email          String           @unique
-  telefone       String?
-  catracaId      String?          @map("catraca_id")
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
+  id        Int      @id @default(autoincrement())
+  nome      String
+  email     String   @unique
+  telefone  String?
+  catracaId Int?     @map("catraca_id")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  planoId   Int      @map("plano_id")
+
+  plano          Plano?           @relation(fields: [planoId], references: [id])
   Mensalidade    Mensalidade[]
   RegistroAcesso RegistroAcesso[]
   LogSistema     LogSistema[]
@@ -42,16 +45,31 @@ model Cliente {
 }
 
 model Usuario {
-  id         Int          @id @default(autoincrement())
-  nome       String
-  email      String       @unique
-  senha      String
-  createdAt  DateTime     @default(now()) @map("created_at")
-  updatedAt  DateTime     @updatedAt @map("updated_at")
-  ativo      Boolean      @default(true)
+  id        Int      @id @default(autoincrement())
+  nome      String
+  email     String   @unique
+  senha     String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  ativo     Boolean  @default(true)
+
   LogSistema LogSistema[]
 
   @@map("usuarios")
+}
+
+model Plano {
+  id        Int      @id @default(autoincrement())
+  nome      String
+  descricao String?
+  valor     Float
+  ativo     Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  Cliente Cliente[]
+
+  @@map("planos")
 }
 
 model Mensalidade {
@@ -69,15 +87,27 @@ model Mensalidade {
   @@map("mensalidades")
 }
 
+model PagamentoAvulso {
+  id             Int           @id @default(autoincrement())
+  nomeCliente    String?       @map("nome_cliente")
+  valor          Float
+  formaPagamento FormPagamento @map("forma_pagamento")
+  dataHora       DateTime      @default(now()) @map("data_hora")
+  observacao     String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("pagamentos_avulsos")
+}
+
 model RegistroAcesso {
-  id             Int            @id @default(autoincrement())
-  clienteId      Int            @map("cliente_id")
-  tipoCatraca    TipoCatraca    @map("tipo_catraca")
-  dataHora       DateTime       @default(now()) @map("data_hora")
-  valorPago      Float?         @map("valor_pago")
-  formaPagamento FormPagamento? @map("forma_pagamento")
-  createdAt      DateTime       @default(now()) @map("created_at")
-  updatedAt      DateTime       @updatedAt @map("updated_at")
+  id          Int         @id @default(autoincrement())
+  clienteId   Int         @map("cliente_id")
+  tipoCatraca TipoCatraca @map("tipo_catraca")
+  dataHora    DateTime    @default(now()) @map("data_hora")
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
 
   cliente Cliente @relation(fields: [clienteId], references: [id])
 

@@ -1,7 +1,9 @@
 import * as jwt from 'jsonwebtoken';
+import { Service } from 'typedi';
 import { UnauthorizedError } from '../errors/UnauthorizedError';
 import { PayloadUserJWT } from './types/jwt.types';
 
+@Service()
 export class JwtToken<T> {
   private secret: string;
   private jwtConfig: jwt.SignOptions;

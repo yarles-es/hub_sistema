@@ -3,7 +3,10 @@ import { Service } from 'typedi';
 
 @Service()
 export class MensalidadeModel {
-  constructor(private prisma: PrismaClient) {}
+  private prisma: PrismaClient;
+  constructor() {
+    this.prisma = new PrismaClient();
+  }
 
   public async create(
     mensalidade: Omit<Mensalidade, 'id' | 'createdAt' | 'updatedAt' | 'status'>,

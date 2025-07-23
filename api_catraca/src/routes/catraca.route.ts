@@ -8,4 +8,4 @@ const catracaController = Container.get(CatracaController);
 
 router.post('/webhook', catracaController.webhook.bind(catracaController));
 
-export default router;
+export const catracaRoute = router;

@@ -5,11 +5,12 @@ import { generateHashBcrypt } from '../utils/bcrypt';
 @Service()
 export class UsuarioModel {
   private prisma: PrismaClient;
+
   constructor() {
     this.prisma = new PrismaClient();
   }
 
-  public async create(usuario: Omit<Usuario, 'id' | 'createdAt' | 'updatedAt'>): Promise<Usuario> {
+  public async create(usuario: Omit<Usuario, 'id' | 'createdAt' | 'updatedAt' | 'ativo'>): Promise<Usuario> {
     return this.prisma.usuario.create({
       data: { ...usuario, senha: await generateHashBcrypt(usuario.senha) },
     });
@@ -31,6 +32,8 @@ export class UsuarioModel {
     id: number,
     usuario: Partial<Omit<Usuario, 'id' | 'createdAt' | 'updatedAt'>>,
   ): Promise<Usuario> {
+    if (usuario.senha) usuario.senha = await generateHashBcrypt(usuario.senha);
+
     return this.prisma.usuario.update({
       where: { id },
       data: usuario,

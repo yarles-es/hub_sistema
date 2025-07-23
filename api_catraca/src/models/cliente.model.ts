@@ -3,7 +3,10 @@ import { Service } from 'typedi';
 
 @Service()
 export class ClienteModel {
-  constructor(private prisma: PrismaClient) {}
+  private prisma: PrismaClient;
+  constructor() {
+    this.prisma = new PrismaClient();
+  }
 
   public async create(cliente: Omit<Cliente, 'id' | 'createdAt' | 'updatedAt'>): Promise<Cliente> {
     return this.prisma.cliente.create({
@@ -14,6 +17,12 @@ export class ClienteModel {
   public async findById(id: number): Promise<Cliente | null> {
     return this.prisma.cliente.findUnique({
       where: { id },
+    });
+  }
+
+  public async findByEmail(email: string): Promise<Cliente | null> {
+    return this.prisma.cliente.findUnique({
+      where: { email },
     });
   }
 
