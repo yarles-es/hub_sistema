@@ -1,11 +1,11 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { Service } from 'typedi';
 import { BloquearEntradaCatraca } from '../api/catraca/bloquear-entrada-catraca';
 import { LiberarEntradaCatraca } from '../api/catraca/liberar-entrada-catraca';
 
 @Service()
 export class CatracaController {
-  public async webhook(req: Request, res: Response): Promise<void> {
+  public async webhook(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       console.log('Webhook received:', req.body);
 
@@ -17,8 +17,7 @@ export class CatracaController {
         res.sendStatus(200);
       }
     } catch (error) {
-      console.error('Error processing webhook:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+      next(error);
     }
   }
 }
