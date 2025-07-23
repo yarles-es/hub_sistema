@@ -1,0 +1,40 @@
+Lista de comandos Prisma:
+
+Criação de nova migration:
+npx prisma migrate dev --name nome_da_migration
+# Cria uma nova migration com o nome especificado e aplica as mudanças no banco de dados de desenvolvimento.
+
+Aplicar migrations em produção:
+npx prisma migrate deploy
+# Aplica todas as migrations pendentes no banco de dados de produção.
+
+Reverter a última migration:
+npx prisma migrate resolve --rolled-back
+# Marca a última migration como revertida sem desfazer as mudanças no banco de dados.
+
+Gerar o Prisma Client:
+npx prisma generate
+# Gera o Prisma Client a partir do schema definido, permitindo a interação com o banco de dados.
+
+Abrir o Prisma Studio:
+npx prisma studio
+# Abre o Prisma Studio, uma interface gráfica para gerenciar os dados do banco de dados.
+
+Formatar o schema:
+npx prisma format
+# Formata o arquivo schema.prisma de acordo com as convenções de formatação do Prisma.
+
+Validar o schema:
+npx prisma validate
+# Valida o arquivo schema.prisma para garantir que não há erros de sintaxe ou configuração.
+
+Introspectar o banco de dados:
+npx prisma db pull
+# Atualiza o arquivo schema.prisma com base na estrutura atual do banco de dados.
+
+Sincronizar o schema com o banco de dados:
+npx prisma db push
+
+Resetar o banco de dados:
+npx prisma migrate reset
+# Reseta o banco de dados, aplicando todas as migrations do início. Útil para ambientes de desenvolvimento.
