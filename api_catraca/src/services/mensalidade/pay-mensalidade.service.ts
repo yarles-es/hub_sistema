@@ -28,6 +28,9 @@ export class PayMensalidadeService {
       formaPagamento,
     });
 
-    await this.createMensalidadeService.execute(mensalidade.clienteId, true);
+    await this.createMensalidadeService.execute({
+      clienteId: mensalidade.clienteId,
+      dataVencimentoAnterior: mensalidade.vencimento,
+    });
   }
 }

@@ -7,6 +7,7 @@ import { clienteRoute } from './cliente.route';
 import { logSistemaRoute } from './log-sistema.route';
 import { loginRoute } from './login.route';
 import { mensalidadeRoute } from './mensalidade.route';
+import { pagamentoAvulsoRoute } from './pagamento-avulso.route';
 import { planoRoute } from './plano.route';
 import { registroAcessoRoute } from './registro-acesso.route';
 import { usuarioRoute } from './usuario.route';
@@ -26,5 +27,6 @@ router.use('/log-sistema', logSistemaRoute);
 router.use('/registro-acesso', registroAcessoRoute);
 router.use('/usuario', usuarioRoute);
 router.use('/plano', planoRoute);
+router.use('/pagamento-avulso', pagamentoAvulsoRoute);
 
 export const routes = router;

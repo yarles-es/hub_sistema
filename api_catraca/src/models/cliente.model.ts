@@ -1,6 +1,6 @@
 import { Cliente, PrismaClient } from '@prisma/client';
 import { Service } from 'typedi';
-import { CreateCliente } from '../types/cliente.types';
+import { CreateCliente, UpdateClient } from '../types/cliente.types';
 
 @Service()
 export class ClienteModel {
@@ -27,7 +27,7 @@ export class ClienteModel {
     });
   }
 
-  public async update(id: number, data: Partial<CreateCliente>): Promise<Cliente> {
+  public async update(id: number, data: UpdateClient): Promise<Cliente> {
     return this.prisma.cliente.update({
       where: { id },
       data: { ...data },

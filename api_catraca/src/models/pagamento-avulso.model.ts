@@ -1,5 +1,6 @@
 import { PagamentoAvulso, PrismaClient } from '@prisma/client';
 import { Service } from 'typedi';
+import { CreatePagamentoAvulso, UpdatePagamentoAvulso } from '../types/pagamento-avulso.types';
 
 @Service()
 export class PagamentoAvulsoModel {
@@ -9,7 +10,7 @@ export class PagamentoAvulsoModel {
     this.prisma = new PrismaClient();
   }
 
-  async create(data: Omit<PagamentoAvulso, 'id'>): Promise<PagamentoAvulso> {
+  async create(data: CreatePagamentoAvulso): Promise<PagamentoAvulso> {
     return this.prisma.pagamentoAvulso.create({
       data,
     });
@@ -21,7 +22,7 @@ export class PagamentoAvulsoModel {
     });
   }
 
-  async update(id: number, data: Partial<PagamentoAvulso>): Promise<PagamentoAvulso> {
+  async update(id: number, data: UpdatePagamentoAvulso): Promise<PagamentoAvulso> {
     return this.prisma.pagamentoAvulso.update({
       where: { id },
       data,

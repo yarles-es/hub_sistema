@@ -13,8 +13,6 @@ interface AuthenticatedRequest extends Request {
 
 const jwt = Container.get(JwtToken<UserWithLogin>);
 
-const PUBLIC_KEY = process.env.JWT_SECRET || 'ACADEMIA_SECRET';
-
 export function validateJWT(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   const authHeader = req.headers.authorization;
 

@@ -32,7 +32,7 @@ model Cliente {
   email          String   @unique
   telefone       String?
   dataNascimento DateTime @default(now()) @map("data_nascimento")
-  diaMensalidade Int      @map("dia_mensalidade")
+  diaMensalidade Int      @default(1) @map("dia_mensalidade")
   catracaId      Int?     @map("catraca_id")
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt

@@ -5,6 +5,11 @@ import { ClienteService } from '../cliente/@cliente.service';
 import { PlanoService } from '../plano/@plano.service';
 import { MensalidadeService } from './@mensalidade.service';
 
+type CreateMensalidadeServiceParams = {
+  clienteId: number;
+  dataVencimentoAnterior?: Date;
+};
+
 @Service()
 export class CreateMensalidadeService {
   constructor(
@@ -13,16 +18,18 @@ export class CreateMensalidadeService {
     private readonly planoService: PlanoService,
   ) {}
 
-  public async execute(clienteId: number, nextMonth: boolean = false): Promise<Mensalidade> {
+  public async execute(data: CreateMensalidadeServiceParams): Promise<Mensalidade> {
+    const { clienteId, dataVencimentoAnterior } = data;
     const cliente = await this.clienteService.getClienteById(clienteId);
     if (!cliente) {
       throw new BadRequestError('Cliente não encontrado.');
     }
 
-    const mensalidades = await this.mensalidadeService.findMensalidadesByClienteId(clienteId);
-    const mensalidadePendente = mensalidades.find(
-      (mensalidade) => mensalidade.status === StatusMensalidade.PENDENTE,
+    const mensalidades = await this.mensalidadeService.findMensalidadesByClienteIdAndStatus(
+      clienteId,
+      StatusMensalidade.PENDENTE,
     );
+    const mensalidadePendente = mensalidades.length > 0;
 
     const plano = await this.planoService.getPlanoById(cliente.planoId);
 
@@ -33,16 +40,26 @@ export class CreateMensalidadeService {
     if (mensalidadePendente) {
       throw new BadRequestError('Já existe uma mensalidade pendente para este cliente.');
     }
-    const diaAtualDoMes = nextMonth ? cliente.diaMensalidade : new Date().getDate();
 
-    await this.clienteService.updateCliente(clienteId, {
-      diaMensalidade: diaAtualDoMes,
-    });
+    if (!dataVencimentoAnterior) {
+      await this.clienteService.updateCliente(clienteId, {
+        diaMensalidade: new Date().getDate(),
+      });
+    }
+
+    let vencimento: Date;
+
+    if (dataVencimentoAnterior) {
+      vencimento = new Date(dataVencimentoAnterior);
+      vencimento.setMonth(vencimento.getMonth() + 1);
+    } else {
+      vencimento = new Date();
+    }
 
     const mensalidade = await this.mensalidadeService.createMensalidade({
       clienteId: cliente.id,
       valor: plano.valor,
-      vencimento: new Date(new Date().setMonth(new Date().getMonth() + (nextMonth ? 1 : 0))),
+      vencimento,
     });
 
     if (!mensalidade) {

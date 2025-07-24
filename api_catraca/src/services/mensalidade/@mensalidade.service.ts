@@ -1,4 +1,4 @@
-import { Mensalidade } from '@prisma/client';
+import { Mensalidade, StatusMensalidade } from '@prisma/client';
 import { Service } from 'typedi';
 import { MensalidadeModel } from '../../models/mensalidade.model';
 import { CreateMensalidade, UpdateMensalidade } from '../../types/mensalidade.types';
@@ -17,6 +17,13 @@ export class MensalidadeService {
 
   public async findMensalidadesByClienteId(clienteId: number): Promise<Mensalidade[]> {
     return await this.mensalidadeModel.findByClienteId(clienteId);
+  }
+
+  public async findMensalidadesByClienteIdAndStatus(
+    clienteId: number,
+    status: StatusMensalidade,
+  ): Promise<Mensalidade[]> {
+    return await this.mensalidadeModel.findByClienteIdAndStatus(clienteId, status);
   }
 
   public async updateMensalidade(id: number, data: UpdateMensalidade): Promise<Mensalidade> {

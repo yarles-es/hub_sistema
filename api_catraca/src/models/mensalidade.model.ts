@@ -1,4 +1,4 @@
-import { Mensalidade, PrismaClient } from '@prisma/client';
+import { Mensalidade, PrismaClient, StatusMensalidade } from '@prisma/client';
 import { Service } from 'typedi';
 import { CreateMensalidade, UpdateMensalidade } from '../types/mensalidade.types';
 
@@ -24,6 +24,15 @@ export class MensalidadeModel {
   public async findByClienteId(clienteId: number): Promise<Mensalidade[]> {
     return this.prisma.mensalidade.findMany({
       where: { clienteId },
+    });
+  }
+
+  public async findByClienteIdAndStatus(
+    clienteId: number,
+    status: StatusMensalidade,
+  ): Promise<Mensalidade[]> {
+    return this.prisma.mensalidade.findMany({
+      where: { clienteId, status },
     });
   }
 

@@ -2,20 +2,20 @@ import { Cliente } from '@prisma/client';
 import { Service } from 'typedi';
 import { BadRequestError } from '../../errors/BadRequestError';
 import { NotFoundError } from '../../errors/NotFoundError';
-import { CreateCliente, CreateClienteRequest } from '../../types/cliente.types';
+import { UpdateClient, UpdateClientRequest } from '../../types/cliente.types';
 import { ClienteService } from './@cliente.service';
 
 @Service()
 export class UpdateClienteService {
   constructor(private readonly clienteService: ClienteService) {}
 
-  async execute(id: number, data: Partial<CreateClienteRequest>): Promise<Cliente> {
+  async execute(id: number, data: UpdateClientRequest): Promise<Cliente> {
     if (!id || isNaN(id)) throw new BadRequestError('ID inválido.');
 
     const cliente = await this.clienteService.getClienteById(id);
     if (!cliente) throw new NotFoundError('Cliente não encontrado.');
 
-    const updatedData: Partial<CreateCliente> = {
+    const updatedData: UpdateClient = {
       nome: data.nome ? data.nome.trim().toUpperCase() : undefined,
       email: data.email ? data.email.trim().toLowerCase() : undefined,
       telefone: data.telefone ? data.telefone.trim() : undefined,
