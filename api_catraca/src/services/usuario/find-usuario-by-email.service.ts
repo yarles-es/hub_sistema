@@ -1,6 +1,6 @@
-import { Usuario } from '@prisma/client';
 import { Service } from 'typedi';
 import { NotFoundError } from '../../errors/NotFoundError';
+import { UsuarioResponse } from '../../types/usuario.types';
 import { validateEmail } from '../../utils/validate-email';
 import { UsuarioService } from './@usuario.service';
 
@@ -8,7 +8,7 @@ import { UsuarioService } from './@usuario.service';
 export class FindUsuarioByEmailService {
   constructor(private readonly usuarioService: UsuarioService) {}
 
-  public async execute(email: string): Promise<Usuario> {
+  public async execute(email: string): Promise<UsuarioResponse> {
     if (!email || email.length < 5 || !validateEmail(email)) {
       throw new Error('Email inválido');
     }

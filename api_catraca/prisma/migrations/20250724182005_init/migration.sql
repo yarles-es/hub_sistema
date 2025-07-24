@@ -13,6 +13,8 @@ CREATE TABLE "clientes" (
     "nome" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "telefone" TEXT,
+    "data_nascimento" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "data_mensalidade" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "catraca_id" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,

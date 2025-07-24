@@ -27,14 +27,16 @@ enum FormPagamento {
 }
 
 model Cliente {
-  id        Int      @id @default(autoincrement())
-  nome      String
-  email     String   @unique
-  telefone  String?
-  catracaId Int?     @map("catraca_id")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  planoId   Int      @map("plano_id")
+  id             Int      @id @default(autoincrement())
+  nome           String
+  email          String   @unique
+  telefone       String?
+  dataNascimento DateTime @default(now()) @map("data_nascimento")
+  diaMensalidade Int      @map("dia_mensalidade")
+  catracaId      Int?     @map("catraca_id")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  planoId        Int      @map("plano_id")
 
   plano          Plano?           @relation(fields: [planoId], references: [id])
   Mensalidade    Mensalidade[]

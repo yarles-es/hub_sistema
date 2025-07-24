@@ -1,5 +1,6 @@
 import { Mensalidade, PrismaClient } from '@prisma/client';
 import { Service } from 'typedi';
+import { CreateMensalidade, UpdateMensalidade } from '../types/mensalidade.types';
 
 @Service()
 export class MensalidadeModel {
@@ -8,9 +9,7 @@ export class MensalidadeModel {
     this.prisma = new PrismaClient();
   }
 
-  public async create(
-    mensalidade: Omit<Mensalidade, 'id' | 'createdAt' | 'updatedAt' | 'status'>,
-  ): Promise<Mensalidade> {
+  public async create(mensalidade: CreateMensalidade): Promise<Mensalidade> {
     return this.prisma.mensalidade.create({
       data: { ...mensalidade },
     });
@@ -28,10 +27,7 @@ export class MensalidadeModel {
     });
   }
 
-  public async update(
-    id: number,
-    data: Partial<Omit<Mensalidade, 'id' | 'createdAt' | 'updatedAt'>>,
-  ): Promise<Mensalidade> {
+  public async update(id: number, data: UpdateMensalidade): Promise<Mensalidade> {
     return this.prisma.mensalidade.update({
       where: { id },
       data: { ...data },

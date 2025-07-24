@@ -1,7 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
+import Container from 'typedi';
+import { JwtToken } from '../auth/jwt-token.auth';
 
 import { Usuario } from '@prisma/client';
-import jwt from 'jsonwebtoken';
+import { UnauthorizedError } from '../errors/UnauthorizedError';
 
 type UserWithLogin = Omit<Usuario, 'senha' | 'createdAt' | 'updatedAt'>;
 
@@ -9,10 +11,11 @@ interface AuthenticatedRequest extends Request {
   user?: UserWithLogin;
 }
 
-const PUBLIC_KEY = process.env.KEY_ACADEMIA || 'ACADEMIA_SECRET';
+const jwt = Container.get(JwtToken<UserWithLogin>);
+
+const PUBLIC_KEY = process.env.JWT_SECRET || 'ACADEMIA_SECRET';
 
 export function validateJWT(req: AuthenticatedRequest, res: Response, next: NextFunction) {
-  console.log('🔐 validateJWT foi chamado em:', req.method, req.originalUrl);
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -21,16 +24,12 @@ export function validateJWT(req: AuthenticatedRequest, res: Response, next: Next
 
   const token = authHeader.split(' ')[1];
 
-  jwt.verify(token, PUBLIC_KEY, { algorithms: ['HS256'] }, (err, decoded) => {
-    if (err) {
-      return res.status(401).json({ error: 'Token inválido ou expirado' });
-    }
+  const user = jwt.verifyToken(token).data;
 
-    if (typeof decoded === 'object' && decoded.data !== null && 'login' in decoded.data) {
-      req.user = decoded.data as UserWithLogin;
-      next();
-    } else {
-      return res.status(401).json({ error: 'Token inválido ou expirado' });
-    }
-  });
+  if (!user) {
+    throw new UnauthorizedError('Token inválido ou expirado');
+  }
+  req.user = user;
+
+  next();
 }

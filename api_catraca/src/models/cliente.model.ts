@@ -1,5 +1,6 @@
 import { Cliente, PrismaClient } from '@prisma/client';
 import { Service } from 'typedi';
+import { CreateCliente } from '../types/cliente.types';
 
 @Service()
 export class ClienteModel {
@@ -8,7 +9,7 @@ export class ClienteModel {
     this.prisma = new PrismaClient();
   }
 
-  public async create(cliente: Omit<Cliente, 'id' | 'createdAt' | 'updatedAt'>): Promise<Cliente> {
+  public async create(cliente: CreateCliente): Promise<Cliente> {
     return this.prisma.cliente.create({
       data: { ...cliente },
     });
@@ -26,10 +27,7 @@ export class ClienteModel {
     });
   }
 
-  public async update(
-    id: number,
-    data: Partial<Omit<Cliente, 'id' | 'createdAt' | 'updatedAt'>>,
-  ): Promise<Cliente> {
+  public async update(id: number, data: Partial<CreateCliente>): Promise<Cliente> {
     return this.prisma.cliente.update({
       where: { id },
       data: { ...data },

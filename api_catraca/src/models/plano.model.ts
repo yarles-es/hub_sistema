@@ -9,7 +9,7 @@ export class PlanoModel {
     this.prisma = new PrismaClient();
   }
 
-  async create(data: Omit<Plano, 'id'>): Promise<Plano> {
+  async create(data: Omit<Plano, 'id' | 'createdAt' | 'updatedAt'>): Promise<Plano> {
     return this.prisma.plano.create({
       data,
     });
@@ -32,5 +32,9 @@ export class PlanoModel {
     return this.prisma.plano.delete({
       where: { id },
     });
+  }
+
+  async findAll(): Promise<Plano[]> {
+    return this.prisma.plano.findMany();
   }
 }

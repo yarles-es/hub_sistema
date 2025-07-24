@@ -1,7 +1,7 @@
-import { Usuario } from '@prisma/client';
 import { Service } from 'typedi';
 import { BadRequestError } from '../../errors/BadRequestError';
 import { NotFoundError } from '../../errors/NotFoundError';
+import { UpdateUsuario, UsuarioResponse } from '../../types/usuario.types';
 import { validateEmail } from '../../utils/validate-email';
 import { UsuarioService } from './@usuario.service';
 
@@ -9,10 +9,7 @@ import { UsuarioService } from './@usuario.service';
 export class UpdateUsuarioService {
   constructor(private readonly usuarioService: UsuarioService) {}
 
-  async execute(
-    id: number,
-    usuario: Partial<Omit<Usuario, 'id' | 'createdAt' | 'updatedAt' | 'ativo'>>,
-  ): Promise<Usuario> {
+  async execute(id: number, usuario: UpdateUsuario): Promise<UsuarioResponse> {
     if (!id || isNaN(id) || id <= 0) throw new BadRequestError('ID inválido.');
 
     await this.validate(usuario);
@@ -23,11 +20,18 @@ export class UpdateUsuarioService {
     return await this.usuarioService.update(id, usuario);
   }
 
-  async validate(usuario: Partial<Omit<Usuario, 'id' | 'createdAt' | 'updatedAt' | 'ativo'>>): Promise<void> {
+  async validate(usuario: UpdateUsuario): Promise<void> {
     if (usuario.email && !validateEmail(usuario.email)) throw new BadRequestError('Email inválido.');
     if (usuario.nome && usuario.nome.trim() === '') throw new BadRequestError('Nome não pode ser vazio.');
     if (usuario.senha && usuario.senha.trim() === '') throw new BadRequestError('Senha não pode ser vazia.');
     if (usuario.senha && usuario.senha.length < 6)
       throw new BadRequestError('Senha deve ter pelo menos 6 caracteres.');
+
+    if (usuario.ativo && typeof usuario.ativo !== 'boolean') {
+      throw new BadRequestError('O campo "ativo" deve ser um booleano.');
+    }
+    if (usuario.administrador && typeof usuario.administrador !== 'boolean') {
+      throw new BadRequestError('O campo "administrador" deve ser um booleano.');
+    }
   }
 }

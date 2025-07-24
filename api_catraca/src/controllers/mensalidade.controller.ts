@@ -4,7 +4,7 @@ import { CreateMensalidadeService } from '../services/mensalidade/create-mensali
 import { DeleteMensalidadeService } from '../services/mensalidade/delete-mensalidade.service';
 import { FindMensalidadeByClienteIdService } from '../services/mensalidade/find-mensalidade-by-cliente-id.service';
 import { FindMensalidadeByIdService } from '../services/mensalidade/find-mensalidade-by-id.service';
-import { UpdateMensalidadeService } from '../services/mensalidade/update-mensalidade.service';
+import { PayMensalidadeService } from '../services/mensalidade/pay-mensalidade.service';
 
 @Service()
 export class MensalidadeController {
@@ -12,14 +12,24 @@ export class MensalidadeController {
     private readonly createMensalidadeService: CreateMensalidadeService,
     private readonly findMensalidadeByIdService: FindMensalidadeByIdService,
     private readonly findMensalidadeByClienteIdService: FindMensalidadeByClienteIdService,
-    private readonly updateMensalidadeService: UpdateMensalidadeService,
     private readonly deleteMensalidadeService: DeleteMensalidadeService,
+    private readonly payMensalidadeService: PayMensalidadeService,
   ) {}
 
   async create(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const mensalidade = await this.createMensalidadeService.execute(req.body);
+      const mensalidade = await this.createMensalidadeService.execute(Number(req.params.clienteId));
       res.status(201).json(mensalidade);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async payMensalidade(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { formaPagamento } = req.body;
+      const mensalidade = await this.payMensalidadeService.execute(Number(req.params.id), formaPagamento);
+      res.status(200).json(mensalidade);
     } catch (error) {
       next(error);
     }
@@ -38,15 +48,6 @@ export class MensalidadeController {
     try {
       const mensalidades = await this.findMensalidadeByClienteIdService.execute(Number(req.params.clienteId));
       res.status(200).json(mensalidades);
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  async update(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const updatedMensalidade = await this.updateMensalidadeService.execute(Number(req.params.id), req.body);
-      res.status(200).json(updatedMensalidade);
     } catch (error) {
       next(error);
     }

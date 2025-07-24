@@ -1,6 +1,6 @@
-import { Usuario } from '@prisma/client';
 import { Service } from 'typedi';
 import { BadRequestError } from '../../errors/BadRequestError';
+import { CreateUsuario, UsuarioResponse } from '../../types/usuario.types';
 import { validateEmail } from '../../utils/validate-email';
 import { UsuarioService } from './@usuario.service';
 
@@ -8,13 +8,13 @@ import { UsuarioService } from './@usuario.service';
 export class CreateUsuarioService {
   constructor(private readonly usuarioService: UsuarioService) {}
 
-  public async execute(usuario: Omit<Usuario, 'id' | 'createdAt' | 'updatedAt' | 'ativo'>): Promise<Usuario> {
+  public async execute(usuario: CreateUsuario): Promise<UsuarioResponse> {
     await this.validate(usuario);
 
     return await this.usuarioService.create(usuario);
   }
 
-  async validate(usuario: Omit<Usuario, 'id' | 'createdAt' | 'updatedAt' | 'ativo'>): Promise<void> {
+  async validate(usuario: CreateUsuario): Promise<void> {
     if (usuario.email.length < 5 || !validateEmail(usuario.email)) {
       throw new BadRequestError('Email inválido');
     }

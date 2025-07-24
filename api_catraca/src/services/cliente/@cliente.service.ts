@@ -1,13 +1,14 @@
 import { Cliente } from '@prisma/client';
 import { Service } from 'typedi';
 import { ClienteModel } from '../../models/cliente.model';
+import { CreateCliente } from '../../types/cliente.types';
 
 @Service()
 export class ClienteService {
   constructor(private readonly clienteModel: ClienteModel) {}
 
-  async createCliente(data: Omit<Cliente, 'id'>): Promise<Cliente> {
-    const formatedData: Omit<Cliente, 'id'> = {
+  async createCliente(data: CreateCliente): Promise<Cliente> {
+    const formatedData: CreateCliente = {
       ...data,
       nome: data.nome.trim().toUpperCase(),
       email: data.email.trim().toLowerCase(),
@@ -26,7 +27,7 @@ export class ClienteService {
     return this.clienteModel.findByEmail(email);
   }
 
-  async updateCliente(id: number, data: Partial<Cliente>): Promise<Cliente> {
+  async updateCliente(id: number, data: Partial<CreateCliente>): Promise<Cliente> {
     return this.clienteModel.update(id, data);
   }
 

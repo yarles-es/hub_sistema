@@ -12,7 +12,7 @@ export class LoginMiddleware {
     try {
       const { login, senha } = this.validate(req);
 
-      const user = await this.usuarioService.findByEmail(login.toLowerCase());
+      const user = await this.usuarioService.findByEmailWithPassword(login.toLowerCase());
 
       if (!user) {
         throw new BadRequestError('Usuário ou senha inválida');

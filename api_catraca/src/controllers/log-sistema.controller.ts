@@ -1,24 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import { Service } from 'typedi';
-import { CreateLogService } from '../services/log-sistema/create-log.service';
 import { GetlogService } from '../services/log-sistema/get-log.service';
 
 @Service()
 export class LogSistemaController {
-  constructor(
-    private readonly createLogService: CreateLogService,
-    private readonly getLogService: GetlogService,
-  ) {}
-
-  async create(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const { usuarioId, acao, clienteId } = req.body;
-      const log = await this.createLogService.execute(usuarioId, acao, clienteId);
-      res.status(201).json(log);
-    } catch (error) {
-      next(error);
-    }
-  }
+  constructor(private readonly getLogService: GetlogService) {}
 
   async getLogs(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {

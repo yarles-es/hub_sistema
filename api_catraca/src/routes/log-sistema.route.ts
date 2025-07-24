@@ -5,8 +5,6 @@ import { LogSistemaController } from '../controllers/log-sistema.controller';
 const router = Router();
 const logSistemaController = Container.get(LogSistemaController);
 
-router
-  .get('/get-all', logSistemaController.getLogs.bind(logSistemaController))
-  .post('/create', logSistemaController.create.bind(logSistemaController));
+router.get('/get-all', logSistemaController.getLogs.bind(logSistemaController));
 
 export const logSistemaRoute = router;
