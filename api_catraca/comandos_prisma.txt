@@ -38,3 +38,7 @@ npx prisma db push
 Resetar o banco de dados:
 npx prisma migrate reset
 # Reseta o banco de dados, aplicando todas as migrations do início. Útil para ambientes de desenvolvimento.
+
+rodar seed.ts
+npx prisma db seed
+# faz rodar todas as funções de inserção de dados dentro do arquivo seed.ts

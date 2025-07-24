@@ -10,7 +10,7 @@ export class LoginMiddleware {
 
   async execute(req: Request, _res: Response, next: NextFunction) {
     try {
-      const { login, password } = this.validate(req);
+      const { login, senha } = this.validate(req);
 
       const user = await this.usuarioService.findByEmail(login.toLowerCase());
 
@@ -18,11 +18,11 @@ export class LoginMiddleware {
         throw new BadRequestError('Usuário ou senha inválida');
       }
 
-      if (!(await compareHashBcrypt(password, user.senha))) {
+      if (!(await compareHashBcrypt(senha, user.senha))) {
         throw new BadRequestError('Usuário ou senha inválida');
       }
 
-      const { senha, ...userWithoutPassword } = user;
+      const { senha: senhaHash, createdAt, updatedAt, ...userWithoutPassword } = user;
 
       req.body.user = userWithoutPassword;
 
@@ -32,11 +32,11 @@ export class LoginMiddleware {
     }
   }
 
-  private validate(req: Request): { login: string; password: string } {
-    const { login, password } = req.body;
-    if (!login || !password) {
-      throw new BadRequestError('Login and password are required');
+  private validate(req: Request): { login: string; senha: string } {
+    const { login, senha } = req.body;
+    if (!login || !senha) {
+      throw new BadRequestError('Login e senha são obrigatórios');
     }
-    return { login, password };
+    return { login, senha };
   }
 }

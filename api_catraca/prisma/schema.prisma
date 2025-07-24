@@ -45,13 +45,14 @@ model Cliente {
 }
 
 model Usuario {
-  id        Int      @id @default(autoincrement())
-  nome      String
-  email     String   @unique
-  senha     String
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  ativo     Boolean  @default(true)
+  id            Int      @id @default(autoincrement())
+  nome          String
+  email         String   @unique
+  senha         String
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  ativo         Boolean  @default(true)
+  administrador Boolean  @default(false) @map("administrador")
 
   LogSistema LogSistema[]
 

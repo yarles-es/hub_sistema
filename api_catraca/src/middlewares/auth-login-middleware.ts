@@ -12,6 +12,7 @@ interface AuthenticatedRequest extends Request {
 const PUBLIC_KEY = process.env.KEY_ACADEMIA || 'ACADEMIA_SECRET';
 
 export function validateJWT(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  console.log('🔐 validateJWT foi chamado em:', req.method, req.originalUrl);
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {

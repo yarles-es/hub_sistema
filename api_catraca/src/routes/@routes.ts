@@ -1,5 +1,7 @@
 import { Router } from 'express';
+import Container from 'typedi';
 import { validateJWT } from '../middlewares/auth-login-middleware';
+import { LoginMiddleware } from '../middlewares/login.middleware';
 import { catracaRoute } from './catraca.route';
 import { clienteRoute } from './cliente.route';
 import { logSistemaRoute } from './log-sistema.route';
@@ -10,7 +12,9 @@ import { usuarioRoute } from './usuario.route';
 
 const router = Router();
 
-router.use('/login', loginRoute);
+const loginMiddleware = Container.get(LoginMiddleware);
+
+router.use('/login', loginMiddleware.execute.bind(loginMiddleware), loginRoute);
 router.use('/catraca', catracaRoute);
 
 router.use(validateJWT);
