@@ -80,7 +80,7 @@ const SideBarLinkFinance: React.FC<SideBarLinkFinanceProps> = ({
                 pathname === "/finance/daily" && "text-white"
               } `}
             >
-              Diarias
+              Diárias
             </Link>
           </li>
           <li>

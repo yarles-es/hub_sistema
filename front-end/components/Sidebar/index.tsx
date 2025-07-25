@@ -4,10 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import SideBarLinkClients from "./SideBarLinkClients";
 import SideBarLinkFinance from "./SideBarLinkFinance";
 import SidebarLinkGroup from "./SidebarLinkGroup";
 import SideBarLinkSettings from "./SideBarLinkSettings";
-import SideBarLinkStock from "./SideBarLinkStock";
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -130,7 +130,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 )}
               </SidebarLinkGroup>
 
-              <SideBarLinkStock />
+              <SideBarLinkClients />
 
               <SidebarLinkGroup
                 activeCondition={
