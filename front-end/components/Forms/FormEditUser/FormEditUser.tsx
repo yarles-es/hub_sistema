@@ -6,7 +6,7 @@ import { Controller, useForm } from "react-hook-form";
 
 import DefaultFormatContainerForm from "../DefaultFormatContainerForm";
 
-import { updateUser } from "@/api/users/user";
+import { updateUser } from "@/api/users/user.api";
 import Button from "@/components/Buttons/Button";
 import CheckBox from "@/components/CheckBox/CheckBox";
 import Input from "@/components/Inputs/Input";

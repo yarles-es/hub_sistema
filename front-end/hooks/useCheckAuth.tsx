@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
-import { loginApp } from "@/api/login/login";
+import { loginApp } from "@/api/login/login.api";
 import { useAuthStore } from "@/store/auth";
 
 import useAlert from "./useAlert";

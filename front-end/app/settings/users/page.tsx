@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 
-import { findAllUsers } from "@/api/users/user";
+import { findAllUsers } from "@/api/users/user.api";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Button from "@/components/Buttons/Button";
 import ModalCreateUser from "@/components/Modals/UserModals/ModalCreateUser";

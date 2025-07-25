@@ -6,39 +6,41 @@ import { Controller, useForm } from "react-hook-form";
 
 import DefaultFormatContainerForm from "../DefaultFormatContainerForm";
 
-import { createUser } from "@/api/users/user.api";
+import { createDaily } from "@/api/finance/daily.api";
 import Button from "@/components/Buttons/Button";
-import CheckBox from "@/components/CheckBox/CheckBox";
 import Input from "@/components/Inputs/Input";
+import MoneyInput from "@/components/Inputs/InputMoney";
+import SelectTypePayment from "@/components/Selects/SelectTypePayment";
 import useAlert from "@/hooks/useAlert";
-import { createUserSchema } from "@/schemas/userSchemas";
-import { CreateUser } from "@/types/User";
+import { createDailySchema } from "@/schemas/dailySchemas";
+import { CreateDaily, PaymentType } from "@/types/Daily";
 
-type FormNewUserProps = {
+type Props = {
   onClose: () => void;
 };
 
-const FormNewUser: React.FC<FormNewUserProps> = ({ onClose }) => {
-  const { register, handleSubmit, formState, control } = useForm<CreateUser>({
-    mode: "onBlur",
-    resolver: zodResolver(createUserSchema),
-    defaultValues: {
-      nome: "",
-      email: "",
-      senha: "",
-      administrador: false,
-    },
-  });
+const FormNewDaily: React.FC<Props> = ({ onClose }) => {
+  const { register, handleSubmit, formState, control, watch } =
+    useForm<CreateDaily>({
+      mode: "onBlur",
+      resolver: zodResolver(createDailySchema),
+      defaultValues: {
+        nomeCliente: null,
+        valor: "",
+        formaPagamento: PaymentType.DINHEIRO,
+        observacao: null,
+      },
+    });
 
   const { errors, isSubmitting } = formState;
 
   const alert = useAlert();
 
   const { mutate } = useMutation({
-    mutationFn: createUser,
+    mutationFn: createDaily,
 
     onSuccess: () => {
-      alert("Usuário criado com sucesso", "success");
+      alert("Diária cadastrada com sucesso!", "success");
       onClose();
     },
     onError: (error) => {
@@ -48,57 +50,59 @@ const FormNewUser: React.FC<FormNewUserProps> = ({ onClose }) => {
     retry: 0,
   });
 
-  const handleSubmitData = (data: CreateUser) => {
+  const handleSubmitData = (data: CreateDaily) => {
     mutate(data);
   };
 
   return (
-    <DefaultFormatContainerForm title="Novo usuário">
+    <DefaultFormatContainerForm title="Nova diária">
       <form onSubmit={handleSubmit(handleSubmitData)}>
         <div className="p-6.5">
           <div className="mb-4.5 flex gap-6 xl:flex-row">
             <div className="w-full xl:w-1/2">
               <Input
-                {...register("nome")}
+                {...register("nomeCliente")}
                 type="text"
-                label="Nome Completo"
-                placeholder="Digite o nome completo"
-                error={errors.nome?.message}
+                label="Nome do cliente:"
+                placeholder="Digite o nome do cliente"
+                error={errors.nomeCliente?.message}
               />
             </div>
             <div className="w-full xl:w-1/2">
               <Input
-                {...register("email")}
+                {...register("observacao")}
                 type="text"
-                label="E-mail"
-                placeholder="Digite o e-mail"
-                error={errors.email?.message}
+                label="Observação"
+                placeholder="Digite a observação"
+                error={errors.observacao?.message}
               />
             </div>
           </div>
           <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
             <div className="w-full xl:w-1/2">
-              <Input
-                {...register("senha")}
-                label="Senha"
-                type="password"
-                placeholder="Digite a senha do usuário"
-                error={errors.senha?.message}
-              />
-            </div>
-            <div className="w-full xl:w-1/2 flex items-center justify-center">
               <Controller
                 control={control}
-                name="administrador"
+                name="valor"
                 render={({ field }) => (
-                  <CheckBox
-                    classLabel="mb-3"
-                    id="administrador"
-                    checked={field.value}
-                    onChange={(e) => field.onChange(e.target.checked)}
-                  >
-                    <span className="text-white">Administrador</span>
-                  </CheckBox>
+                  <MoneyInput
+                    {...field}
+                    externalValue={watch("valor")}
+                    label="Valor:"
+                    error={errors.valor?.message}
+                  />
+                )}
+              />
+            </div>
+            <div className="w-full xl:w-1/2">
+              <Controller
+                control={control}
+                name="formaPagamento"
+                render={({ field }) => (
+                  <SelectTypePayment
+                    {...field}
+                    label="Forma de pagamento:"
+                    error={errors.formaPagamento?.message}
+                  />
                 )}
               />
             </div>
@@ -120,4 +124,4 @@ const FormNewUser: React.FC<FormNewUserProps> = ({ onClose }) => {
   );
 };
 
-export default FormNewUser;
+export default FormNewDaily;

@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 
 import DefaultFormatContainerForm from "../DefaultFormatContainerForm";
 
-import { updateUserStatus } from "@/api/users/user";
+import { updateUserStatus } from "@/api/users/user.api";
 import Button from "@/components/Buttons/Button";
 import useAlert from "@/hooks/useAlert";
 import { ModalTypeItemUser } from "@/types/ModalTypes";
