@@ -23,7 +23,7 @@ type FormValues = {
   observacao: string;
 };
 
-const FormSearchDaily: React.FC<Props> = ({ isOpen, onClose }) => {
+const FormSearchDaily: React.FC<Props> = ({ onClose }) => {
   const pathName = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();

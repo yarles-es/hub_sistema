@@ -23,6 +23,7 @@ const DailyPage = () => {
   const alert = useAlert();
 
   const [modals, setModals] = useState<ModalDailyType>("");
+  const [itemSelected, setItemSelected] = useState<number>(0);
 
   const objectVisualModals = {
     create: () => setModals("create"),
@@ -77,6 +78,7 @@ const DailyPage = () => {
       return;
     }
     objectVisualModals[type]();
+    setItemSelected(id);
   };
 
   return (
