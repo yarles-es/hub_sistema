@@ -9,5 +9,6 @@ route.post('/create', pagamentoAvulsoController.create.bind(pagamentoAvulsoContr
 route.get('/get-by-id/:id', pagamentoAvulsoController.getById.bind(pagamentoAvulsoController));
 route.put('/update/:id', pagamentoAvulsoController.update.bind(pagamentoAvulsoController));
 route.delete('/delete/:id', pagamentoAvulsoController.delete.bind(pagamentoAvulsoController));
+route.get('/get-all', pagamentoAvulsoController.getAll.bind(pagamentoAvulsoController));
 
 export const pagamentoAvulsoRoute = route;

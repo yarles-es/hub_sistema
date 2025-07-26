@@ -1,6 +1,11 @@
 import { Service } from 'typedi';
 import { PagamentoAvulsoModel } from '../../models/pagamento-avulso.model';
-import { CreatePagamentoAvulso, UpdatePagamentoAvulso } from '../../types/pagamento-avulso.types';
+import {
+  CreatePagamentoAvulso,
+  PagamentoAvulsoFilter,
+  PagamentoAvulsoResponse,
+  UpdatePagamentoAvulso,
+} from '../../types/pagamento-avulso.types';
 
 @Service()
 export class PagamentoAvulsoService {
@@ -24,5 +29,13 @@ export class PagamentoAvulsoService {
 
   async deletePagamentoAvulso(id: number) {
     return this.pagamentoAvulsoModel.delete(id);
+  }
+
+  async getAllPagamentoAvulso(
+    pageNumber: number,
+    limitNumber: number,
+    filters?: PagamentoAvulsoFilter,
+  ): Promise<PagamentoAvulsoResponse> {
+    return this.pagamentoAvulsoModel.getAll(pageNumber, limitNumber, filters);
   }
 }
