@@ -1,4 +1,4 @@
-import { Cliente } from '@prisma/client';
+import { Cliente, Mensalidade } from '@prisma/client';
 
 export type CreateClienteRequest = Omit<
   Cliente,
@@ -16,3 +16,30 @@ export type UpdateClientRequest = Partial<
 };
 
 export type UpdateClient = Partial<Omit<Cliente, 'id' | 'createdAt' | 'updatedAt'>>;
+
+export type StatusCliente = 'ATIVO' | 'INATIVO';
+
+export type ClienteFilter = {
+  nome?: string;
+  email?: string;
+  telefone?: string;
+  dataNascimento?: Date;
+  diaMensalidade?: number;
+  status?: StatusCliente;
+};
+
+export type ClienteResponseGetAll = {
+  data: (Cliente & { status: StatusCliente })[];
+  total: number;
+  page: number;
+  limit: number;
+};
+
+export type ClientResponseGetAllModel = {
+  data: (Cliente & {
+    Mensalidade: Mensalidade[];
+  })[];
+  total: number;
+  page: number;
+  limit: number;
+};

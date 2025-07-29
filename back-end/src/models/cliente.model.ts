@@ -1,6 +1,11 @@
 import { Cliente, PrismaClient } from '@prisma/client';
 import { Service } from 'typedi';
-import { CreateCliente, UpdateClient } from '../types/cliente.types';
+import {
+  ClienteFilter,
+  ClientResponseGetAllModel,
+  CreateCliente,
+  UpdateClient,
+} from '../types/cliente.types';
 
 @Service()
 export class ClienteModel {
@@ -38,5 +43,51 @@ export class ClienteModel {
     return this.prisma.cliente.delete({
       where: { id },
     });
+  }
+
+  public async findAll(
+    page: number,
+    limit: number,
+    dates: { dataInicialMensalidade?: Date; dataFinalMensalidade?: Date },
+    filter?: ClienteFilter,
+  ): Promise<ClientResponseGetAllModel> {
+    const where: any = {};
+
+    if (filter?.nome) {
+      where.nome = { contains: filter.nome, mode: 'insensitive' };
+    }
+    if (filter?.email) {
+      where.email = { contains: filter.email, mode: 'insensitive' };
+    }
+
+    const whereMensalidade: any = {};
+    if (dates.dataInicialMensalidade) {
+      whereMensalidade.vencimento = { gte: dates.dataInicialMensalidade };
+    }
+    if (dates.dataFinalMensalidade) {
+      whereMensalidade.vencimento = { lte: dates.dataFinalMensalidade };
+    }
+
+    const [data, total] = await Promise.all([
+      this.prisma.cliente.findMany({
+        where,
+        skip: (page - 1) * limit,
+        take: limit,
+        include: {
+          Mensalidade: {
+            where: whereMensalidade,
+            orderBy: { vencimento: 'asc' },
+          },
+        },
+      }),
+      this.prisma.cliente.count({ where }),
+    ]);
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+    };
   }
 }

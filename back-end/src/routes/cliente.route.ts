@@ -9,6 +9,7 @@ router
   .get('/get-by-email/:email', clienteController.getByEmail.bind(clienteController))
   .get('/get-by-id/:id', clienteController.getById.bind(clienteController))
   .post('/create', clienteController.create.bind(clienteController))
-  .put('/update/:id', clienteController.update.bind(clienteController));
+  .put('/update/:id', clienteController.update.bind(clienteController))
+  .get('/get-all', clienteController.getAll.bind(clienteController));
 
 export const clienteRoute = router;

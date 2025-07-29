@@ -70,8 +70,6 @@ export class PagamentoAvulsoController {
       const { numberPage, limit, initialDate, finalDate, observacao, nomeCliente, formaPagamento } =
         req.query;
 
-      console.log('Query Parameters:', req.query);
-
       const limitNumber = safeParseInt(limit) || 30;
       const page = safeParseInt(numberPage) || 1;
       const initial = safeParseDate(new Date(`${initialDate as string}T00:00:00`));
@@ -79,16 +77,6 @@ export class PagamentoAvulsoController {
       const observacaoValue = safeParseString(observacao);
       const nomeClienteValue = safeParseString(nomeCliente);
       const formaPagamentoValue = safeParseFormPagamentoArray(formaPagamento);
-
-      console.log('Parameters:', {
-        page,
-        limit: limitNumber,
-        initialDate: initial,
-        finalDate: final,
-        observacao: observacaoValue,
-        nomeCliente: nomeClienteValue,
-        formaPagamento: formaPagamentoValue,
-      });
 
       const pagamentos = await this.getAllPagamentosAvulsoService.execute(page, limitNumber, {
         initialDate: initial,

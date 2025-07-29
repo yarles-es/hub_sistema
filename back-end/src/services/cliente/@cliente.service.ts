@@ -1,7 +1,12 @@
 import { Cliente } from '@prisma/client';
 import { Service } from 'typedi';
 import { ClienteModel } from '../../models/cliente.model';
-import { CreateCliente, UpdateClient } from '../../types/cliente.types';
+import {
+  ClienteFilter,
+  ClientResponseGetAllModel,
+  CreateCliente,
+  UpdateClient,
+} from '../../types/cliente.types';
 
 @Service()
 export class ClienteService {
@@ -33,5 +38,14 @@ export class ClienteService {
 
   async deleteCliente(id: number): Promise<Cliente> {
     return this.clienteModel.delete(id);
+  }
+
+  async getAllClientes(
+    page: number,
+    limit: number,
+    dates: { dataInicialMensalidade?: Date; dataFinalMensalidade?: Date },
+    filter?: ClienteFilter,
+  ): Promise<ClientResponseGetAllModel> {
+    return this.clienteModel.findAll(page, limit, dates, filter);
   }
 }
