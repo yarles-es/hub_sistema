@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { Controller, useForm } from "react-hook-form";
@@ -23,34 +21,21 @@ type Props = {
 const FormEditDaily: React.FC<Props> = ({ onClose, daily }) => {
   const alert = useAlert();
 
-  const { register, handleSubmit, formState, control, reset } =
-    useForm<UpdateDaily>({
-      mode: "onBlur",
-      resolver: zodResolver(updateDailySchema),
-      defaultValues: {
-        id: daily?.id || 0,
-        nomeCliente: daily?.nomeCliente || undefined,
-        valor: daily?.valor
-          ? `R$:${daily.valor.toFixed(2).replace(".", ",")}`
-          : undefined,
-        formaPagamento: daily?.formaPagamento || PaymentType.DINHEIRO,
-        observacao: daily?.observacao || null,
-      },
-    });
-
-  useEffect(() => {
-    if (daily) {
-      reset({
-        id: daily.id,
-        nomeCliente: daily.nomeCliente ?? "",
-        valor: daily.valor
-          ? daily.valor.toFixed(2).replace(".", ",")
-          : undefined,
-        formaPagamento: daily.formaPagamento ?? PaymentType.DINHEIRO,
-        observacao: daily.observacao ?? "",
-      });
-    }
-  }, [daily, reset]);
+  const { register, handleSubmit, formState, control } = useForm<UpdateDaily>({
+    mode: "onBlur",
+    resolver: zodResolver(updateDailySchema),
+    defaultValues: daily
+      ? {
+          id: daily.id,
+          nomeCliente: daily.nomeCliente ?? "",
+          valor: daily.valor
+            ? daily.valor.toFixed(2).replace(".", ",")
+            : undefined,
+          formaPagamento: daily.formaPagamento ?? PaymentType.DINHEIRO,
+          observacao: daily.observacao ?? "",
+        }
+      : undefined,
+  });
 
   const { errors, isSubmitting } = formState;
 
@@ -84,21 +69,35 @@ const FormEditDaily: React.FC<Props> = ({ onClose, daily }) => {
         <div className="p-6.5">
           <div className="mb-4.5 flex gap-6 xl:flex-row">
             <div className="w-full xl:w-1/2">
-              <Input
-                {...register("nomeCliente")}
-                type="text"
-                label="Nome do cliente:"
-                placeholder="Digite o nome do cliente"
-                error={errors.nomeCliente?.message}
+              <Controller
+                control={control}
+                name="nomeCliente"
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    value={field.value ?? ""}
+                    type="text"
+                    label="Nome do cliente:"
+                    placeholder="Digite o nome do cliente"
+                    error={errors.nomeCliente?.message}
+                  />
+                )}
               />
             </div>
             <div className="w-full xl:w-1/2">
-              <Input
-                {...register("observacao")}
-                type="text"
-                label="Observação"
-                placeholder="Digite a observação"
-                error={errors.observacao?.message}
+              <Controller
+                control={control}
+                name="observacao"
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    value={field.value ?? ""}
+                    type="text"
+                    label="Observação:"
+                    placeholder="Digite uma observação"
+                    error={errors.observacao?.message}
+                  />
+                )}
               />
             </div>
           </div>
