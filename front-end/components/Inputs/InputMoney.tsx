@@ -34,7 +34,7 @@ const MoneyInput = forwardRef<HTMLInputElement, InputProps>(
         externalValue !== previousExternal.current
       ) {
         previousExternal.current = externalValue;
-        setValue(formatNumber(externalValue));
+        setValue(formatNumber(externalValue || "R$ 0,00"));
       }
     }, [externalValue]);
 
