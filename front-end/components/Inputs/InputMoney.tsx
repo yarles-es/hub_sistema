@@ -1,9 +1,8 @@
-import { eventNames } from "process";
-
 import React, {
   forwardRef,
   InputHTMLAttributes,
   useEffect,
+  useRef,
   useState,
 } from "react";
 
@@ -19,6 +18,7 @@ const MoneyInput = forwardRef<HTMLInputElement, InputProps>(
     ref
   ) => {
     const [value, setValue] = useState("R$ 0,00");
+    const previousExternal = useRef<string | undefined>();
 
     const formatNumber = (inputValue: string) => {
       const numericValue = parseInt(inputValue.replace(/\D/g, ""), 10) / 100;
@@ -29,9 +29,13 @@ const MoneyInput = forwardRef<HTMLInputElement, InputProps>(
     };
 
     useEffect(() => {
-      externalValue
-        ? setValue(formatNumber(externalValue))
-        : setValue("R$ 0,00");
+      if (
+        externalValue !== undefined &&
+        externalValue !== previousExternal.current
+      ) {
+        previousExternal.current = externalValue;
+        setValue(formatNumber(externalValue));
+      }
     }, [externalValue]);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,6 +48,7 @@ const MoneyInput = forwardRef<HTMLInputElement, InputProps>(
         newFormattedNumber =
           paddedValue.slice(0, -2) + "." + paddedValue.slice(-2);
       }
+
       const formattedValue = formatNumber(newFormattedNumber);
       setValue(formattedValue);
 
@@ -68,10 +73,10 @@ const MoneyInput = forwardRef<HTMLInputElement, InputProps>(
       <>
         {label && (
           <label
-            className={`mb-2.5 block text-black dark:text-white`}
+            className="mb-2.5 block text-black dark:text-white"
             htmlFor={id}
           >
-            {label ?? ""}
+            {label}
           </label>
         )}
 
@@ -84,7 +89,7 @@ const MoneyInput = forwardRef<HTMLInputElement, InputProps>(
             type="tel"
             value={value}
             onChange={handleChange}
-            className={` w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary`}
+            className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
           />
         </div>
 

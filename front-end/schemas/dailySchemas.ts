@@ -19,4 +19,8 @@ const createDailySchema = z.object({
   observacao: z.string().optional(),
 });
 
-export { createDailySchema };
+const updateDailySchema = createDailySchema.extend({
+  id: z.number().int().positive(),
+});
+
+export { createDailySchema, updateDailySchema };

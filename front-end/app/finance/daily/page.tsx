@@ -9,6 +9,8 @@ import { getAllDaily } from "@/api/finance/daily.api";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Button from "@/components/Buttons/Button";
 import ModalCreateDaily from "@/components/Modals/DailyModals/ModalCreateDaily";
+import ModalDeleteDaily from "@/components/Modals/DailyModals/ModalDeleteDaily";
+import ModalEditDaily from "@/components/Modals/DailyModals/ModalEditDaily";
 import ModalSearchDaily from "@/components/Modals/DailyModals/ModalSearchDaily";
 import PageTransition from "@/components/PageTransition/PageTransition";
 import Pagination from "@/components/Pagination/Pagination";
@@ -128,6 +130,38 @@ const DailyPage = () => {
           <ModalSearchDaily
             isOpen={modals === "search"}
             onClose={() => setModals("")}
+          />
+        )}
+
+        {modals === "delete" && (
+          <ModalDeleteDaily
+            isOpen={modals === "delete"}
+            onClose={() => {
+              setModals("");
+              setItemSelected(0);
+            }}
+            onCloseAndGetDaily={() => {
+              setModals("");
+              setItemSelected(0);
+              refetch();
+            }}
+            itemSelected={itemSelected}
+          />
+        )}
+
+        {modals === "edit" && (
+          <ModalEditDaily
+            isOpen={modals === "edit"}
+            onClose={() => {
+              setModals("");
+              setItemSelected(0);
+            }}
+            onCloseAndGetDaily={() => {
+              setModals("");
+              setItemSelected(0);
+              refetch();
+            }}
+            daily={dailyData?.data.find((item) => item.id === itemSelected)}
           />
         )}
       </div>

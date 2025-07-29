@@ -5,6 +5,7 @@ import {
   Daily,
   GetAllDaily,
   GetAllDailyResponse,
+  UpdateDaily,
 } from "@/types/Daily";
 import { createFullUrlFromParamsBackEnd } from "@/utils/generateURLpaginateOrFilter";
 
@@ -22,4 +23,23 @@ export const createDaily = async (data: CreateDaily) => {
     ...data,
     valor,
   });
+};
+
+export const deleteDaily = async (id: number) => {
+  return await genericRequest<Daily>("delete", `pagamento-avulso/delete/${id}`);
+};
+
+export const updateDaily = async (data: UpdateDaily) => {
+  const { id, ...rest } = {
+    ...data,
+    valor: data.valor ? parseFloat(data.valor) : undefined,
+  };
+
+  return await genericRequest<Daily>(
+    "put",
+    `pagamento-avulso/update/${data.id}`,
+    {
+      ...rest,
+    }
+  );
 };

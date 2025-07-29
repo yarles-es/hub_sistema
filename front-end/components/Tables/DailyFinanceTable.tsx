@@ -1,8 +1,5 @@
 import ButtonActionDelete from "../Buttons/ButtonActionDelete";
 import ButtonActionEdit from "../Buttons/ButtonActionEdit";
-import ButtonActionPayment from "../Buttons/ButtonActionPayment";
-
-import DefaultTableContainer from "./DefaultTableContainer";
 
 import useOrderTable from "@/hooks/useOrderTable";
 import useViewPermission from "@/hooks/useViewPermission";
@@ -11,6 +8,8 @@ import { ModalDailyType } from "@/types/ModalTypes";
 import { Title } from "@/types/Tables";
 import formatStringDate from "@/utils/formatStringDate";
 import { isNotNull } from "@/utils/tableGuardType";
+
+import DefaultTableContainer from "./DefaultTableContainer";
 
 type Props = {
   dailys: Daily[];
@@ -36,7 +35,6 @@ const DailyFinanceTable: React.FC<Props> = ({ dailys, onOpenItemSelect }) => {
     administration
       ? { key: "delete", label: "Excluir", type: "actions", order: false }
       : null,
-    { key: "pay", label: "Pagar", type: "actions", order: false },
   ];
 
   const titlesFiltered = titles.filter(isNotNull);
@@ -134,13 +132,6 @@ const DailyFinanceTable: React.FC<Props> = ({ dailys, onOpenItemSelect }) => {
                   </div>
                 </td>
               )}
-              <td className="py-4 px-4 text-black dark:text-white">
-                <div className="flex items-center space-x-3.5">
-                  <ButtonActionPayment
-                    onClick={() => onOpenItemSelect(daily.id, "pay")}
-                  />
-                </div>
-              </td>
             </tr>
           ))}
         </tbody>

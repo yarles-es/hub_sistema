@@ -39,3 +39,7 @@ export type CreateDaily = Omit<
 > & {
   valor: string; // Assuming valor is a string in the form input
 };
+
+export type UpdateDaily = Partial<CreateDaily> & {
+  id: number;
+};
