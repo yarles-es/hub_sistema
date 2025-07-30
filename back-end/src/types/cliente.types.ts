@@ -2,12 +2,15 @@ import { Cliente, Mensalidade } from '@prisma/client';
 
 export type CreateClienteRequest = Omit<
   Cliente,
-  'id' | 'createdAt' | 'updatedAt' | 'dataNascimento' | 'diaMensalidade'
+  'id' | 'createdAt' | 'updatedAt' | 'dataNascimento' | 'diaMensalidade' | 'ativo' | 'catracaId'
 > & {
   dataNascimento: string;
 };
 
-export type CreateCliente = Omit<Cliente, 'id' | 'createdAt' | 'updatedAt' | 'diaMensalidade'>;
+export type CreateCliente = Omit<
+  Cliente,
+  'id' | 'createdAt' | 'updatedAt' | 'diaMensalidade' | 'ativo' | 'catracaId'
+>;
 
 export type UpdateClientRequest = Partial<
   Omit<Cliente, 'id' | 'createdAt' | 'updatedAt' | 'dataNascimento'>

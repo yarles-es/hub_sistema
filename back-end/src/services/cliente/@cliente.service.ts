@@ -18,7 +18,6 @@ export class ClienteService {
       nome: data.nome.trim().toUpperCase(),
       email: data.email.trim().toLowerCase(),
       telefone: data.telefone ? data.telefone.trim() : null,
-      catracaId: data.catracaId ? Number(data.catracaId) : null,
     };
 
     return this.clienteModel.create(formatedData);
