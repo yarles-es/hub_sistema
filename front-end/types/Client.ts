@@ -38,3 +38,7 @@ export type CreateClient = {
   dataNascimento: string;
   planoId: number;
 };
+
+export type UpdateClient = Partial<CreateClient> & {
+  id: number;
+};

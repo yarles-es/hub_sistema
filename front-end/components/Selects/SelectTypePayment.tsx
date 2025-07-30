@@ -39,7 +39,7 @@ const SelectTypePayment = forwardRef<HTMLSelectElement, Props>(
             options={options}
             value={value}
             onChange={onChange}
-            fristOption={fristOption ? "Selecione o tipo" : undefined}
+            firstOption={fristOption ? "Selecione o tipo" : undefined}
             ref={ref}
           />
         </div>

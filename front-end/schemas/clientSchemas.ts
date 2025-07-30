@@ -7,9 +7,12 @@ const createClientSchema = z.object({
     .max(100, "Nome muito longo")
     .regex(/^[A-Za-zÀ-ÖØ-öø-ÿ\s'-]+$/, "Nome deve conter apenas letras"),
   email: z.string().email("Email inválido").max(100, "Email muito longo"),
-  telefone: z
-    .string()
-    .regex(/^\d{10,11}$/, "Telefone deve conter 10 ou 11 dígitos numéricos"),
+  telefone: z.preprocess((val) => {
+    if (typeof val === "string") {
+      return val.replace(/\D/g, "");
+    }
+    return val;
+  }, z.string().regex(/^\d{10,11}$/, "Telefone deve conter 10 ou 11 dígitos numéricos")),
   dataNascimento: z
     .string()
     .regex(

@@ -2,14 +2,14 @@ import ButtonActionAdd from "../Buttons/ButtonActionAdd";
 import ButtonActionEdit from "../Buttons/ButtonActionEdit";
 import ButtonActionUnlink from "../Buttons/ButtonactionUnlink";
 
-import DefaultTableContainer from "./DefaultTableContainer";
-
 import useOrderTable from "@/hooks/useOrderTable";
 import useViewPermission from "@/hooks/useViewPermission";
 import { Client } from "@/types/Client";
 import { ModalClientType } from "@/types/ModalTypes";
 import { Title } from "@/types/Tables";
 import { isNotNull } from "@/utils/tableGuardType";
+
+import DefaultTableContainer from "./DefaultTableContainer";
 
 type Props = {
   clients: Client[];

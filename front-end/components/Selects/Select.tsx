@@ -1,4 +1,4 @@
-import React, { forwardRef, SelectHTMLAttributes, useState } from "react";
+import { forwardRef, SelectHTMLAttributes, useState } from "react";
 
 export type Option = {
   label: string;
@@ -7,12 +7,12 @@ export type Option = {
 
 type SelectProps = SelectHTMLAttributes<HTMLSelectElement> & {
   options: Option[];
-  fristOption?: string; // Considerando ajustar para "firstOption" para melhor clareza
+  firstOption?: string; // Considerando ajustar para "firstOption" para melhor clareza
 };
 
 const Select = forwardRef<HTMLSelectElement, SelectProps>(
   (
-    { options, fristOption = "Selecione uma opção", disabled, ...rest },
+    { options, firstOption = "Selecione uma opção", disabled, ...rest },
     ref
   ) => {
     const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
@@ -26,7 +26,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
           className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
           {...rest}
         >
-          <option value="">{fristOption}</option>
+          <option value="">{firstOption}</option>
           {options.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}

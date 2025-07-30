@@ -8,6 +8,8 @@ import { useSearchParams } from "next/navigation";
 import { getAllClients } from "@/api/client/client.api";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Button from "@/components/Buttons/Button";
+import ModalCreateClient from "@/components/Modals/ClientModals/ModalCreateClient";
+import ModalEditClient from "@/components/Modals/ClientModals/ModalEditClient";
 import PageTransition from "@/components/PageTransition/PageTransition";
 import Pagination from "@/components/Pagination/Pagination";
 import ClientTable from "@/components/Tables/ClientTable";
@@ -99,6 +101,29 @@ const ClientPage = () => {
             />
           </div>
         ) : null}
+
+        {modals === "create" && (
+          <ModalCreateClient
+            isOpen={modals === "create"}
+            onClose={() => setModals("")}
+            onCloseAndGetClient={() => {
+              refetch();
+              setModals("");
+            }}
+          />
+        )}
+
+        {modals === "edit" && (
+          <ModalEditClient
+            isOpen={modals === "edit"}
+            onClose={() => setModals("")}
+            onCloseAndGetClient={() => {
+              refetch();
+              setModals("");
+            }}
+            client={clients?.data.find((client) => client.id === itemSelected)}
+          />
+        )}
       </div>
     </PageTransition>
   );
