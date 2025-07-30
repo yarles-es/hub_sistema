@@ -7,16 +7,19 @@ import { useSearchParams } from "next/navigation";
 
 import { getAllClients } from "@/api/client/client.api";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+import Button from "@/components/Buttons/Button";
 import PageTransition from "@/components/PageTransition/PageTransition";
 import Pagination from "@/components/Pagination/Pagination";
+import ClientTable from "@/components/Tables/ClientTable";
 import HeaderTable from "@/components/Tables/HeaderTable/HeaderTable";
 import useAlert from "@/hooks/useAlert";
 import { GetAllClient, StatusClient } from "@/types/Client";
+import { ModalClientType } from "@/types/ModalTypes";
 
 const ClientPage = () => {
   const alert = useAlert();
 
-  const [modals, setModals] = useState("");
+  const [modals, setModals] = useState<ModalClientType>("");
   const [itemSelected, setItemSelected] = useState<number>(0);
 
   const searchParams = useSearchParams();
@@ -58,11 +61,11 @@ const ClientPage = () => {
     search: () => setModals("search"),
   };
 
-  const onOpenModal = (id: number, type: string) => {
+  const onOpenModal = (id: number, type: ModalClientType) => {
     if (!type) return;
 
     setItemSelected(id);
-    setModals(type);
+    objectVisualModals[type]();
   };
 
   return (
@@ -70,14 +73,24 @@ const ClientPage = () => {
       <div>
         <Breadcrumb pageName="Clientes" />
         <HeaderTable viewHeader={true}>
-          <></>
+          <>
+            <Button header onClick={() => onOpenModal(0, "search")}>
+              <p> Consultar</p>
+            </Button>
+            <Button header onClick={() => onOpenModal(0, "create")}>
+              <p>Cadastrar</p>
+            </Button>
+          </>
         </HeaderTable>
       </div>
       <div className="flex flex-col gap-4">
         {clients?.data && clients.data.length > 0 ? (
           <div className="mt-1.5 xl:mt-3">
             <PageTransition>
-              <p>tabela aqui</p>
+              <ClientTable
+                clients={clients.data}
+                onOpenItemSelect={onOpenModal}
+              />
             </PageTransition>
             <Pagination
               limit={clients.limit}

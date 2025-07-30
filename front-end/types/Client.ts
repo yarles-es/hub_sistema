@@ -1,4 +1,4 @@
-export type StatusClient = "ATIVO" | "INATIVO";
+export type StatusClient = "ATIVO" | "DESATIVADO" | "VENCIDO";
 
 export type Client = {
   id: number;
@@ -7,6 +7,7 @@ export type Client = {
   telefone: string;
   dataNascimento: Date;
   diaMensalidade: number;
+  status: StatusClient;
   catracaId: number | null;
   planoId: number;
   createdAt: Date;
@@ -24,7 +25,7 @@ export type GetAllClient = {
 };
 
 export type ClientResponseGetAll = {
-  data: (Client & { status: StatusClient })[];
+  data: Client[];
   limit: number;
   page: number;
   total: number;
