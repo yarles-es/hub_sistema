@@ -10,7 +10,7 @@ export class GetAllClientesService {
   async execute(page: number, limit: number, filter?: ClienteFilter): Promise<ClienteResponseGetAll> {
     const dates = {
       dataInicialMensalidade: filter?.status === 'ATIVO' ? new Date() : undefined,
-      dataFinalMensalidade: filter?.status === 'INATIVO' ? new Date() : undefined,
+      dataFinalMensalidade: filter?.status === 'VENCIDO' ? new Date() : undefined,
     };
 
     delete filter?.status;
@@ -21,9 +21,10 @@ export class GetAllClientesService {
       const { Mensalidade, ...rest } = cliente;
       const pendente = Mensalidade.find((m) => m.status === 'PENDENTE');
       let status: StatusCliente = 'ATIVO';
-
-      if (pendente) {
-        status = pendente.vencimento > new Date() ? 'ATIVO' : 'INATIVO';
+      if (cliente.ativo === false) {
+        status = 'DESATIVADO';
+      } else if (pendente) {
+        status = pendente.vencimento > new Date() ? 'ATIVO' : 'VENCIDO';
       }
 
       return {
