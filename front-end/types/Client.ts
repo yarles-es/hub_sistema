@@ -30,3 +30,11 @@ export type ClientResponseGetAll = {
   page: number;
   total: number;
 };
+
+export type CreateClient = {
+  nome: string;
+  email: string;
+  telefone: string;
+  dataNascimento: string;
+  planoId: number;
+};

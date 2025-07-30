@@ -1,6 +1,10 @@
 import { genericRequest } from "../@genericRequest";
 
-import { ClientResponseGetAll, GetAllClient } from "@/types/Client";
+import {
+  ClientResponseGetAll,
+  CreateClient,
+  GetAllClient,
+} from "@/types/Client";
 import { createFullUrlFromParamsBackEnd } from "@/utils/generateURLpaginateOrFilter";
 
 export const getAllClients = async (data: GetAllClient) => {
@@ -8,5 +12,13 @@ export const getAllClients = async (data: GetAllClient) => {
   return await genericRequest<ClientResponseGetAll>(
     "get",
     `cliente/get-all?${queryString}`
+  );
+};
+
+export const createClient = async (data: CreateClient) => {
+  return await genericRequest<ClientResponseGetAll>(
+    "post",
+    "cliente/create",
+    data
   );
 };
