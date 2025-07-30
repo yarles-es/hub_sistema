@@ -3,6 +3,7 @@ import { Service } from 'typedi';
 import { BadRequestError } from '../../errors/BadRequestError';
 import { CreateCliente, CreateClienteRequest } from '../../types/cliente.types';
 import { validateCel } from '../../utils/validate-cel';
+import { CreateMensalidadeService } from '../mensalidade/create-mensalida.service';
 import { PlanoService } from '../plano/@plano.service';
 import { ClienteService } from './@cliente.service';
 
@@ -11,17 +12,18 @@ export class CreateClienteService {
   constructor(
     private readonly clienteService: ClienteService,
     private readonly planoService: PlanoService,
+    private readonly createMensalidadeService: CreateMensalidadeService,
   ) {}
 
   async execute(data: CreateClienteRequest): Promise<Cliente> {
     const transformedData: CreateCliente = this.transformData(data);
     await this.validate(transformedData);
     const result = await this.clienteService.createCliente(transformedData);
+    await this.createMensalidadeService.execute({ clienteId: result.id });
     return result;
   }
 
   private async validate(data: CreateCliente): Promise<void> {
-    console.log(data);
     if (!data.nome || data.nome.trim() === '') {
       throw new BadRequestError('Nome é obrigatório.');
     }
@@ -58,9 +60,11 @@ export class CreateClienteService {
       throw new BadRequestError('Data de nascimento inválida.');
     }
 
+    const date = new Date(data.dataNascimento);
+    date.setHours(date.getHours() + 3);
     return {
       ...data,
-      dataNascimento: new Date(data.dataNascimento),
+      dataNascimento: date,
     };
   }
 }

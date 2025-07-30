@@ -24,7 +24,7 @@ export class GetAllClientesService {
       if (cliente.ativo === false) {
         status = 'DESATIVADO';
       } else if (pendente) {
-        status = pendente.vencimento > new Date() ? 'ATIVO' : 'VENCIDO';
+        status = this.isDataNoPassado(pendente.vencimento) ? 'VENCIDO' : 'ATIVO';
       }
 
       return {
@@ -39,5 +39,15 @@ export class GetAllClientesService {
       page: response.page,
       limit: response.limit,
     };
+  }
+
+  private isDataNoPassado(data: Date): boolean {
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+
+    const dataComparar = new Date(data);
+    dataComparar.setHours(0, 0, 0, 0);
+
+    return dataComparar < hoje;
   }
 }

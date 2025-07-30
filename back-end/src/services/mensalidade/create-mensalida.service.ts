@@ -53,7 +53,8 @@ export class CreateMensalidadeService {
       vencimento = new Date(dataVencimentoAnterior);
       vencimento.setMonth(vencimento.getMonth() + 1);
     } else {
-      vencimento = new Date();
+      const now = new Date();
+      vencimento = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 3, 0, 0, 0));
     }
 
     const mensalidade = await this.mensalidadeService.createMensalidade({

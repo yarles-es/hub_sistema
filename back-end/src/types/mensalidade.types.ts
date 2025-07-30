@@ -5,4 +5,4 @@ export type CreateMensalidade = Omit<
   'id' | 'createdAt' | 'updatedAt' | 'status' | 'formaPagamento'
 >;
 
-export type UpdateMensalidade = Partial<Pick<Mensalidade, 'formaPagamento' | 'status'>>;
+export type UpdateMensalidade = Partial<Pick<Mensalidade, 'formaPagamento' | 'status' | 'valor'>>;
