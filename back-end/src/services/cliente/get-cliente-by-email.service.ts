@@ -10,7 +10,6 @@ export class GetClienteByEmailService {
   constructor(private readonly clienteService: ClienteService) {}
 
   async execute(email: string): Promise<Cliente> {
-    console.log('GetClienteByEmailService.execute', { email });
     if (!email || !validateEmail(email) || email.trim() === '') {
       throw new BadRequestError('Email inválido.');
     }

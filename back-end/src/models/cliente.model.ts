@@ -91,8 +91,6 @@ export class ClienteModel {
       whereMensalidade.vencimento = { lte: dates.dataFinalMensalidade };
     }
 
-    console.log('where', where);
-
     const [data, total] = await Promise.all([
       this.prisma.cliente.findMany({
         where,
