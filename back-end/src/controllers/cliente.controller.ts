@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import { Service } from 'typedi';
+import { ActiveClienteService } from '../services/cliente/active-cliente.service';
 import { CreateClienteService } from '../services/cliente/create-cliente.service';
+import { DisableClienteService } from '../services/cliente/disable-cliente.service';
 import { GetAllClientesService } from '../services/cliente/get-all-clientes.service';
 import { GetClienteByEmailService } from '../services/cliente/get-cliente-by-email.service';
 import { GetClienteByIdService } from '../services/cliente/get-cliente-by-id.service';
@@ -16,6 +18,8 @@ export class ClienteController {
     private readonly getClienteByEmailService: GetClienteByEmailService,
     private readonly updateClienteService: UpdateClienteService,
     private readonly getAllClientesService: GetAllClientesService,
+    private readonly disableClienteService: DisableClienteService,
+    private readonly activeClienteService: ActiveClienteService,
   ) {}
 
   async create(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -59,7 +63,8 @@ export class ClienteController {
 
   async getAll(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { numberPage, limit, nome, email, telefone, dataNascimento, diaMensalidade, status } = req.query;
+      const { numberPage, limit, nome, email, telefone, dataNascimento, diaMensalidade, status, planoId } =
+        req.query;
 
       const page = safeParseInt(numberPage) || 1;
       const limitNumber = safeParseInt(limit) || 30;
@@ -69,6 +74,7 @@ export class ClienteController {
       const dataNascimentoQuery = safeParseDate(dataNascimento);
       const diaMensalidadeQuery = safeParseInt(diaMensalidade);
       const statusQuery = safeParseString(status) as StatusCliente | undefined;
+      const planoIdQuery = safeParseInt(planoId);
 
       const clientes = await this.getAllClientesService.execute(page, limitNumber, {
         nome: nomeQuery,
@@ -77,9 +83,28 @@ export class ClienteController {
         dataNascimento: dataNascimentoQuery,
         diaMensalidade: diaMensalidadeQuery,
         status: statusQuery,
+        planoId: planoIdQuery,
       });
 
       res.status(200).json(clientes);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async disable(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const cliente = await this.disableClienteService.execute(Number(req.params.id));
+      res.status(200).json(cliente);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async active(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const cliente = await this.activeClienteService.execute(Number(req.params.id));
+      res.status(200).json(cliente);
     } catch (error) {
       next(error);
     }

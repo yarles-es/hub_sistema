@@ -60,6 +60,29 @@ export class ClienteModel {
       where.email = { contains: filter.email, mode: 'insensitive' };
     }
 
+    if (filter?.telefone) {
+      where.telefone = { contains: filter.telefone, mode: 'insensitive' };
+    }
+
+    if (filter?.dataNascimento) {
+      const inputDate = new Date(filter.dataNascimento);
+
+      const start = new Date(inputDate);
+      start.setUTCHours(0, 0, 0, 0);
+
+      const end = new Date(inputDate);
+      end.setUTCHours(23, 59, 59, 999);
+
+      where.dataNascimento = {
+        gte: start,
+        lte: end,
+      };
+    }
+
+    if (filter?.planoId) {
+      where.planoId = filter.planoId;
+    }
+
     const whereMensalidade: any = {};
     if (dates.dataInicialMensalidade) {
       whereMensalidade.vencimento = { gte: dates.dataInicialMensalidade };
@@ -68,11 +91,14 @@ export class ClienteModel {
       whereMensalidade.vencimento = { lte: dates.dataFinalMensalidade };
     }
 
+    console.log('where', where);
+
     const [data, total] = await Promise.all([
       this.prisma.cliente.findMany({
         where,
         skip: (page - 1) * limit,
         take: limit,
+        orderBy: { id: 'desc' },
         include: {
           Mensalidade: {
             where: whereMensalidade,

@@ -29,6 +29,7 @@ export type ClienteFilter = {
   dataNascimento?: Date;
   diaMensalidade?: number;
   status?: StatusCliente;
+  planoId?: number;
 };
 
 export type ClienteResponseGetAll = {
