@@ -7,4 +7,10 @@ export type ModalDailyType =
   | "pay"
   | "";
 
-export type ModalClientType = "create" | "edit" | "delete" | "search" | "";
+export type ModalClientType =
+  | "create"
+  | "edit"
+  | "active"
+  | "disable"
+  | "search"
+  | "";

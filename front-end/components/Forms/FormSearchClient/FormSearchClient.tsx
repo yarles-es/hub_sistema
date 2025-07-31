@@ -1,61 +1,67 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 
 import DefaultFormatContainerForm from "../DefaultFormatContainerForm";
 
-import { createClient } from "@/api/client/client.api";
 import Button from "@/components/Buttons/Button";
 import Input from "@/components/Inputs/Input";
 import InputPhone from "@/components/Inputs/InputPhone";
 import SelectPlano from "@/components/Selects/SelectPlano";
-import useAlert from "@/hooks/useAlert";
-import { createClientSchema } from "@/schemas/clientSchemas";
-import { CreateClient } from "@/types/Client";
+import { StatusClient } from "@/types/Client";
+import { createFullUrlFromParamsBrowser } from "@/utils/generateURLpaginateOrFilter";
 
 type Props = {
   onClose: () => void;
 };
 
-const FormNewClient: React.FC<Props> = ({ onClose }) => {
-  const { register, handleSubmit, formState, control, watch } =
-    useForm<CreateClient>({
-      mode: "onBlur",
-      resolver: zodResolver(createClientSchema),
+type FormValues = {
+  nome: string;
+  email: string;
+  telefone: string;
+  dataNascimento: string;
+  status: StatusClient | undefined;
+  planoId: number | undefined;
+};
+
+const FormSearchClient: React.FC<Props> = ({ onClose }) => {
+  const pathName = usePathname();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const { handleSubmit, formState, control, register, watch } =
+    useForm<FormValues>({
       defaultValues: {
         nome: "",
         email: "",
         telefone: "",
         dataNascimento: "",
-        planoId: 0,
+        status: undefined,
+        planoId: undefined,
       },
     });
 
-  const { errors, isSubmitting } = formState;
+  const { errors } = formState;
 
-  const alert = useAlert();
+  const onSubmit = (data: FormValues) => {
+    const URL = createFullUrlFromParamsBrowser({
+      params: data,
+      pathName,
+      searchParams,
+    });
 
-  const { mutate } = useMutation({
-    mutationFn: createClient,
-
-    onSuccess: () => {
-      alert("Cliente cadastrado com sucesso!", "success");
+    const lastURL = `${pathName}?${searchParams.toString()}`;
+    if (URL !== lastURL) {
+      router.push(URL);
       onClose();
-    },
-    onError: (error) => {
-      alert(error.message, "error");
-      console.error(error);
-    },
-    retry: 0,
-  });
+      return;
+    }
 
-  const handleSubmitData = (data: CreateClient) => {
-    mutate(data);
+    onClose();
   };
 
   return (
-    <DefaultFormatContainerForm title="Novo Cliente">
-      <form onSubmit={handleSubmit(handleSubmitData)}>
+    <DefaultFormatContainerForm title="Consultar Cliente">
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="p-6.5">
           <div className="mb-4.5 flex gap-6 xl:flex-row">
             <div className="w-full xl:w-1/2">
@@ -77,7 +83,6 @@ const FormNewClient: React.FC<Props> = ({ onClose }) => {
               />
             </div>
           </div>
-
           <div className="mb-4.5 flex gap-6 xl:flex-row">
             <div className="w-full xl:w-1/3">
               <Controller
@@ -123,12 +128,11 @@ const FormNewClient: React.FC<Props> = ({ onClose }) => {
           </div>
           <div className="flex justify-center items-center">
             <Button
-              disabled={isSubmitting}
               type="submit"
-              className={`flex w-full lg:w-100 justify-center p-3 rounded`}
               primary
+              className="flex w-full lg:w-100 justify-center rounded p-3"
             >
-              Criar
+              Consultar
             </Button>
           </div>
         </div>
@@ -137,4 +141,4 @@ const FormNewClient: React.FC<Props> = ({ onClose }) => {
   );
 };
 
-export default FormNewClient;
+export default FormSearchClient;

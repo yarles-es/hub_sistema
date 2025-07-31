@@ -8,8 +8,11 @@ import { useSearchParams } from "next/navigation";
 import { getAllClients } from "@/api/client/client.api";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Button from "@/components/Buttons/Button";
+import ModalActiveClient from "@/components/Modals/ClientModals/ModalActiveClient";
 import ModalCreateClient from "@/components/Modals/ClientModals/ModalCreateClient";
+import ModalDisableClient from "@/components/Modals/ClientModals/ModalDisableClient";
 import ModalEditClient from "@/components/Modals/ClientModals/ModalEditClient";
+import ModalSearchClient from "@/components/Modals/ClientModals/ModalSearchClient";
 import PageTransition from "@/components/PageTransition/PageTransition";
 import Pagination from "@/components/Pagination/Pagination";
 import ClientTable from "@/components/Tables/ClientTable";
@@ -35,6 +38,9 @@ const ClientPage = () => {
       telefone: searchParams.get("telefone") || undefined,
       dataNascimento: searchParams.get("dataNascimento") || undefined,
       status: searchParams.get("status") as StatusClient | undefined,
+      planoId: searchParams.get("planoId")
+        ? Number(searchParams.get("planoId"))
+        : undefined,
     }),
     [searchParams]
   );
@@ -59,8 +65,9 @@ const ClientPage = () => {
   const objectVisualModals = {
     create: () => setModals("create"),
     edit: () => setModals("edit"),
-    delete: () => setModals("delete"),
+    active: () => setModals("active"),
     search: () => setModals("search"),
+    disable: () => setModals("disable"),
   };
 
   const onOpenModal = (id: number, type: ModalClientType) => {
@@ -122,6 +129,37 @@ const ClientPage = () => {
               setModals("");
             }}
             client={clients?.data.find((client) => client.id === itemSelected)}
+          />
+        )}
+
+        {modals === "disable" && (
+          <ModalDisableClient
+            isOpen={modals === "disable"}
+            onClose={() => setModals("")}
+            onCloseAndGetClient={() => {
+              refetch();
+              setModals("");
+            }}
+            client={clients?.data.find((client) => client.id === itemSelected)}
+          />
+        )}
+
+        {modals === "active" && (
+          <ModalActiveClient
+            isOpen={modals === "active"}
+            onClose={() => setModals("")}
+            onCloseAndGetClient={() => {
+              refetch();
+              setModals("");
+            }}
+            client={clients?.data.find((client) => client.id === itemSelected)}
+          />
+        )}
+
+        {modals === "search" && (
+          <ModalSearchClient
+            isOpen={modals === "search"}
+            onClose={() => setModals("")}
           />
         )}
       </div>

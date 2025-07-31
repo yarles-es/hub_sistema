@@ -2,9 +2,9 @@ import { ChangeEvent, forwardRef } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 
-import Select from "./Select";
-
 import { getAllPlanos } from "@/api/plano/plano.api";
+
+import Select from "./Select";
 
 type Props = {
   value: string | "";

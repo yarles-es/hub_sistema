@@ -29,3 +29,11 @@ export const updateClient = async (data: UpdateClient) => {
   const { id, ...rest } = data;
   return await genericRequest<Client>("put", `cliente/update/${id}`, rest);
 };
+
+export const disableClient = async (id: number) => {
+  return await genericRequest<Client>("put", `cliente/disable/${id}`);
+};
+
+export const activeClient = async (id: number) => {
+  return await genericRequest<Client>("put", `cliente/active/${id}`);
+};

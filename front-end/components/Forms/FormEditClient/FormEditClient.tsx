@@ -107,6 +107,9 @@ const FormEditClient: React.FC<Props> = ({ onClose, client }) => {
                 render={({ field }) => (
                   <InputPhone
                     {...field}
+                    onChange={(e) =>
+                      field.onChange(e.target.value.replace(/\D/g, ""))
+                    }
                     label="Telefone:"
                     placeholder="(00) 00000-0000"
                     error={errors.telefone?.message}

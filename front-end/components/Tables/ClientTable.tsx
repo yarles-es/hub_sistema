@@ -142,12 +142,20 @@ const ClientTable: React.FC<Props> = ({ clients, onOpenItemSelect }) => {
               </td>
               <td className="py-4 px-4 text-center text-black dark:text-white">
                 <div className="flex space-x-3">
-                  {client.status === "ATIVO" && <ButtonActionUnlink />}
+                  {client.status === "ATIVO" && (
+                    <ButtonActionUnlink
+                      onClick={() => onOpenItemSelect(client.id, "disable")}
+                    />
+                  )}
                 </div>
               </td>
               <td className="py-4 px-4 text-center text-black dark:text-white">
                 <div className="flex space-x-3">
-                  {client.status === "DESATIVADO" && <ButtonActionAdd />}
+                  {client.status === "DESATIVADO" && (
+                    <ButtonActionAdd
+                      onClick={() => onOpenItemSelect(client.id, "active")}
+                    />
+                  )}
                 </div>
               </td>
             </tr>
