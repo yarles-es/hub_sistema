@@ -1,4 +1,8 @@
-export type StatusClient = "ATIVO" | "DESATIVADO" | "VENCIDO";
+export type StatusClient =
+  | "ATIVO"
+  | "DESATIVADO"
+  | "VENCIDO"
+  | "MENSALIDADE_AUSENTE";
 
 export type Client = {
   id: number;

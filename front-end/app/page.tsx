@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "RHM",
-  description: "Sistema de gerenciamento RHM",
+  title: "ACADEMIA",
+  description: "Sistema de gerenciamento Academia",
 };
 
 export default function Home() {

@@ -127,6 +127,8 @@ const ClientTable: React.FC<Props> = ({ clients, onOpenItemSelect }) => {
                   className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-xs font-medium ${
                     client.status === "ATIVO"
                       ? "bg-success text-success"
+                      : client.status === "MENSALIDADE_AUSENTE"
+                      ? "bg-warning text-warning"
                       : "bg-danger text-danger"
                   }`}
                 >
