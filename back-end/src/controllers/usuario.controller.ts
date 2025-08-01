@@ -2,9 +2,9 @@ import { NextFunction, Request, Response } from 'express';
 import { Service } from 'typedi';
 import { CreateUsuarioService } from '../services/usuario/create-usuario.service';
 import { EditStatusUsuarioService } from '../services/usuario/disable-usuario.service';
-import { FindAllUsuarioService } from '../services/usuario/find-all-usuario.service';
-import { FindUsuarioByEmailService } from '../services/usuario/find-usuario-by-email.service';
-import { FindUsuarioByIdService } from '../services/usuario/find-usuario-by-id.service';
+import { GetAllUsuarioService } from '../services/usuario/get-all-usuario.service';
+import { GetUsuarioByEmailService } from '../services/usuario/get-usuario-by-email.service';
+import { GetUsuarioByIdService } from '../services/usuario/get-usuario-by-id.service';
 import { UpdateUsuarioService } from '../services/usuario/update-usuario.service';
 import { CreateUsuario, UpdateUsuario } from '../types/usuario.types';
 
@@ -12,11 +12,11 @@ import { CreateUsuario, UpdateUsuario } from '../types/usuario.types';
 export class UsuarioController {
   constructor(
     private readonly createUsuarioService: CreateUsuarioService,
-    private readonly findUsuarioByIdService: FindUsuarioByIdService,
-    private readonly findUsuarioByEmailService: FindUsuarioByEmailService,
+    private readonly getUsuarioByIdService: GetUsuarioByIdService,
+    private readonly getUsuarioByEmailService: GetUsuarioByEmailService,
     private readonly updateUsuarioService: UpdateUsuarioService,
     private readonly editStatusUsuarioService: EditStatusUsuarioService,
-    private readonly findAllUsuarioService: FindAllUsuarioService,
+    private readonly getAllUsuarioService: GetAllUsuarioService,
   ) {}
 
   async create(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -30,7 +30,7 @@ export class UsuarioController {
 
   async getAll(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const usuarios = await this.findAllUsuarioService.execute();
+      const usuarios = await this.getAllUsuarioService.execute();
       res.status(200).json(usuarios);
     } catch (error) {
       next(error);
@@ -39,7 +39,7 @@ export class UsuarioController {
 
   async getById(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const usuario = await this.findUsuarioByIdService.execute(Number(req.params.id));
+      const usuario = await this.getUsuarioByIdService.execute(Number(req.params.id));
       res.status(200).json(usuario);
     } catch (error) {
       next(error);
@@ -48,7 +48,7 @@ export class UsuarioController {
 
   async getByEmail(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const usuario = await this.findUsuarioByEmailService.execute(req.params.email as string);
+      const usuario = await this.getUsuarioByEmailService.execute(req.params.email as string);
       res.status(200).json(usuario);
     } catch (error) {
       next(error);

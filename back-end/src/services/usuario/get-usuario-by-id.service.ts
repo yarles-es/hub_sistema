@@ -5,7 +5,7 @@ import { UsuarioResponse } from '../../types/usuario.types';
 import { UsuarioService } from './@usuario.service';
 
 @Service()
-export class FindUsuarioByIdService {
+export class GetUsuarioByIdService {
   constructor(private readonly usuarioService: UsuarioService) {}
 
   async execute(id: number): Promise<UsuarioResponse> {

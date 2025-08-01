@@ -1,7 +1,12 @@
 import { Mensalidade, StatusMensalidade } from '@prisma/client';
 import { Service } from 'typedi';
 import { MensalidadeModel } from '../../models/mensalidade.model';
-import { CreateMensalidade, UpdateMensalidade } from '../../types/mensalidade.types';
+import {
+  CreateMensalidade,
+  MensalidadeFilter,
+  MensalidadeResponseGetAll,
+  UpdateMensalidade,
+} from '../../types/mensalidade.types';
 
 @Service()
 export class MensalidadeService {
@@ -32,5 +37,13 @@ export class MensalidadeService {
 
   public async deleteMensalidade(id: number): Promise<Mensalidade> {
     return await this.mensalidadeModel.delete(id);
+  }
+
+  public async findAllMensalidades(
+    page: number,
+    limit: number,
+    filter?: MensalidadeFilter,
+  ): Promise<MensalidadeResponseGetAll> {
+    return await this.mensalidadeModel.findAll(page, limit, filter);
   }
 }

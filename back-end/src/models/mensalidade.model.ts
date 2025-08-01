@@ -1,6 +1,11 @@
-import { Mensalidade, PrismaClient, StatusMensalidade } from '@prisma/client';
+import { Mensalidade, Prisma, PrismaClient, StatusMensalidade } from '@prisma/client';
 import { Service } from 'typedi';
-import { CreateMensalidade, UpdateMensalidade } from '../types/mensalidade.types';
+import {
+  CreateMensalidade,
+  MensalidadeFilter,
+  MensalidadeResponseGetAll,
+  UpdateMensalidade,
+} from '../types/mensalidade.types';
 
 @Service()
 export class MensalidadeModel {
@@ -47,5 +52,60 @@ export class MensalidadeModel {
     return this.prisma.mensalidade.delete({
       where: { id },
     });
+  }
+
+  public async findAll(
+    page: number,
+    limit: number,
+    filter?: MensalidadeFilter,
+  ): Promise<MensalidadeResponseGetAll> {
+    const where: Prisma.MensalidadeWhereInput = {};
+
+    if (filter?.initialDate) {
+      where.vencimento = { gte: filter.initialDate };
+    }
+
+    if (filter?.finalDate) {
+      where.vencimento = { lte: filter.finalDate };
+    }
+
+    if (filter?.status && filter.status.length > 0) {
+      where.status = { in: filter.status };
+    }
+
+    if (filter?.clienteId) {
+      where.clienteId = filter.clienteId;
+    }
+
+    if (filter?.formaPagamento && filter.formaPagamento.length > 0) {
+      where.formaPagamento = { in: filter.formaPagamento };
+    }
+
+    const [data, total] = await Promise.all([
+      this.prisma.mensalidade.findMany({
+        where,
+        skip: (page - 1) * limit,
+        take: limit,
+        orderBy: {
+          vencimento: 'desc',
+        },
+        include: {
+          cliente: {
+            select: {
+              nome: true,
+              email: true,
+            },
+          },
+        },
+      }),
+      this.prisma.mensalidade.count({ where }),
+    ]);
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+    };
   }
 }

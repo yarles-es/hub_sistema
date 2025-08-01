@@ -5,7 +5,7 @@ import { NotFoundError } from '../../errors/NotFoundError';
 import { MensalidadeService } from './@mensalidade.service';
 
 @Service()
-export class FindMensalidadeByIdService {
+export class GetMensalidadeByIdService {
   constructor(private readonly mensalidadeService: MensalidadeService) {}
 
   public async execute(id: number): Promise<Mensalidade> {

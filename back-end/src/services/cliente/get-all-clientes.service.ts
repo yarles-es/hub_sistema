@@ -25,6 +25,8 @@ export class GetAllClientesService {
         status = 'DESATIVADO';
       } else if (pendente) {
         status = this.isDataNoPassado(pendente.vencimento) ? 'VENCIDO' : 'ATIVO';
+      } else {
+        status = 'MENSALIDADE_AUSENTE';
       }
 
       return {

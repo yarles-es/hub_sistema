@@ -4,7 +4,7 @@ import { UsuarioResponse } from '../../types/usuario.types';
 import { UsuarioService } from './@usuario.service';
 
 @Service()
-export class FindAllUsuarioService {
+export class GetAllUsuarioService {
   private usuarioService: UsuarioService;
 
   constructor() {

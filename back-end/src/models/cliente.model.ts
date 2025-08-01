@@ -83,12 +83,15 @@ export class ClienteModel {
       where.planoId = filter.planoId;
     }
 
-    const whereMensalidade: any = {};
-    if (dates.dataInicialMensalidade) {
-      whereMensalidade.vencimento = { gte: dates.dataInicialMensalidade };
-    }
-    if (dates.dataFinalMensalidade) {
-      whereMensalidade.vencimento = { lte: dates.dataFinalMensalidade };
+    if (dates.dataInicialMensalidade || dates.dataFinalMensalidade) {
+      where.Mensalidade = {
+        some: {
+          vencimento: {
+            ...(dates.dataInicialMensalidade && { gte: dates.dataInicialMensalidade }),
+            ...(dates.dataFinalMensalidade && { lte: dates.dataFinalMensalidade }),
+          },
+        },
+      };
     }
 
     const [data, total] = await Promise.all([
@@ -99,7 +102,10 @@ export class ClienteModel {
         orderBy: { id: 'desc' },
         include: {
           Mensalidade: {
-            where: whereMensalidade,
+            where: {
+              ...(dates.dataInicialMensalidade && { vencimento: { gte: dates.dataInicialMensalidade } }),
+              ...(dates.dataFinalMensalidade && { vencimento: { lte: dates.dataFinalMensalidade } }),
+            },
             orderBy: { vencimento: 'asc' },
           },
         },

@@ -1,4 +1,4 @@
-import { FormPagamento } from '@prisma/client';
+import { FormPagamento, StatusMensalidade } from '@prisma/client';
 
 export const safeParseInt = (value: any): number | undefined => {
   const parsed = parseInt(value, 10);
@@ -17,6 +17,19 @@ export const safeParseFormPagamentoArray = (value: any): FormPagamento[] => {
     );
   } else if (typeof value === 'string') {
     return Object.values(FormPagamento).includes(value as FormPagamento) ? [value as FormPagamento] : [];
+  }
+  return [];
+};
+
+export const safeParseStatusMensalidadeArray = (value: any): StatusMensalidade[] => {
+  if (Array.isArray(value)) {
+    return value.filter((status): status is StatusMensalidade =>
+      Object.values(StatusMensalidade).includes(status as StatusMensalidade),
+    );
+  } else if (typeof value === 'string') {
+    return Object.values(StatusMensalidade).includes(value as StatusMensalidade)
+      ? [value as StatusMensalidade]
+      : [];
   }
   return [];
 };

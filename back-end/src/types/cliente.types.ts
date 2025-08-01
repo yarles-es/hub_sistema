@@ -20,7 +20,7 @@ export type UpdateClientRequest = Partial<
 
 export type UpdateClient = Partial<Omit<Cliente, 'id' | 'createdAt' | 'updatedAt'>>;
 
-export type StatusCliente = 'ATIVO' | 'DESATIVADO' | 'VENCIDO';
+export type StatusCliente = 'ATIVO' | 'DESATIVADO' | 'VENCIDO' | 'MENSALIDADE_AUSENTE';
 
 export type ClienteFilter = {
   nome?: string;

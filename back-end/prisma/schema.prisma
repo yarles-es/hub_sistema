@@ -17,6 +17,7 @@ enum StatusMensalidade {
   PENDENTE
   PAGO
   CANCELADO
+  ATRASADO
 }
 
 enum FormPagamento {
@@ -83,6 +84,8 @@ model Mensalidade {
   vencimento     DateTime
   status         StatusMensalidade @default(PENDENTE)
   formaPagamento FormPagamento?    @map("forma_pagamento")
+  valorPago      Float?            @map("valor_pago")
+  dataPagamento  DateTime?         @map("data_pagamento")
   createdAt      DateTime          @default(now()) @map("created_at")
   updatedAt      DateTime          @updatedAt @map("updated_at")
 

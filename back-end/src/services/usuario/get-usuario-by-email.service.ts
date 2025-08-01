@@ -5,7 +5,7 @@ import { validateEmail } from '../../utils/validate-email';
 import { UsuarioService } from './@usuario.service';
 
 @Service()
-export class FindUsuarioByEmailService {
+export class GetUsuarioByEmailService {
   constructor(private readonly usuarioService: UsuarioService) {}
 
   public async execute(email: string): Promise<UsuarioResponse> {

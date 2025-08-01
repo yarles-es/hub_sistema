@@ -3,7 +3,7 @@ import { Service } from 'typedi';
 import { RegistroAcessoService } from './@registro-acesso.service';
 
 @Service()
-export class FindAllRegistroAcessoService {
+export class GetAllRegistroAcessoService {
   constructor(private readonly registroAcessoService: RegistroAcessoService) {}
 
   public async execute(): Promise<RegistroAcesso[]> {

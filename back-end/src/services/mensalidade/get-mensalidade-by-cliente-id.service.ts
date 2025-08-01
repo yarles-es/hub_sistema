@@ -6,7 +6,7 @@ import { ClienteService } from '../cliente/@cliente.service';
 import { MensalidadeService } from './@mensalidade.service';
 
 @Service()
-export class FindMensalidadeByClienteIdService {
+export class GetMensalidadeByClienteIdService {
   constructor(
     private readonly mensalidadeService: MensalidadeService,
     private readonly clienteService: ClienteService,
