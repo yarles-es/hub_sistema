@@ -2,6 +2,7 @@ import { Cliente, PrismaClient } from '@prisma/client';
 import { Service } from 'typedi';
 import {
   ClienteFilter,
+  ClienteGetAllWithMensalidade,
   ClientResponseGetAllModel,
   CreateCliente,
   UpdateClient,
@@ -42,6 +43,23 @@ export class ClienteModel {
   public async delete(id: number): Promise<Cliente> {
     return this.prisma.cliente.delete({
       where: { id },
+    });
+  }
+
+  public async findAllByName(name: string): Promise<ClienteGetAllWithMensalidade[]> {
+    return this.prisma.cliente.findMany({
+      where: { nome: { contains: name, mode: 'insensitive' } },
+      orderBy: { id: 'desc' },
+      include: {
+        Mensalidade: true,
+        plano: {
+          select: {
+            id: true,
+            nome: true,
+            valor: true,
+          },
+        },
+      },
     });
   }
 
@@ -107,6 +125,13 @@ export class ClienteModel {
               ...(dates.dataFinalMensalidade && { vencimento: { lte: dates.dataFinalMensalidade } }),
             },
             orderBy: { vencimento: 'asc' },
+          },
+          plano: {
+            select: {
+              id: true,
+              nome: true,
+              valor: true,
+            },
           },
         },
       }),

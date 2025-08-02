@@ -26,7 +26,12 @@ export class GetAllMensalidadesService {
     mensalidade: MensalidadeResponseGetAll['data'][number],
   ): MensalidadeResponseGetAll['data'][number] {
     const currentDate = new Date();
-    if (mensalidade.vencimento < currentDate && mensalidade.status !== 'PAGO') {
+    currentDate.setHours(0, 0, 0, 0);
+
+    const vencimentoDate = new Date(mensalidade.vencimento);
+    vencimentoDate.setHours(0, 0, 0, 0);
+
+    if (vencimentoDate < currentDate && mensalidade.status !== 'PAGO' && mensalidade.status !== 'CANCELADO') {
       return {
         ...mensalidade,
         status: StatusMensalidade.ATRASADO,

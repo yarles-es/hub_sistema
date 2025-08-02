@@ -3,6 +3,7 @@ import { Service } from 'typedi';
 import { ClienteModel } from '../../models/cliente.model';
 import {
   ClienteFilter,
+  ClienteGetAllWithMensalidade,
   ClientResponseGetAllModel,
   CreateCliente,
   UpdateClient,
@@ -46,5 +47,9 @@ export class ClienteService {
     filter?: ClienteFilter,
   ): Promise<ClientResponseGetAllModel> {
     return this.clienteModel.findAll(page, limit, dates, filter);
+  }
+
+  async findAllClientesByName(name: string): Promise<ClienteGetAllWithMensalidade[]> {
+    return this.clienteModel.findAllByName(name);
   }
 }

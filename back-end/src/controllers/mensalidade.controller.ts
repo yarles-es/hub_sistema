@@ -73,6 +73,7 @@ export class MensalidadeController {
   async getAll(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { numberPage, limit, clienteId, initialDate, finalDate, status, formaPagamento } = req.query;
+      console.log(req.query);
       const page = safeParseInt(numberPage) || 1;
       const limitNumber = safeParseInt(limit) || 30;
       const clienteIdQuery = safeParseInt(clienteId);

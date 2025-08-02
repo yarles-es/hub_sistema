@@ -1,23 +1,20 @@
 import { Service } from 'typedi';
-
-import { ClienteFilter, ClienteResponseGetAll, StatusCliente } from '../../types/cliente.types';
 import { ClienteService } from './@cliente.service';
+import { Cliente } from '@prisma/client';
+import { ClienteGetAll, ClienteGetAllWithMensalidade, StatusCliente } from '../../types/cliente.types';
 
 @Service()
-export class GetAllClientesService {
+export class GetAllClientesByNameService {
   constructor(private readonly clienteService: ClienteService) {}
 
-  async execute(page: number, limit: number, filter?: ClienteFilter): Promise<ClienteResponseGetAll> {
-    const dates = {
-      dataInicialMensalidade: filter?.status === 'ATIVO' ? new Date() : undefined,
-      dataFinalMensalidade: filter?.status === 'VENCIDO' ? new Date() : undefined,
-    };
+  async execute(name: string): Promise<ClienteGetAll[]> {
+    if (!name || name.trim() === '' || name.length < 3) {
+      return [];
+    }
 
-    delete filter?.status;
+    const clientes = await this.clienteService.findAllClientesByName(name.trim());
 
-    const response = await this.clienteService.getAllClientes(page, limit, dates, filter);
-
-    const clientesFormatted = response.data.map((cliente) => {
+    const clientesFormatted = clientes.map((cliente) => {
       const { Mensalidade, plano, ...rest } = cliente;
       const pendente = Mensalidade.find((m) => m.status === 'PENDENTE');
       let status: StatusCliente = 'ATIVO';
@@ -37,12 +34,7 @@ export class GetAllClientesService {
       };
     });
 
-    return {
-      data: clientesFormatted,
-      total: response.total,
-      page: response.page,
-      limit: response.limit,
-    };
+    return clientesFormatted;
   }
 
   private isDataNoPassado(data: Date): boolean {

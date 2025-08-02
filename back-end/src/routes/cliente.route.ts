@@ -12,6 +12,7 @@ router
   .put('/update/:id', clienteController.update.bind(clienteController))
   .get('/get-all', clienteController.getAll.bind(clienteController))
   .put('/disable/:id', clienteController.disable.bind(clienteController))
-  .put('/active/:id', clienteController.active.bind(clienteController));
+  .put('/active/:id', clienteController.active.bind(clienteController))
+  .get('/get-by-name/:name', clienteController.getByName.bind(clienteController));
 
 export const clienteRoute = router;

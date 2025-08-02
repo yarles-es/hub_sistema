@@ -9,6 +9,7 @@ import { GetClienteByIdService } from '../services/cliente/get-cliente-by-id.ser
 import { UpdateClienteService } from '../services/cliente/update-cliente.service';
 import { CreateClienteRequest, StatusCliente } from '../types/cliente.types';
 import { safeParseDate, safeParseInt, safeParseString } from '../utils/safeTypes';
+import { GetAllClientesByNameService } from '../services/cliente/get-all-clientes-by-name.service';
 
 @Service()
 export class ClienteController {
@@ -20,6 +21,7 @@ export class ClienteController {
     private readonly getAllClientesService: GetAllClientesService,
     private readonly disableClienteService: DisableClienteService,
     private readonly activeClienteService: ActiveClienteService,
+    private readonly getAllClientesByNameService: GetAllClientesByNameService,
   ) {}
 
   async create(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -56,6 +58,16 @@ export class ClienteController {
         req.body as Partial<CreateClienteRequest>,
       );
       res.status(200).json(updatedCliente);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getByName(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const name = req.params.name as string;
+      const clientes = await this.getAllClientesByNameService.execute(name);
+      res.status(200).json(clientes);
     } catch (error) {
       next(error);
     }

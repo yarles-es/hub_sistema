@@ -1,4 +1,4 @@
-import { Cliente, Mensalidade } from '@prisma/client';
+import { Cliente, Mensalidade, Plano } from '@prisma/client';
 
 export type CreateClienteRequest = Omit<
   Cliente,
@@ -32,17 +32,22 @@ export type ClienteFilter = {
   planoId?: number;
 };
 
+export type ClienteGetAll = Cliente & { status: StatusCliente; nomePlano: string; valorPlano: number };
+
+export type ClienteGetAllWithMensalidade = Cliente & {
+  Mensalidade: Mensalidade[];
+  plano: Pick<Plano, 'id' | 'nome' | 'valor'>;
+};
+
 export type ClienteResponseGetAll = {
-  data: (Cliente & { status: StatusCliente })[];
+  data: ClienteGetAll[];
   total: number;
   page: number;
   limit: number;
 };
 
 export type ClientResponseGetAllModel = {
-  data: (Cliente & {
-    Mensalidade: Mensalidade[];
-  })[];
+  data: ClienteGetAllWithMensalidade[];
   total: number;
   page: number;
   limit: number;
