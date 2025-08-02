@@ -8,9 +8,11 @@ import { useSearchParams } from "next/navigation";
 import { getAllMonthlyFees } from "@/api/monthlyFee/monthlyFee.api";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Button from "@/components/Buttons/Button";
+import ModalSearchMonthlyFee from "@/components/Modals/MonthlyFeeModals/ModalSearchMonthlyFee";
 import PageTransition from "@/components/PageTransition/PageTransition";
 import Pagination from "@/components/Pagination/Pagination";
 import HeaderTable from "@/components/Tables/HeaderTable/HeaderTable";
+import MonthlyFeeTable from "@/components/Tables/MonthlyFeeTable";
 import useAlert from "@/hooks/useAlert";
 import { LIMIT_WITH_PAGE, NUMBER_PAGE } from "@/schemas/paginationSchemas";
 import { PaymentType } from "@/types/Daily";
@@ -47,13 +49,12 @@ const MonthlyFeePage = () => {
         PaymentType.CARTAO,
         PaymentType.GRATIS,
       ],
+
       status: searchParams
         .getAll("status")
-        .map((value) => value as MonthlyFeeStatus) || [
-        MonthlyFeeStatus.PAGO,
-        MonthlyFeeStatus.PENDENTE,
-        MonthlyFeeStatus.CANCELADO,
-      ],
+        .map((value) => value as MonthlyFeeStatus)
+        ? [MonthlyFeeStatus.PAGO, MonthlyFeeStatus.PENDENTE]
+        : [],
     }),
     [searchParams]
   );
@@ -84,8 +85,6 @@ const MonthlyFeePage = () => {
     setItemSelected(id);
   };
 
-  console.log("monthlyFees", monthlyFees);
-
   return (
     <PageTransition>
       <div>
@@ -103,7 +102,10 @@ const MonthlyFeePage = () => {
         {monthlyFees?.data && monthlyFees.data.length > 0 ? (
           <div className="mt-1.5 xl:mt-3">
             <PageTransition>
-              {/* Tabela aqui*/}
+              <MonthlyFeeTable
+                MonthlyFees={monthlyFees.data}
+                onOpenItemSelect={onOpenModal}
+              />
               <Pagination
                 limit={monthlyFees.limit}
                 page={monthlyFees.page}
@@ -112,6 +114,13 @@ const MonthlyFeePage = () => {
             </PageTransition>
           </div>
         ) : null}
+
+        {modals === "search" && (
+          <ModalSearchMonthlyFee
+            isOpen={modals === "search"}
+            onClose={() => setModals("")}
+          />
+        )}
       </div>
     </PageTransition>
   );

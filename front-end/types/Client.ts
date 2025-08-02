@@ -16,6 +16,8 @@ export type Client = {
   planoId: number;
   createdAt: Date;
   updatedAt: Date;
+  nomePlano: string;
+  valorPlano: number;
 };
 
 export type GetAllClient = {

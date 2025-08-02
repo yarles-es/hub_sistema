@@ -37,3 +37,7 @@ export const disableClient = async (id: number) => {
 export const activeClient = async (id: number) => {
   return await genericRequest<Client>("put", `cliente/active/${id}`);
 };
+
+export const getClientByName = async (name: string) => {
+  return await genericRequest<Client[]>("get", `cliente/get-by-name/${name}`);
+};

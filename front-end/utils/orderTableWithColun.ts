@@ -25,6 +25,12 @@ const sortTableByTypeString = (a: string, b: string) => {
 const sortTableByDate = (a: string, b: string) => {
   const dateA = new Date(a);
   const dateB = new Date(b);
+
+  if (isNaN(dateA.getTime()) || isNaN(dateB.getTime())) {
+    // Trata datas inválidas (pode ordenar para o final, por exemplo)
+    return 0;
+  }
+
   return dateA.getTime() - dateB.getTime();
 };
 
@@ -53,7 +59,8 @@ function sortTableByColumn<T>({
       const valueA = setValueBySpecificKey(clickedKey, a);
       const valueB = setValueBySpecificKey(clickedKey, b);
       if (title.type === "string") return sortTableByTypeString(valueA, valueB);
-      if (title.type === "number") return sortTableByTypeNumber(Number(valueA), Number(valueB));
+      if (title.type === "number")
+        return sortTableByTypeNumber(Number(valueA), Number(valueB));
       if (title.type === "boolean") return sortTableByTypeBoo(valueA, valueB);
       if (title.type === "date") return sortTableByDate(valueA, valueB);
       return 0;
