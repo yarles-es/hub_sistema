@@ -12,6 +12,7 @@ import {
   safeParseInt,
   safeParseStatusMensalidadeArray,
 } from '../utils/safeTypes';
+import { CancelMensalidadeService } from '../services/mensalidade/cancel-mensalidade.service';
 
 @Service()
 export class MensalidadeController {
@@ -22,6 +23,7 @@ export class MensalidadeController {
     private readonly deleteMensalidadeService: DeleteMensalidadeService,
     private readonly payMensalidadeService: PayMensalidadeService,
     private readonly getAllMensalidadesService: GetAllMensalidadesService,
+    private readonly cancelMensalidadeService: CancelMensalidadeService,
   ) {}
 
   async create(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -70,10 +72,18 @@ export class MensalidadeController {
     }
   }
 
+  async cancel(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      await this.cancelMensalidadeService.execute(Number(req.params.id));
+      res.status(204).send();
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async getAll(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { numberPage, limit, clienteId, initialDate, finalDate, status, formaPagamento } = req.query;
-      console.log(req.query);
       const page = safeParseInt(numberPage) || 1;
       const limitNumber = safeParseInt(limit) || 30;
       const clienteIdQuery = safeParseInt(clienteId);

@@ -12,6 +12,7 @@ router
   .post('/create', mensalidadeController.create.bind(mensalidadeController))
   .put('/pay/:id', mensalidadeController.payMensalidade.bind(mensalidadeController))
   .delete('/delete/:id', mensalidadeController.delete.bind(mensalidadeController))
-  .get('/get-all', mensalidadeController.getAll.bind(mensalidadeController));
+  .get('/get-all', mensalidadeController.getAll.bind(mensalidadeController))
+  .put('/cancel/:id', mensalidadeController.cancel.bind(mensalidadeController));
 
 export const mensalidadeRoute = router;
