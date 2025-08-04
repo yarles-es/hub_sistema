@@ -3,13 +3,12 @@ import ButtonActionPayment from "../Buttons/ButtonActionPayment";
 
 import useOrderTable from "@/hooks/useOrderTable";
 import { ModalMonthlyFeeType } from "@/types/ModalTypes";
+import { getAllMonthlyFeesResponse } from "@/types/MonthlyFee";
 import { Title } from "@/types/Tables";
 import formatStringDate from "@/utils/formatStringDate";
 import { isNotNull } from "@/utils/tableGuardType";
 
 import DefaultTableContainer from "./DefaultTableContainer";
-
-import { getAllMonthlyFeesResponse } from "@/types/MonthlyFee";
 
 type Props = {
   MonthlyFees: getAllMonthlyFeesResponse["data"];
@@ -145,17 +144,25 @@ const MonthlyFeeTable: React.FC<Props> = ({
               </td>
               <td className="py-4 px-4 text-black dark:text-white">
                 <div className="flex items-center space-x-3.5">
-                  <ButtonActionDelete
-                    onClick={() => onOpenItemSelect(monthlyFee.id, "cancel")}
-                  />
+                  {monthlyFee.status !== "CANCELADO" &&
+                    monthlyFee.status !== "PAGO" && (
+                      <ButtonActionDelete
+                        onClick={() =>
+                          onOpenItemSelect(monthlyFee.id, "cancel")
+                        }
+                      />
+                    )}
                 </div>
               </td>
 
               <td className="py-4 px-4 text-black dark:text-white">
                 <div className="flex items-center space-x-3.5">
-                  <ButtonActionPayment
-                    onClick={() => onOpenItemSelect(monthlyFee.id, "pay")}
-                  />
+                  {monthlyFee.status !== "CANCELADO" &&
+                    monthlyFee.status !== "PAGO" && (
+                      <ButtonActionPayment
+                        onClick={() => onOpenItemSelect(monthlyFee.id, "pay")}
+                      />
+                    )}
                 </div>
               </td>
             </tr>

@@ -34,17 +34,8 @@ const FormSearchMonthlyFee = ({ onClose }: Props) => {
         initialDate: "",
         finalDate: "",
         clientId: undefined,
-        formaPagamento: [
-          PaymentType.DINHEIRO,
-          PaymentType.PIX,
-          PaymentType.CARTAO,
-          PaymentType.GRATIS,
-        ],
-        status: [
-          MonthlyFeeStatus.PAGO,
-          MonthlyFeeStatus.PENDENTE,
-          MonthlyFeeStatus.CANCELADO,
-        ],
+        formaPagamento: [],
+        status: [],
       },
     });
 
@@ -56,7 +47,7 @@ const FormSearchMonthlyFee = ({ onClose }: Props) => {
       pathName,
       searchParams,
     });
-    console.log("URL", URL);
+
     const lastURL = `${pathName}?${searchParams.toString()}`;
 
     if (URL !== lastURL) {

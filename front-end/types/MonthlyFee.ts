@@ -28,8 +28,15 @@ export type MonthlyFee = {
   dataPagamento: Date | null;
 };
 
+export type MonthlyFeeWithClient = MonthlyFee & {
+  cliente: {
+    nome: string;
+    email: string;
+  };
+};
+
 export type getAllMonthlyFeesResponse = {
-  data: (MonthlyFee & { cliente: { nome: string; email: string } })[];
+  data: MonthlyFeeWithClient[];
   page: number;
   limit: number;
   total: number;

@@ -8,6 +8,7 @@ import { useSearchParams } from "next/navigation";
 import { getAllMonthlyFees } from "@/api/monthlyFee/monthlyFee.api";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Button from "@/components/Buttons/Button";
+import ModalCancelMonthlyFee from "@/components/Modals/MonthlyFeeModals/ModalCancelMonthlyFee";
 import ModalSearchMonthlyFee from "@/components/Modals/MonthlyFeeModals/ModalSearchMonthlyFee";
 import PageTransition from "@/components/PageTransition/PageTransition";
 import Pagination from "@/components/Pagination/Pagination";
@@ -52,9 +53,10 @@ const MonthlyFeePage = () => {
 
       status: searchParams
         .getAll("status")
-        .map((value) => value as MonthlyFeeStatus)
-        ? [MonthlyFeeStatus.PAGO, MonthlyFeeStatus.PENDENTE]
-        : [],
+        .map((value) => value as MonthlyFeeStatus) || [
+        MonthlyFeeStatus.PAGO,
+        MonthlyFeeStatus.PENDENTE,
+      ],
     }),
     [searchParams]
   );
@@ -119,6 +121,21 @@ const MonthlyFeePage = () => {
           <ModalSearchMonthlyFee
             isOpen={modals === "search"}
             onClose={() => setModals("")}
+          />
+        )}
+
+        {modals === "cancel" && (
+          <ModalCancelMonthlyFee
+            isOpen={modals === "cancel"}
+            onClose={() => setModals("")}
+            onCloseAndGetMonthlyFee={() => {
+              setModals("");
+              setItemSelected(0);
+              refetch();
+            }}
+            monthlyFee={monthlyFees?.data.find(
+              (item) => item.id === itemSelected
+            )}
           />
         )}
       </div>

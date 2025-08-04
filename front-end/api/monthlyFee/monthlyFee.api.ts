@@ -13,3 +13,7 @@ export const getAllMonthlyFees = async (data: GetAllMonthlyFees) => {
     `mensalidade/get-all?${queryString}`
   );
 };
+
+export const cancelMonthlyFee = async (id: number) => {
+  return await genericRequest<void>("put", `mensalidade/cancel/${id}`);
+};
