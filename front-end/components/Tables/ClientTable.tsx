@@ -1,7 +1,13 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import ButtonActionAdd from "../Buttons/ButtonActionAdd";
 import ButtonActionEdit from "../Buttons/ButtonActionEdit";
+import ButtonActionNew from "../Buttons/ButtonActionNew";
+import ButtonActionReverse from "../Buttons/ButtonActionReverse";
 import ButtonActionUnlink from "../Buttons/ButtonactionUnlink";
 
+import { createMonthlyFee } from "@/api/monthlyFee/monthlyFee.api";
+import useAlert from "@/hooks/useAlert";
 import useOrderTable from "@/hooks/useOrderTable";
 import useViewPermission from "@/hooks/useViewPermission";
 import { Client } from "@/types/Client";
@@ -17,6 +23,8 @@ type Props = {
 };
 
 const ClientTable: React.FC<Props> = ({ clients, onOpenItemSelect }) => {
+  const alert = useAlert();
+  const queryClient = useQueryClient();
   const administration = useViewPermission();
 
   const titles: Array<Title | null> = [
@@ -31,6 +39,12 @@ const ClientTable: React.FC<Props> = ({ clients, onOpenItemSelect }) => {
       order: true,
     },
     { key: "status", label: "Status", type: "boolean", order: true },
+    {
+      key: "monthlyFee",
+      label: "Nova Mensalidade",
+      type: "actions",
+      order: false,
+    },
 
     { key: "edit", label: "Editar", type: "actions", order: false },
     {
@@ -59,6 +73,21 @@ const ClientTable: React.FC<Props> = ({ clients, onOpenItemSelect }) => {
       return;
     }
     return () => handleOrder(title.key);
+  };
+
+  const { mutate } = useMutation({
+    mutationFn: async (clientId: number) => await createMonthlyFee(clientId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["getAllClients"] });
+      alert("Mensalidade criada com sucesso!", "success");
+    },
+    onError: (error: Error) => {
+      alert(error.message, "error");
+    },
+  });
+
+  const onCreateMonthlyFee = (clientId: number) => {
+    mutate(clientId);
   };
 
   return (
@@ -134,6 +163,15 @@ const ClientTable: React.FC<Props> = ({ clients, onOpenItemSelect }) => {
                 >
                   {client.status}
                 </p>
+              </td>
+              <td className="py-4 px-4 text-center text-black dark:text-white">
+                {client.status === "MENSALIDADE_AUSENTE" && (
+                  <div className="flex space-x-3">
+                    <ButtonActionNew
+                      onClick={() => onCreateMonthlyFee(client.id)}
+                    />
+                  </div>
+                )}
               </td>
               <td className="py-4 px-4 text-center text-black dark:text-white">
                 <div className="flex space-x-3">

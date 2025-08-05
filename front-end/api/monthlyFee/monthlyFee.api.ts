@@ -17,3 +17,7 @@ export const getAllMonthlyFees = async (data: GetAllMonthlyFees) => {
 export const cancelMonthlyFee = async (id: number) => {
   return await genericRequest<void>("put", `mensalidade/cancel/${id}`);
 };
+
+export const createMonthlyFee = async (clientId: number) => {
+  return await genericRequest<void>("post", `mensalidade/create/${clientId}`);
+};
