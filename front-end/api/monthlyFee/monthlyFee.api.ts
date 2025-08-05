@@ -3,6 +3,7 @@ import { genericRequest } from "../@genericRequest";
 import {
   GetAllMonthlyFees,
   getAllMonthlyFeesResponse,
+  PaymentMonthlyFee,
 } from "@/types/MonthlyFee";
 import { createFullUrlFromParamsBackEnd } from "@/utils/generateURLpaginateOrFilter";
 
@@ -20,4 +21,13 @@ export const cancelMonthlyFee = async (id: number) => {
 
 export const createMonthlyFee = async (clientId: number) => {
   return await genericRequest<void>("post", `mensalidade/create/${clientId}`);
+};
+
+export const payMonthlyFee = async (data: PaymentMonthlyFee) => {
+  const { id, ...rest } = {
+    ...data,
+    valorPago: data.valorPago ? parseFloat(data.valorPago) : null,
+  };
+
+  return await genericRequest<void>("put", `mensalidade/pay/${id}`, rest);
 };

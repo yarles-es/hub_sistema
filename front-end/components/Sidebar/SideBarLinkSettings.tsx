@@ -92,17 +92,6 @@ const SideBarLinkSettings: React.FC<SideBarLinkSettingsProps> = ({
                 pathname === "/settings/turnstile" && "text-white"
               } `}
             >
-              Catraca
-            </Link>
-          </li>
-          <li>
-            <Link
-              onClick={(e) => setSidebarOpen(!sidebarOpen)}
-              href="/settings/turnstile"
-              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${
-                pathname === "/settings/turnstile" && "text-white"
-              } `}
-            >
               Logs
             </Link>
           </li>

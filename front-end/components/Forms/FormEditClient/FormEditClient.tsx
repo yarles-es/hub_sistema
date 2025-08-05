@@ -30,6 +30,7 @@ const FormEditClient: React.FC<Props> = ({ onClose, client }) => {
           dataNascimento:
             new Date(client.dataNascimento).toISOString().split("T")[0] || "",
           planoId: client.planoId ?? undefined,
+          diaMensalidade: client.diaMensalidade ?? undefined,
         }
       : undefined,
   });
@@ -65,7 +66,7 @@ const FormEditClient: React.FC<Props> = ({ onClose, client }) => {
       <form onSubmit={handleSubmit(handleSubmitData)}>
         <div className="p-6.5">
           <div className="mb-4.5 flex gap-6 xl:flex-row">
-            <div className="w-full xl:w-1/2">
+            <div className="w-full xl:w-1/3">
               <Controller
                 control={control}
                 name="nome"
@@ -82,7 +83,7 @@ const FormEditClient: React.FC<Props> = ({ onClose, client }) => {
                 )}
               />
             </div>
-            <div className="w-full xl:w-1/2">
+            <div className="w-full xl:w-1/3">
               <Controller
                 control={control}
                 name="email"
@@ -93,6 +94,32 @@ const FormEditClient: React.FC<Props> = ({ onClose, client }) => {
                     label="Email:"
                     placeholder="Digite o email"
                     error={errors.email?.message}
+                  />
+                )}
+              />
+            </div>
+            <div className="w-full xl:w-1/3">
+              <Controller
+                control={control}
+                name="diaMensalidade"
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    type="number"
+                    label="Dia da Mensalidade:"
+                    placeholder="Digite o dia da mensalidade"
+                    error={errors.diaMensalidade?.message}
+                    min={1}
+                    max={31}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (
+                        value === "" ||
+                        (Number(value) >= 1 && Number(value) <= 31)
+                      ) {
+                        field.onChange(value);
+                      }
+                    }}
                   />
                 )}
               />

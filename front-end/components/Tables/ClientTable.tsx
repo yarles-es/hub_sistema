@@ -182,7 +182,8 @@ const ClientTable: React.FC<Props> = ({ clients, onOpenItemSelect }) => {
               </td>
               <td className="py-4 px-4 text-center text-black dark:text-white">
                 <div className="flex space-x-3">
-                  {client.status === "ATIVO" && (
+                  {(client.status === "ATIVO" ||
+                    client.status === "MENSALIDADE_AUSENTE") && (
                     <ButtonActionUnlink
                       onClick={() => onOpenItemSelect(client.id, "disable")}
                     />

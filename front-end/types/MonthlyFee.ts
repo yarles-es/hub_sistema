@@ -41,3 +41,9 @@ export type getAllMonthlyFeesResponse = {
   limit: number;
   total: number;
 };
+
+export type PaymentMonthlyFee = {
+  id: number;
+  valorPago: undefined | string;
+  formaPagamento: PaymentType;
+};

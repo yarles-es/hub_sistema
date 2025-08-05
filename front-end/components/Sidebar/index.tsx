@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import SideBarLinkClients from "./SideBarLinkClients";
 import SideBarLinkFinance from "./SideBarLinkFinance";
 import SidebarLinkGroup from "./SidebarLinkGroup";
+import SideBarLinkPlans from "./SideBarLinkPlans";
 import SideBarLinkSettings from "./SideBarLinkSettings";
 
 interface SidebarProps {
@@ -131,6 +132,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               </SidebarLinkGroup>
 
               <SideBarLinkClients />
+
+              <SideBarLinkPlans />
 
               <SidebarLinkGroup
                 activeCondition={

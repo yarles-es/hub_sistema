@@ -9,6 +9,7 @@ import { getAllMonthlyFees } from "@/api/monthlyFee/monthlyFee.api";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Button from "@/components/Buttons/Button";
 import ModalCancelMonthlyFee from "@/components/Modals/MonthlyFeeModals/ModalCancelMonthlyFee";
+import ModalPayMonthlyFee from "@/components/Modals/MonthlyFeeModals/ModalPayMonthlyFee";
 import ModalSearchMonthlyFee from "@/components/Modals/MonthlyFeeModals/ModalSearchMonthlyFee";
 import PageTransition from "@/components/PageTransition/PageTransition";
 import Pagination from "@/components/Pagination/Pagination";
@@ -127,6 +128,21 @@ const MonthlyFeePage = () => {
         {modals === "cancel" && (
           <ModalCancelMonthlyFee
             isOpen={modals === "cancel"}
+            onClose={() => setModals("")}
+            onCloseAndGetMonthlyFee={() => {
+              setModals("");
+              setItemSelected(0);
+              refetch();
+            }}
+            monthlyFee={monthlyFees?.data.find(
+              (item) => item.id === itemSelected
+            )}
+          />
+        )}
+
+        {modals === "pay" && (
+          <ModalPayMonthlyFee
+            isOpen={modals === "pay"}
             onClose={() => setModals("")}
             onCloseAndGetMonthlyFee={() => {
               setModals("");

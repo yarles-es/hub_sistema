@@ -1,6 +1,14 @@
 import { z } from "zod";
 
 const createClientSchema = z.object({
+  diaMensalidade: z
+    .string()
+    .optional()
+    .transform((val) => {
+      if (typeof val !== "string") return undefined;
+      const num = parseInt(val, 10);
+      return isNaN(num) ? undefined : num;
+    }),
   nome: z
     .string()
     .min(1, "Nome é obrigatório")

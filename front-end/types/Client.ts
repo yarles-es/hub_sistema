@@ -43,6 +43,7 @@ export type CreateClient = {
   telefone: string;
   dataNascimento: string;
   planoId: number;
+  diaMensalidade?: number;
 };
 
 export type UpdateClient = Partial<CreateClient> & {
