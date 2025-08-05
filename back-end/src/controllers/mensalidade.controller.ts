@@ -28,7 +28,9 @@ export class MensalidadeController {
 
   async create(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const mensalidade = await this.createMensalidadeService.execute({ clienteId: req.body.clienteId });
+      const mensalidade = await this.createMensalidadeService.execute({
+        clienteId: Number(req.params.clienteId),
+      });
       res.status(201).json(mensalidade);
     } catch (error) {
       next(error);
