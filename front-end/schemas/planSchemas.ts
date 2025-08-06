@@ -14,4 +14,8 @@ const createPlanSchema = z.object({
   ),
 });
 
-export { createPlanSchema };
+const updatePlanSchema = createPlanSchema.extend({
+  id: z.number().int().positive(),
+});
+
+export { createPlanSchema, updatePlanSchema };

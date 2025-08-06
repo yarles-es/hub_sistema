@@ -8,6 +8,7 @@ import { getAllPlanos } from "@/api/plano/plano.api";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Button from "@/components/Buttons/Button";
 import ModalCreatePlan from "@/components/Modals/PlanModals/ModalCreatePlan";
+import ModalEditPlan from "@/components/Modals/PlanModals/ModalEditPlan";
 import PageTransition from "@/components/PageTransition/PageTransition";
 import HeaderTable from "@/components/Tables/HeaderTable/HeaderTable";
 import PlanTable from "@/components/Tables/PlanTable";
@@ -30,8 +31,6 @@ const PlanPage = () => {
     retry: 0,
     staleTime: 0,
   });
-
-  console.log(plans);
 
   useEffect(() => {
     if (error) alert(error.message, "error");
@@ -85,7 +84,15 @@ const PlanPage = () => {
           />
         )}
         {modals === "edit" && (
-          <p>Modal de edição para o plano {itemSelected}</p>
+          <ModalEditPlan
+            isOpen={modals === "edit"}
+            onClose={() => setModals("")}
+            onCloseAndGetPlan={() => {
+              setModals("");
+              refetch();
+            }}
+            plan={plans?.find((plan) => plan.id === itemSelected)}
+          />
         )}
         {modals === "disable" && (
           <p>Modal de desativação para o plano {itemSelected}</p>

@@ -7,12 +7,11 @@ import ButtonActionUnlink from "../Buttons/ButtonactionUnlink";
 import useAlert from "@/hooks/useAlert";
 import useOrderTable from "@/hooks/useOrderTable";
 import { ModalPlanType } from "@/types/ModalTypes";
+import { Plano } from "@/types/Plano";
 import { Title } from "@/types/Tables";
 import { isNotNull } from "@/utils/tableGuardType";
 
 import DefaultTableContainer from "./DefaultTableContainer";
-
-import { Plano } from "@/types/Plano";
 
 type Props = {
   plans: Plano[];

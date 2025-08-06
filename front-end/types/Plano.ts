@@ -9,3 +9,10 @@ export type Plano = {
 };
 
 export type CreatePlano = Pick<Plano, "nome" | "descricao"> & { valor: string };
+
+export type UpdatePlano = {
+  id: number;
+  nome?: string;
+  descricao?: string | null;
+  valor?: string;
+};
