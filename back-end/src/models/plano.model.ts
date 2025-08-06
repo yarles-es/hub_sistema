@@ -50,6 +50,8 @@ export class PlanoModel {
 
   async findAll(transaction?: Prisma.TransactionClient): Promise<Plano[]> {
     const client = transaction || this.prisma;
-    return client.plano.findMany();
+    return client.plano.findMany({
+      orderBy: { id: 'desc' },
+    });
   }
 }

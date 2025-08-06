@@ -185,6 +185,7 @@ export class ClienteModel {
           },
         },
       },
+      orderBy: { id: 'desc' },
     });
   }
 }

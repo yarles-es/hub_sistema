@@ -26,7 +26,9 @@ export class UsuarioModel {
 
   public async findAll(transaction?: Prisma.TransactionClient): Promise<UsuarioResponse[]> {
     const client = transaction || this.prisma;
-    const users = await client.usuario.findMany();
+    const users = await client.usuario.findMany({
+      orderBy: { id: 'desc' },
+    });
     return users.map((user) => {
       const { senha, ...userWithoutPassword } = user;
       return userWithoutPassword;

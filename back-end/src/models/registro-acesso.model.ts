@@ -22,6 +22,8 @@ export class RegistroAcessoModel {
 
   public async findAll(transaction?: Prisma.TransactionClient): Promise<RegistroAcesso[]> {
     const client = transaction || this.prisma;
-    return client.registroAcesso.findMany();
+    return client.registroAcesso.findMany({
+      orderBy: { id: 'desc' },
+    });
   }
 }
