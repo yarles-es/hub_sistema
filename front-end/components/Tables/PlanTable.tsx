@@ -1,70 +1,43 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
 import ButtonActionAdd from "../Buttons/ButtonActionAdd";
 import ButtonActionEdit from "../Buttons/ButtonActionEdit";
-import ButtonActionNew from "../Buttons/ButtonActionNew";
 import ButtonActionUnlink from "../Buttons/ButtonactionUnlink";
 
-import { createMonthlyFee } from "@/api/monthlyFee/monthlyFee.api";
 import useAlert from "@/hooks/useAlert";
 import useOrderTable from "@/hooks/useOrderTable";
-import useViewPermission from "@/hooks/useViewPermission";
-import { Client } from "@/types/Client";
-import { ModalClientType } from "@/types/ModalTypes";
+import { ModalPlanType } from "@/types/ModalTypes";
 import { Title } from "@/types/Tables";
 import { isNotNull } from "@/utils/tableGuardType";
 
 import DefaultTableContainer from "./DefaultTableContainer";
 
+import { Plano } from "@/types/Plano";
+
 type Props = {
-  clients: Client[];
-  onOpenItemSelect: (id: number, type: ModalClientType) => void;
+  plans: Plano[];
+  onOpenItemSelect: (id: number, type: ModalPlanType) => void;
 };
 
-const ClientTable: React.FC<Props> = ({ clients, onOpenItemSelect }) => {
+const PlanTable: React.FC<Props> = ({ plans, onOpenItemSelect }) => {
   const alert = useAlert();
   const queryClient = useQueryClient();
-  const administration = useViewPermission();
 
   const titles: Array<Title | null> = [
     { key: "id", label: "ID", type: "number", order: true },
     { key: "nome", label: "Nome", type: "string", order: true },
-    { key: "email", label: "Email", type: "string", order: true },
-    { key: "telefone", label: "Telefone", type: "string", order: true },
-    {
-      key: "dataNascimento",
-      label: "Data Nascimento",
-      type: "date",
-      order: true,
-    },
-    { key: "nomePlano", label: "Plano", type: "string", order: true },
+    { key: "valor", label: "Valor", type: "number", order: true },
+    { key: "descricao", label: "Descrição", type: "string", order: true },
     { key: "status", label: "Status", type: "boolean", order: true },
-    {
-      key: "monthlyFee",
-      label: "Nova Mensalidade",
-      type: "actions",
-      order: false,
-    },
-
     { key: "edit", label: "Editar", type: "actions", order: false },
-    {
-      key: "disable",
-      label: "Desativar",
-      type: "actions",
-      order: false,
-    },
-    {
-      key: "enable",
-      label: "Ativar",
-      type: "actions",
-      order: false,
-    },
+    { key: "disable", label: "Desativar", type: "actions", order: false },
+    { key: "active", label: "Ativar", type: "actions", order: false },
   ];
 
   const titlesFiltered = titles.filter(isNotNull);
 
-  const { dataOrder: clientsOrder, handleOrder } = useOrderTable({
-    data: clients ?? [],
+  const { dataOrder: planOrders, handleOrder } = useOrderTable({
+    data: plans ?? [],
     titles: titlesFiltered,
   });
 
@@ -73,21 +46,6 @@ const ClientTable: React.FC<Props> = ({ clients, onOpenItemSelect }) => {
       return;
     }
     return () => handleOrder(title.key);
-  };
-
-  const { mutate } = useMutation({
-    mutationFn: async (clientId: number) => await createMonthlyFee(clientId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["getAllClients"] });
-      alert("Mensalidade criada com sucesso!", "success");
-    },
-    onError: (error: Error) => {
-      alert(error.message, "error");
-    },
-  });
-
-  const onCreateMonthlyFee = (clientId: number) => {
-    mutate(clientId);
   };
 
   return (
@@ -123,82 +81,63 @@ const ClientTable: React.FC<Props> = ({ clients, onOpenItemSelect }) => {
           </tr>
         </thead>
         <tbody className="text-xs">
-          {clientsOrder.map((client, key) => (
+          {planOrders.map((plan, key) => (
             <tr
               key={key}
               className="border-b border-gray-200 dark:border-strokedark"
             >
               <td className="py-4 px-4 text-black dark:text-white xl:pl-11">
-                <p>{client.id}</p>
+                <p>{plan.id}</p>
               </td>
               <td className="py-4 px-4 text-black dark:text-white">
-                <p>{client.nome}</p>
-              </td>
-              <td className="py-4 px-4 text-black dark:text-white">
-                <p>{client.email}</p>
-              </td>
-
-              <td className="py-4 px-4 text-black dark:text-white">
-                <p>
-                  {client.telefone.replace(
-                    /^(\d{2})(\d{5})(\d{4})$/,
-                    "($1) $2-$3"
-                  )}
-                </p>
-              </td>
-
-              <td className="py-4 px-4 text-black dark:text-white">
-                <p>{new Date(client.dataNascimento).toLocaleDateString()}</p>
-              </td>
-              <td className="py-4 px-4">
                 <p className="inline-flex text-center rounded-full bg-opacity-20 p-1 text-xs px-2 font-bold text-primary bg-primary">
-                  {client.nomePlano}
+                  {plan.nome}
                 </p>
+              </td>
+              <td className="py-4 px-4 text-black dark:text-white">
+                <p className={`text-success`}>
+                  {plan.valor.toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  })}
+                </p>
+              </td>
+              <td className="py-4 px-4 text-black dark:text-white max-w-30">
+                <p>{plan.descricao}</p>
               </td>
               <td className="py-4 px-4 text-black dark:text-white">
                 <p
                   className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-xs font-medium ${
-                    client.status === "ATIVO"
+                    plan.ativo
                       ? "bg-success text-success"
-                      : client.status === "MENSALIDADE_AUSENTE"
-                      ? "bg-warning text-warning"
                       : "bg-danger text-danger"
                   }`}
                 >
-                  {client.status}
+                  {plan.ativo ? "ATIVO" : "INATIVO"}
                 </p>
               </td>
-              <td className="py-4 px-4 text-center text-black dark:text-white">
-                {client.status === "MENSALIDADE_AUSENTE" && (
-                  <div className="flex space-x-3">
-                    <ButtonActionNew
-                      onClick={() => onCreateMonthlyFee(client.id)}
-                    />
-                  </div>
-                )}
-              </td>
-              <td className="py-4 px-4 text-center text-black dark:text-white">
-                <div className="flex space-x-3">
+
+              <td className="py-4 px-4 text-black dark:text-white">
+                <div className="flex items-center space-x-3.5">
                   <ButtonActionEdit
-                    onClick={() => onOpenItemSelect(client.id, "edit")}
+                    onClick={() => onOpenItemSelect(plan.id, "edit")}
                   />
                 </div>
               </td>
               <td className="py-4 px-4 text-center text-black dark:text-white">
                 <div className="flex space-x-3">
-                  {(client.status === "ATIVO" ||
-                    client.status === "MENSALIDADE_AUSENTE") && (
+                  {plan.ativo && (
                     <ButtonActionUnlink
-                      onClick={() => onOpenItemSelect(client.id, "disable")}
+                      onClick={() => onOpenItemSelect(plan.id, "disable")}
                     />
                   )}
                 </div>
               </td>
               <td className="py-4 px-4 text-center text-black dark:text-white">
                 <div className="flex space-x-3">
-                  {client.status === "DESATIVADO" && (
+                  {!plan.ativo && (
                     <ButtonActionAdd
-                      onClick={() => onOpenItemSelect(client.id, "active")}
+                      onClick={() => onOpenItemSelect(plan.id, "active")}
                     />
                   )}
                 </div>
@@ -211,4 +150,4 @@ const ClientTable: React.FC<Props> = ({ clients, onOpenItemSelect }) => {
   );
 };
 
-export default ClientTable;
+export default PlanTable;

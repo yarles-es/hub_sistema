@@ -18,6 +18,7 @@ import Pagination from "@/components/Pagination/Pagination";
 import ClientTable from "@/components/Tables/ClientTable";
 import HeaderTable from "@/components/Tables/HeaderTable/HeaderTable";
 import useAlert from "@/hooks/useAlert";
+import { LIMIT_WITH_PAGE, NUMBER_PAGE } from "@/schemas/paginationSchemas";
 import { GetAllClient, StatusClient } from "@/types/Client";
 import { ModalClientType } from "@/types/ModalTypes";
 
@@ -31,8 +32,8 @@ const ClientPage = () => {
 
   const queryParams: GetAllClient = useMemo(
     () => ({
-      numberPage: Number(searchParams.get("page")) || 1,
-      limit: Number(searchParams.get("limit")) || 10,
+      numberPage: Number(searchParams.get("page")) || NUMBER_PAGE,
+      limit: Number(searchParams.get("limit")) || LIMIT_WITH_PAGE,
       nome: searchParams.get("nome") || undefined,
       email: searchParams.get("email") || undefined,
       telefone: searchParams.get("telefone") || undefined,

@@ -7,3 +7,5 @@ export type Plano = {
   valor: number;
   descricao: string | null;
 };
+
+export type CreatePlano = Pick<Plano, "nome" | "descricao"> & { valor: string };
