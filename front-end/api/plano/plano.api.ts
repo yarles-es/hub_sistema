@@ -21,3 +21,15 @@ export const updatePlan = async (data: UpdatePlano) => {
   };
   return await genericRequest<Plano>("put", `plano/update/${id}`, rest);
 };
+
+export const disablePlan = async (id: number) => {
+  return await genericRequest<void>("put", `plano/update/${id}`, {
+    ativo: false,
+  });
+};
+
+export const activatePlan = async (id: number) => {
+  return await genericRequest<void>("put", `plano/update/${id}`, {
+    ativo: true,
+  });
+};

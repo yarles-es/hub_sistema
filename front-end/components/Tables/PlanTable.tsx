@@ -1,9 +1,10 @@
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import ButtonActionAdd from "../Buttons/ButtonActionAdd";
 import ButtonActionEdit from "../Buttons/ButtonActionEdit";
 import ButtonActionUnlink from "../Buttons/ButtonactionUnlink";
 
+import { activatePlan, disablePlan } from "@/api/plano/plano.api";
 import useAlert from "@/hooks/useAlert";
 import useOrderTable from "@/hooks/useOrderTable";
 import { ModalPlanType } from "@/types/ModalTypes";
@@ -45,6 +46,40 @@ const PlanTable: React.FC<Props> = ({ plans, onOpenItemSelect }) => {
       return;
     }
     return () => handleOrder(title.key);
+  };
+
+  const { mutate: disablePlanMutate } = useMutation({
+    mutationFn: async (id: number) => await disablePlan(id),
+    onSuccess: () => {
+      alert("Plano desativado com sucesso!", "success");
+      queryClient.invalidateQueries({ queryKey: ["getAllPlans"] });
+    },
+    onError: (error) => {
+      alert(error.message, "error");
+      console.error(error);
+    },
+    retry: 0,
+  });
+
+  const handleDisablePlan = (id: number) => {
+    disablePlanMutate(id);
+  };
+
+  const { mutate: activatePlanMutate } = useMutation({
+    mutationFn: async (id: number) => await activatePlan(id),
+    onSuccess: () => {
+      alert("Plano ativado com sucesso!", "success");
+      queryClient.invalidateQueries({ queryKey: ["getAllPlans"] });
+    },
+    onError: (error) => {
+      alert(error.message, "error");
+      console.error(error);
+    },
+    retry: 0,
+  });
+
+  const handleActivatePlan = (id: number) => {
+    activatePlanMutate(id);
   };
 
   return (
@@ -127,7 +162,7 @@ const PlanTable: React.FC<Props> = ({ plans, onOpenItemSelect }) => {
                 <div className="flex space-x-3">
                   {plan.ativo && (
                     <ButtonActionUnlink
-                      onClick={() => onOpenItemSelect(plan.id, "disable")}
+                      onClick={() => handleDisablePlan(plan.id)}
                     />
                   )}
                 </div>
@@ -136,7 +171,7 @@ const PlanTable: React.FC<Props> = ({ plans, onOpenItemSelect }) => {
                 <div className="flex space-x-3">
                   {!plan.ativo && (
                     <ButtonActionAdd
-                      onClick={() => onOpenItemSelect(plan.id, "active")}
+                      onClick={() => handleActivatePlan(plan.id)}
                     />
                   )}
                 </div>
