@@ -9,6 +9,7 @@ import SideBarLinkFinance from "./SideBarLinkFinance";
 import SidebarLinkGroup from "./SidebarLinkGroup";
 import SideBarLinkPlans from "./SideBarLinkPlans";
 import SideBarLinkSettings from "./SideBarLinkSettings";
+import SideBarLinkTurnstile from "./SideBarLinkTurnstile";
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -134,6 +135,23 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               <SideBarLinkClients />
 
               <SideBarLinkPlans />
+
+              <SidebarLinkGroup
+                activeCondition={
+                  pathname === "/turnstile" || pathname.includes("turnstile")
+                }
+              >
+                {(handleClick, open) => (
+                  <SideBarLinkTurnstile
+                    handleClick={handleClick}
+                    open={open}
+                    setSidebarExpanded={setSidebarExpanded}
+                    sidebarExpanded={sidebarExpanded}
+                    setSidebarOpen={setSidebarOpen}
+                    sidebarOpen={sidebarOpen}
+                  />
+                )}
+              </SidebarLinkGroup>
 
               <SidebarLinkGroup
                 activeCondition={
