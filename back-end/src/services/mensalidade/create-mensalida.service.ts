@@ -1,4 +1,4 @@
-import { Mensalidade, StatusMensalidade } from '@prisma/client';
+import { Mensalidade, Prisma, StatusMensalidade } from '@prisma/client';
 import { Service } from 'typedi';
 import { BadRequestError } from '../../errors/BadRequestError';
 import { ClienteService } from '../cliente/@cliente.service';
@@ -18,9 +18,12 @@ export class CreateMensalidadeService {
     private readonly planoService: PlanoService,
   ) {}
 
-  public async execute(data: CreateMensalidadeServiceParams): Promise<Mensalidade> {
+  public async execute(
+    data: CreateMensalidadeServiceParams,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<Mensalidade> {
     const { clienteId, dataVencimentoAnterior } = data;
-    const cliente = await this.clienteService.getClienteById(clienteId);
+    const cliente = await this.clienteService.getClienteById(clienteId, transaction);
     if (!cliente) {
       throw new BadRequestError('Cliente não encontrado.');
     }
@@ -28,6 +31,7 @@ export class CreateMensalidadeService {
     const mensalidades = await this.mensalidadeService.findMensalidadesByClienteIdAndStatus(
       clienteId,
       StatusMensalidade.PENDENTE,
+      transaction,
     );
 
     const mensalidadePendente = mensalidades.length > 0;
@@ -36,7 +40,7 @@ export class CreateMensalidadeService {
       throw new BadRequestError('Já existe uma mensalidade pendente para este cliente.');
     }
 
-    const plano = await this.planoService.getPlanoById(cliente.planoId);
+    const plano = await this.planoService.getPlanoById(cliente.planoId, transaction);
 
     if (!plano) {
       throw new BadRequestError('Plano não encontrado para o cliente.');
@@ -47,9 +51,13 @@ export class CreateMensalidadeService {
     }
 
     if (!dataVencimentoAnterior) {
-      await this.clienteService.updateCliente(clienteId, {
-        diaMensalidade: cliente.diaMensalidade ?? new Date().getDate(),
-      });
+      await this.clienteService.updateCliente(
+        clienteId,
+        {
+          diaMensalidade: cliente.diaMensalidade ?? new Date().getDate(),
+        },
+        transaction,
+      );
     }
 
     let vencimento: Date;
@@ -66,11 +74,14 @@ export class CreateMensalidadeService {
       );
     }
 
-    const mensalidade = await this.mensalidadeService.createMensalidade({
-      clienteId: cliente.id,
-      valor: plano.valor,
-      vencimento,
-    });
+    const mensalidade = await this.mensalidadeService.createMensalidade(
+      {
+        clienteId: cliente.id,
+        valor: plano.valor,
+        vencimento,
+      },
+      transaction,
+    );
 
     if (!mensalidade) {
       throw new BadRequestError('Erro ao criar mensalidade.');

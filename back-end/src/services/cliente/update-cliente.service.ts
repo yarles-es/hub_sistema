@@ -62,11 +62,11 @@ export class UpdateClienteService {
       clienteId,
       StatusMensalidade.PENDENTE,
     );
-    if (!mensalidade) throw new NotFoundError('Mensalidade pendente não encontrada.');
 
     const plano = await this.planoService.getPlanoById(newPlanoId);
 
     if (!plano) throw new NotFoundError('Plano não encontrado.');
+    if (!mensalidade) return;
 
     const { valor } = plano;
 

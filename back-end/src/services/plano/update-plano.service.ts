@@ -1,19 +1,59 @@
-import { Plano } from '@prisma/client';
+import { Plano, Prisma, StatusMensalidade } from '@prisma/client';
 import { Service } from 'typedi';
 import { BadRequestError } from '../../errors/BadRequestError';
 import { UpdatePlano } from '../../types/plano.types';
 import { PlanoService } from './@plano.service';
+import { ClienteService } from '../cliente/@cliente.service';
+import { MensalidadeService } from '../mensalidade/@mensalidade.service';
+import { withTransaction } from '../../utils/withTransaction';
 
 @Service()
 export class UpdatePlanoService {
-  constructor(private readonly planoService: PlanoService) {}
+  constructor(
+    private readonly planoService: PlanoService,
+    private readonly clienteService: ClienteService,
+    private readonly mensalidadeService: MensalidadeService,
+  ) {}
 
   async execute(id: number, data: UpdatePlano): Promise<Plano> {
-    await this.validate(id, data);
-    return this.planoService.updatePlano(id, data);
+    this.validate(id, data);
+
+    const plan = await withTransaction(async (tx) => {
+      const existingPlan = await this.planoService.getPlanoById(id, tx);
+
+      if (!existingPlan) {
+        throw new BadRequestError('Plano não encontrado');
+      }
+
+      const plan = await this.planoService.updatePlano(id, data);
+
+      if (data.valor && plan.valor !== existingPlan.valor) {
+        await this.modifyValorExistingMonthlyFeePending(id, data.valor, tx);
+      }
+      return plan;
+    });
+
+    return plan;
   }
 
-  async validate(id: number, data: UpdatePlano): Promise<void> {
+  private async modifyValorExistingMonthlyFeePending(
+    idPlano: number,
+    newValor: number,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<void> {
+    const clientes = await this.clienteService.getAllClientesWithMensalidadeByPlanId(idPlano, transaction);
+
+    await Promise.all(
+      clientes.map(async (cliente) => {
+        const mensalidade = cliente.Mensalidade.find((m) => m.status === StatusMensalidade.PENDENTE);
+        if (mensalidade) {
+          await this.mensalidadeService.updateMensalidade(mensalidade.id, { valor: newValor }, transaction);
+        }
+      }),
+    );
+  }
+
+  private validate(id: number, data: UpdatePlano): void {
     if (!id || id <= 0 || isNaN(id)) {
       throw new BadRequestError('ID inválido');
     }

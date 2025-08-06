@@ -1,4 +1,4 @@
-import { PrismaClient, RegistroAcesso } from '@prisma/client';
+import { Prisma, PrismaClient, RegistroAcesso } from '@prisma/client';
 import { Service } from 'typedi';
 import { CreateRegistroAcesso } from '../types/registro-acesso.types';
 
@@ -10,13 +10,18 @@ export class RegistroAcessoModel {
     this.prisma = new PrismaClient();
   }
 
-  public async create(registro: CreateRegistroAcesso): Promise<RegistroAcesso> {
-    return this.prisma.registroAcesso.create({
+  public async create(
+    registro: CreateRegistroAcesso,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<RegistroAcesso> {
+    const client = transaction || this.prisma;
+    return client.registroAcesso.create({
       data: registro,
     });
   }
 
-  public async findAll(): Promise<RegistroAcesso[]> {
-    return this.prisma.registroAcesso.findMany();
+  public async findAll(transaction?: Prisma.TransactionClient): Promise<RegistroAcesso[]> {
+    const client = transaction || this.prisma;
+    return client.registroAcesso.findMany();
   }
 }

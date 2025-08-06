@@ -1,4 +1,4 @@
-import { Mensalidade } from '@prisma/client';
+import { Mensalidade, Prisma } from '@prisma/client';
 import { Service } from 'typedi';
 import { BadRequestError } from '../../errors/BadRequestError';
 import { NotFoundError } from '../../errors/NotFoundError';
@@ -8,12 +8,12 @@ import { MensalidadeService } from './@mensalidade.service';
 export class GetMensalidadeByIdService {
   constructor(private readonly mensalidadeService: MensalidadeService) {}
 
-  public async execute(id: number): Promise<Mensalidade> {
+  public async execute(id: number, transaction?: Prisma.TransactionClient): Promise<Mensalidade> {
     if (!id || isNaN(id) || id <= 0) {
       throw new BadRequestError('ID inválido');
     }
 
-    const mensalidade = await this.mensalidadeService.findMensalidadeById(id);
+    const mensalidade = await this.mensalidadeService.findMensalidadeById(id, transaction);
 
     if (!mensalidade) {
       throw new NotFoundError('Mensalidade não encontrada');

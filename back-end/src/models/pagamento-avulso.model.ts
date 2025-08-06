@@ -15,27 +15,38 @@ export class PagamentoAvulsoModel {
     this.prisma = new PrismaClient();
   }
 
-  async create(data: CreatePagamentoAvulso): Promise<PagamentoAvulso> {
-    return this.prisma.pagamentoAvulso.create({
+  async create(
+    data: CreatePagamentoAvulso,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<PagamentoAvulso> {
+    const client = transaction || this.prisma;
+    return client.pagamentoAvulso.create({
       data,
     });
   }
 
-  async findById(id: number): Promise<PagamentoAvulso | null> {
-    return this.prisma.pagamentoAvulso.findUnique({
+  async findById(id: number, transaction?: Prisma.TransactionClient): Promise<PagamentoAvulso | null> {
+    const client = transaction || this.prisma;
+    return client.pagamentoAvulso.findUnique({
       where: { id },
     });
   }
 
-  async update(id: number, data: UpdatePagamentoAvulso): Promise<PagamentoAvulso> {
-    return this.prisma.pagamentoAvulso.update({
+  async update(
+    id: number,
+    data: UpdatePagamentoAvulso,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<PagamentoAvulso> {
+    const client = transaction || this.prisma;
+    return client.pagamentoAvulso.update({
       where: { id },
       data,
     });
   }
 
-  async delete(id: number): Promise<PagamentoAvulso> {
-    return this.prisma.pagamentoAvulso.delete({
+  async delete(id: number, transaction?: Prisma.TransactionClient): Promise<PagamentoAvulso> {
+    const client = transaction || this.prisma;
+    return client.pagamentoAvulso.delete({
       where: { id },
     });
   }
@@ -44,7 +55,9 @@ export class PagamentoAvulsoModel {
     pageNumber: number,
     limitNumber: number,
     filters?: PagamentoAvulsoFilter,
+    transaction?: Prisma.TransactionClient,
   ): Promise<PagamentoAvulsoResponse> {
+    const client = transaction || this.prisma;
     const where: Prisma.PagamentoAvulsoWhereInput = {};
 
     if (filters) {
@@ -68,7 +81,7 @@ export class PagamentoAvulsoModel {
     }
 
     const [data, total] = await Promise.all([
-      this.prisma.pagamentoAvulso.findMany({
+      client.pagamentoAvulso.findMany({
         where,
         skip: (pageNumber - 1) * limitNumber,
         take: limitNumber,
@@ -76,7 +89,7 @@ export class PagamentoAvulsoModel {
           dataHora: 'desc',
         },
       }),
-      this.prisma.pagamentoAvulso.count({ where }),
+      client.pagamentoAvulso.count({ where }),
     ]);
 
     return {

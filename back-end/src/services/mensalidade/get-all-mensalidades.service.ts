@@ -1,4 +1,4 @@
-import { StatusMensalidade } from '@prisma/client';
+import { Prisma, StatusMensalidade } from '@prisma/client';
 import { Service } from 'typedi';
 import { MensalidadeFilter, MensalidadeResponseGetAll } from '../../types/mensalidade.types';
 import { MensalidadeService } from './@mensalidade.service';
@@ -11,8 +11,9 @@ export class GetAllMensalidadesService {
     page: number,
     limit: number,
     filter?: MensalidadeFilter,
+    transaction?: Prisma.TransactionClient,
   ): Promise<MensalidadeResponseGetAll> {
-    const mensalidades = await this.mensalidadeService.findAllMensalidades(page, limit, filter);
+    const mensalidades = await this.mensalidadeService.findAllMensalidades(page, limit, filter, transaction);
 
     const mensalidadesEdited = mensalidades.data.map(this.editMensalidadeStatus);
 

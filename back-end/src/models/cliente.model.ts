@@ -1,4 +1,4 @@
-import { Cliente, PrismaClient } from '@prisma/client';
+import { Cliente, Prisma, PrismaClient, StatusMensalidade } from '@prisma/client';
 import { Service } from 'typedi';
 import {
   ClienteFilter,
@@ -15,39 +15,52 @@ export class ClienteModel {
     this.prisma = new PrismaClient();
   }
 
-  public async create(cliente: CreateCliente): Promise<Cliente> {
-    return this.prisma.cliente.create({
+  public async create(cliente: CreateCliente, transaction?: Prisma.TransactionClient): Promise<Cliente> {
+    const client = transaction || this.prisma;
+    return client.cliente.create({
       data: { ...cliente },
     });
   }
 
-  public async findById(id: number): Promise<Cliente | null> {
-    return this.prisma.cliente.findUnique({
+  public async findById(id: number, transaction?: Prisma.TransactionClient): Promise<Cliente | null> {
+    const client = transaction || this.prisma;
+    return client.cliente.findUnique({
       where: { id },
     });
   }
 
-  public async findByEmail(email: string): Promise<Cliente | null> {
-    return this.prisma.cliente.findUnique({
+  public async findByEmail(email: string, transaction?: Prisma.TransactionClient): Promise<Cliente | null> {
+    const client = transaction || this.prisma;
+    return client.cliente.findUnique({
       where: { email },
     });
   }
 
-  public async update(id: number, data: UpdateClient): Promise<Cliente> {
-    return this.prisma.cliente.update({
+  public async update(
+    id: number,
+    data: UpdateClient,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<Cliente> {
+    const client = transaction || this.prisma;
+    return client.cliente.update({
       where: { id },
       data: { ...data },
     });
   }
 
-  public async delete(id: number): Promise<Cliente> {
-    return this.prisma.cliente.delete({
+  public async delete(id: number, transaction?: Prisma.TransactionClient): Promise<Cliente> {
+    const client = transaction || this.prisma;
+    return client.cliente.delete({
       where: { id },
     });
   }
 
-  public async findAllByName(name: string): Promise<ClienteGetAllWithMensalidade[]> {
-    return this.prisma.cliente.findMany({
+  public async findAllByName(
+    name: string,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<ClienteGetAllWithMensalidade[]> {
+    const client = transaction || this.prisma;
+    return client.cliente.findMany({
       where: { nome: { contains: name, mode: 'insensitive' } },
       orderBy: { id: 'desc' },
       include: {
@@ -68,7 +81,10 @@ export class ClienteModel {
     limit: number,
     dates: { dataInicialMensalidade?: Date; dataFinalMensalidade?: Date },
     filter?: ClienteFilter,
+    transaction?: Prisma.TransactionClient,
   ): Promise<ClientResponseGetAllModel> {
+    const client = transaction || this.prisma;
+
     const where: any = {};
 
     if (filter?.nome) {
@@ -113,7 +129,7 @@ export class ClienteModel {
     }
 
     const [data, total] = await Promise.all([
-      this.prisma.cliente.findMany({
+      client.cliente.findMany({
         where,
         skip: (page - 1) * limit,
         take: limit,
@@ -135,7 +151,7 @@ export class ClienteModel {
           },
         },
       }),
-      this.prisma.cliente.count({ where }),
+      client.cliente.count({ where }),
     ]);
 
     return {
@@ -144,5 +160,31 @@ export class ClienteModel {
       page,
       limit,
     };
+  }
+
+  async getAllWithMensalidadeByPlanId(
+    planoId: number,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<ClienteGetAllWithMensalidade[]> {
+    const client = transaction || this.prisma;
+    return client.cliente.findMany({
+      where: {
+        planoId,
+      },
+      include: {
+        Mensalidade: {
+          where: {
+            status: StatusMensalidade.PENDENTE,
+          },
+        },
+        plano: {
+          select: {
+            id: true,
+            nome: true,
+            valor: true,
+          },
+        },
+      },
+    });
   }
 }

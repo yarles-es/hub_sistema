@@ -1,4 +1,4 @@
-import { FormPagamento, Mensalidade, StatusMensalidade } from '@prisma/client';
+import { FormPagamento, Mensalidade, Prisma, StatusMensalidade } from '@prisma/client';
 import { Service } from 'typedi';
 import { BadRequestError } from '../../errors/BadRequestError';
 import { MensalidadeService } from './@mensalidade.service';
@@ -10,6 +10,7 @@ export class UpdateMensalidadeService {
   public async execute(
     id: number,
     data: Partial<Pick<Mensalidade, 'formaPagamento' | 'status' | 'valorPago'>>,
+    transaction?: Prisma.TransactionClient,
   ): Promise<Mensalidade> {
     if (!id || isNaN(id) || id <= 0) {
       throw new BadRequestError('ID inválido.');
@@ -25,7 +26,7 @@ export class UpdateMensalidadeService {
       data.valorPago = null;
     }
 
-    return await this.mensalidadeService.updateMensalidade(id, data);
+    return await this.mensalidadeService.updateMensalidade(id, data, transaction);
   }
 
   async validate(id: number, formaPagamento?: FormPagamento, status?: StatusMensalidade): Promise<void> {

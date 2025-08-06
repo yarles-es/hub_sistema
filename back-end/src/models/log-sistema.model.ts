@@ -1,4 +1,4 @@
-import { LogSistema, PrismaClient } from '@prisma/client';
+import { LogSistema, Prisma, PrismaClient } from '@prisma/client';
 import { Service } from 'typedi';
 
 @Service()
@@ -8,8 +8,14 @@ export class LogSistemaModel {
     this.prisma = new PrismaClient();
   }
 
-  public async createLog(usuarioId: number, acao: string, clienteId?: number): Promise<LogSistema> {
-    return await this.prisma.logSistema.create({
+  public async createLog(
+    usuarioId: number,
+    acao: string,
+    clienteId?: number,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<LogSistema> {
+    const client = transaction || this.prisma;
+    return await client.logSistema.create({
       data: {
         usuarioId,
         acao,
@@ -18,8 +24,9 @@ export class LogSistemaModel {
     });
   }
 
-  public async getLogs(): Promise<LogSistema[]> {
-    return this.prisma.logSistema.findMany({
+  public async getLogs(transaction?: Prisma.TransactionClient): Promise<LogSistema[]> {
+    const client = transaction || this.prisma;
+    return client.logSistema.findMany({
       include: {
         usuario: true,
         cliente: true,

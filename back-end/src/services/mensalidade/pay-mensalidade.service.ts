@@ -1,10 +1,11 @@
-import { FormPagamento, StatusMensalidade } from '@prisma/client';
+import { FormPagamento, Prisma, StatusMensalidade } from '@prisma/client';
 import { Service } from 'typedi';
 import { BadRequestError } from '../../errors/BadRequestError';
 import { MensalidadeService } from './@mensalidade.service';
 import { CreateMensalidadeService } from './create-mensalida.service';
 import { UpdateMensalidadeService } from './update-mensalidade.service';
 import { PaymentMensalidade } from '../../types/mensalidade.types';
+import { withTransaction } from '../../utils/withTransaction';
 
 @Service()
 export class PayMensalidadeService {
@@ -24,15 +25,24 @@ export class PayMensalidadeService {
       throw new BadRequestError('Mensalidade não está pendente.');
     }
 
-    await this.updateMensalidadeService.execute(mensalidadeId, {
-      status: StatusMensalidade.PAGO,
-      formaPagamento,
-      valorPago,
-    });
+    await withTransaction(async (tx) => {
+      await this.updateMensalidadeService.execute(
+        mensalidadeId,
+        {
+          status: StatusMensalidade.PAGO,
+          formaPagamento,
+          valorPago,
+        },
+        tx,
+      );
 
-    await this.createMensalidadeService.execute({
-      clienteId: mensalidade.clienteId,
-      dataVencimentoAnterior: mensalidade.vencimento,
+      await this.createMensalidadeService.execute(
+        {
+          clienteId: mensalidade.clienteId,
+          dataVencimentoAnterior: mensalidade.vencimento,
+        },
+        tx,
+      );
     });
   }
 }

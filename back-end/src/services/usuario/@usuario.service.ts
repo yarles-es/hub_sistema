@@ -1,4 +1,4 @@
-import { Usuario } from '@prisma/client';
+import { Prisma, Usuario } from '@prisma/client';
 import { Service } from 'typedi';
 import { UsuarioModel } from '../../models/usuario.model';
 import { CreateUsuario, UpdateUsuario, UsuarioResponse } from '../../types/usuario.types';
@@ -11,43 +11,60 @@ export class UsuarioService {
     this.usuarioModel = new UsuarioModel();
   }
 
-  public async create(usuario: CreateUsuario): Promise<UsuarioResponse> {
+  public async create(
+    usuario: CreateUsuario,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<UsuarioResponse> {
     const userFormated = {
       ...usuario,
       nome: usuario.nome.trim(),
       email: usuario.email.trim(),
       senha: usuario.senha.trim(),
     };
-    return await this.usuarioModel.create(userFormated);
+    return await this.usuarioModel.create(userFormated, transaction);
   }
 
-  public async findByEmail(email: string): Promise<UsuarioResponse | null> {
-    return await this.usuarioModel.findByEmail(email);
+  public async findByEmail(
+    email: string,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<UsuarioResponse | null> {
+    return await this.usuarioModel.findByEmail(email, transaction);
   }
 
-  public async findAll(): Promise<UsuarioResponse[]> {
-    return await this.usuarioModel.findAll();
+  public async findAll(transaction?: Prisma.TransactionClient): Promise<UsuarioResponse[]> {
+    return await this.usuarioModel.findAll(transaction);
   }
 
-  public async findByEmailWithPassword(email: string): Promise<Usuario | null> {
-    return await this.usuarioModel.findByEmailWithPassword(email);
+  public async findByEmailWithPassword(
+    email: string,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<Usuario | null> {
+    return await this.usuarioModel.findByEmailWithPassword(email, transaction);
   }
 
-  public async findById(id: number): Promise<UsuarioResponse | null> {
-    return await this.usuarioModel.findById(id);
+  public async findById(id: number, transaction?: Prisma.TransactionClient): Promise<UsuarioResponse | null> {
+    return await this.usuarioModel.findById(id, transaction);
   }
 
-  public async update(id: number, usuario: UpdateUsuario): Promise<Omit<Usuario, 'senha'>> {
+  public async update(
+    id: number,
+    usuario: UpdateUsuario,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<Omit<Usuario, 'senha'>> {
     const userFormated = {
       ...usuario,
       nome: usuario.nome?.trim(),
       email: usuario.email?.trim(),
       senha: usuario.senha?.trim(),
     };
-    return await this.usuarioModel.update(id, userFormated);
+    return await this.usuarioModel.update(id, userFormated, transaction);
   }
 
-  public async editStatus(id: number, status: boolean): Promise<UsuarioResponse> {
-    return await this.usuarioModel.editStatus(id, status);
+  public async editStatus(
+    id: number,
+    status: boolean,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<UsuarioResponse> {
+    return await this.usuarioModel.editStatus(id, status, transaction);
   }
 }

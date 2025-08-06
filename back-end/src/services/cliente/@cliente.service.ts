@@ -1,4 +1,4 @@
-import { Cliente } from '@prisma/client';
+import { Cliente, Prisma } from '@prisma/client';
 import { Service } from 'typedi';
 import { ClienteModel } from '../../models/cliente.model';
 import {
@@ -13,7 +13,7 @@ import {
 export class ClienteService {
   constructor(private readonly clienteModel: ClienteModel) {}
 
-  async createCliente(data: CreateCliente): Promise<Cliente> {
+  async createCliente(data: CreateCliente, transaction?: Prisma.TransactionClient): Promise<Cliente> {
     const formatedData: CreateCliente = {
       ...data,
       nome: data.nome.trim().toUpperCase(),
@@ -21,23 +21,27 @@ export class ClienteService {
       telefone: data.telefone ? data.telefone.trim() : null,
     };
 
-    return this.clienteModel.create(formatedData);
+    return this.clienteModel.create(formatedData, transaction);
   }
 
-  async getClienteById(id: number): Promise<Cliente | null> {
-    return this.clienteModel.findById(id);
+  async getClienteById(id: number, transaction?: Prisma.TransactionClient): Promise<Cliente | null> {
+    return this.clienteModel.findById(id, transaction);
   }
 
-  async getClienteByEmail(email: string): Promise<Cliente | null> {
-    return this.clienteModel.findByEmail(email);
+  async getClienteByEmail(email: string, transaction?: Prisma.TransactionClient): Promise<Cliente | null> {
+    return this.clienteModel.findByEmail(email, transaction);
   }
 
-  async updateCliente(id: number, data: UpdateClient): Promise<Cliente> {
-    return this.clienteModel.update(id, data);
+  async updateCliente(
+    id: number,
+    data: UpdateClient,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<Cliente> {
+    return this.clienteModel.update(id, data, transaction);
   }
 
-  async deleteCliente(id: number): Promise<Cliente> {
-    return this.clienteModel.delete(id);
+  async deleteCliente(id: number, transaction?: Prisma.TransactionClient): Promise<Cliente> {
+    return this.clienteModel.delete(id, transaction);
   }
 
   async getAllClientes(
@@ -45,11 +49,22 @@ export class ClienteService {
     limit: number,
     dates: { dataInicialMensalidade?: Date; dataFinalMensalidade?: Date },
     filter?: ClienteFilter,
+    transaction?: Prisma.TransactionClient,
   ): Promise<ClientResponseGetAllModel> {
-    return this.clienteModel.findAll(page, limit, dates, filter);
+    return this.clienteModel.findAll(page, limit, dates, filter, transaction);
   }
 
-  async findAllClientesByName(name: string): Promise<ClienteGetAllWithMensalidade[]> {
-    return this.clienteModel.findAllByName(name);
+  async findAllClientesByName(
+    name: string,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<ClienteGetAllWithMensalidade[]> {
+    return this.clienteModel.findAllByName(name, transaction);
+  }
+
+  async getAllClientesWithMensalidadeByPlanId(
+    planoId: number,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<ClienteGetAllWithMensalidade[]> {
+    return this.clienteModel.getAllWithMensalidadeByPlanId(planoId, transaction);
   }
 }
