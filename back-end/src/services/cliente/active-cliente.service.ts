@@ -36,11 +36,11 @@ export class ActiveClienteService {
       });
     }
 
+    const cliente = await this.clienteService.updateCliente(id, { ativo: true });
+
     await this.createMensalidadeService.execute({
       clienteId: id,
     });
-
-    const cliente = await this.clienteService.updateCliente(id, { ativo: true });
 
     return cliente;
   }

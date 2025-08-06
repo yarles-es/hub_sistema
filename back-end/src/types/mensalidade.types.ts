@@ -2,7 +2,9 @@ import { Cliente, FormPagamento, Mensalidade, StatusMensalidade } from '@prisma/
 
 export type CreateMensalidade = Pick<Mensalidade, 'clienteId' | 'valor' | 'vencimento'>;
 
-export type UpdateMensalidade = Partial<Pick<Mensalidade, 'formaPagamento' | 'status' | 'valor'>>;
+export type UpdateMensalidade = Partial<
+  Pick<Mensalidade, 'formaPagamento' | 'status' | 'valor' | 'valorPago'>
+>;
 
 export type MensalidadeFilter = {
   initialDate?: Date;
@@ -17,4 +19,10 @@ export type MensalidadeResponseGetAll = {
   total: number;
   page: number;
   limit: number;
+};
+
+export type PaymentMensalidade = {
+  mensalidadeId: number;
+  formaPagamento: FormPagamento;
+  valorPago: number;
 };

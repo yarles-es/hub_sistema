@@ -39,8 +39,12 @@ export class MensalidadeController {
 
   async payMensalidade(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { formaPagamento } = req.body;
-      const mensalidade = await this.payMensalidadeService.execute(Number(req.params.id), formaPagamento);
+      const { formaPagamento, valorPago } = req.body;
+      const mensalidade = await this.payMensalidadeService.execute({
+        mensalidadeId: Number(req.params.id),
+        formaPagamento,
+        valorPago,
+      });
       res.status(200).json(mensalidade);
     } catch (error) {
       next(error);

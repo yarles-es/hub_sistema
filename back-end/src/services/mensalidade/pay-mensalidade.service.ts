@@ -4,6 +4,7 @@ import { BadRequestError } from '../../errors/BadRequestError';
 import { MensalidadeService } from './@mensalidade.service';
 import { CreateMensalidadeService } from './create-mensalida.service';
 import { UpdateMensalidadeService } from './update-mensalidade.service';
+import { PaymentMensalidade } from '../../types/mensalidade.types';
 
 @Service()
 export class PayMensalidadeService {
@@ -13,7 +14,7 @@ export class PayMensalidadeService {
     private readonly updateMensalidadeService: UpdateMensalidadeService,
   ) {}
 
-  public async execute(mensalidadeId: number, formaPagamento: FormPagamento) {
+  public async execute({ mensalidadeId, formaPagamento, valorPago }: PaymentMensalidade): Promise<void> {
     const mensalidade = await this.mensalidadeService.findMensalidadeById(mensalidadeId);
     if (!mensalidade) {
       throw new BadRequestError('Mensalidade não encontrada.');
@@ -26,6 +27,7 @@ export class PayMensalidadeService {
     await this.updateMensalidadeService.execute(mensalidadeId, {
       status: StatusMensalidade.PAGO,
       formaPagamento,
+      valorPago,
     });
 
     await this.createMensalidadeService.execute({

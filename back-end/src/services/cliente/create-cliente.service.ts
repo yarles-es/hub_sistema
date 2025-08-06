@@ -50,6 +50,10 @@ export class CreateClienteService {
     if (data.telefone && !validateCel(data.telefone)) {
       throw new BadRequestError('Número de celular inválido.');
     }
+
+    if (data.diaMensalidade && (data.diaMensalidade < 1 || data.diaMensalidade > 31)) {
+      throw new BadRequestError('Dia da mensalidade deve ser entre 1 e 31.');
+    }
   }
 
   private transformData(data: CreateClienteRequest): CreateCliente {
@@ -65,6 +69,7 @@ export class CreateClienteService {
     return {
       ...data,
       dataNascimento: date,
+      diaMensalidade: data.diaMensalidade ?? undefined,
     };
   }
 }

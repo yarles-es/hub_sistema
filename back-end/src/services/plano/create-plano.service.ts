@@ -18,6 +18,12 @@ export class CreatePlanoService {
       throw new BadRequestError('Nome do plano é obrigatório');
     }
 
+    const planoExistente = await this.planoService.getPlanoByName(data.nome);
+
+    if (planoExistente) {
+      throw new BadRequestError('Já existe um plano com este nome');
+    }
+
     if (data.descricao && data.descricao.length > 255) {
       throw new BadRequestError('Descrição não pode exceder 255 caracteres');
     }

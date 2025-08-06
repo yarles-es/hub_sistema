@@ -29,7 +29,12 @@ export class CreateMensalidadeService {
       clienteId,
       StatusMensalidade.PENDENTE,
     );
+
     const mensalidadePendente = mensalidades.length > 0;
+
+    if (mensalidadePendente) {
+      throw new BadRequestError('Já existe uma mensalidade pendente para este cliente.');
+    }
 
     const plano = await this.planoService.getPlanoById(cliente.planoId);
 
@@ -37,13 +42,13 @@ export class CreateMensalidadeService {
       throw new BadRequestError('Plano não encontrado para o cliente.');
     }
 
-    if (mensalidadePendente) {
-      throw new BadRequestError('Já existe uma mensalidade pendente para este cliente.');
+    if (!plano.ativo) {
+      throw new BadRequestError('Plano atual do cliente está inativo, não é possível criar mensalidade.');
     }
 
     if (!dataVencimentoAnterior) {
       await this.clienteService.updateCliente(clienteId, {
-        diaMensalidade: new Date().getDate(),
+        diaMensalidade: cliente.diaMensalidade ?? new Date().getDate(),
       });
     }
 
@@ -52,9 +57,13 @@ export class CreateMensalidadeService {
     if (dataVencimentoAnterior) {
       vencimento = new Date(dataVencimentoAnterior);
       vencimento.setMonth(vencimento.getMonth() + 1);
+      vencimento.setDate(cliente.diaMensalidade ?? vencimento.getDate());
+      vencimento.setHours(3, 0, 0, 0);
     } else {
       const now = new Date();
-      vencimento = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 3, 0, 0, 0));
+      vencimento = new Date(
+        Date.UTC(now.getFullYear(), now.getMonth(), cliente.diaMensalidade ?? now.getDate(), 3, 0, 0, 0),
+      );
     }
 
     const mensalidade = await this.mensalidadeService.createMensalidade({

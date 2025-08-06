@@ -21,6 +21,12 @@ export class PlanoModel {
     });
   }
 
+  async findByName(nome: string): Promise<Plano | null> {
+    return this.prisma.plano.findFirst({
+      where: { nome: nome.trim().toUpperCase() },
+    });
+  }
+
   async update(id: number, data: Partial<Plano>): Promise<Plano> {
     return this.prisma.plano.update({
       where: { id },

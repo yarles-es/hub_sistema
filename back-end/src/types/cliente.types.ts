@@ -5,17 +5,21 @@ export type CreateClienteRequest = Omit<
   'id' | 'createdAt' | 'updatedAt' | 'dataNascimento' | 'diaMensalidade' | 'ativo' | 'catracaId'
 > & {
   dataNascimento: string;
+  diaMensalidade?: number;
 };
 
 export type CreateCliente = Omit<
   Cliente,
   'id' | 'createdAt' | 'updatedAt' | 'diaMensalidade' | 'ativo' | 'catracaId'
->;
+> & {
+  diaMensalidade?: number;
+};
 
 export type UpdateClientRequest = Partial<
   Omit<Cliente, 'id' | 'createdAt' | 'updatedAt' | 'dataNascimento'>
 > & {
   dataNascimento?: string;
+  diaMensalidade?: number;
 };
 
 export type UpdateClient = Partial<Omit<Cliente, 'id' | 'createdAt' | 'updatedAt'>>;

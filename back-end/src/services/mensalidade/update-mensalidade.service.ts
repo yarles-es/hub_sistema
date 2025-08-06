@@ -9,7 +9,7 @@ export class UpdateMensalidadeService {
 
   public async execute(
     id: number,
-    data: Partial<Pick<Mensalidade, 'formaPagamento' | 'status'>>,
+    data: Partial<Pick<Mensalidade, 'formaPagamento' | 'status' | 'valorPago'>>,
   ): Promise<Mensalidade> {
     if (!id || isNaN(id) || id <= 0) {
       throw new BadRequestError('ID inválido.');
@@ -20,6 +20,10 @@ export class UpdateMensalidadeService {
       data.formaPagamento === null ? undefined : data.formaPagamento,
       data.status === null ? undefined : data.status,
     );
+
+    if (data.valorPago === undefined) {
+      data.valorPago = null;
+    }
 
     return await this.mensalidadeService.updateMensalidade(id, data);
   }

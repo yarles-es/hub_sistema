@@ -20,6 +20,10 @@ export class PlanoService {
     return this.planoModel.create(planotransformed);
   }
 
+  async getPlanoByName(nome: string): Promise<Plano | null> {
+    return this.planoModel.findByName(nome.trim().toUpperCase());
+  }
+
   async getPlanoById(id: number): Promise<Plano | null> {
     return this.planoModel.findById(id);
   }

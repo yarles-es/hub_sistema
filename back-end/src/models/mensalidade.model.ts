@@ -71,6 +71,8 @@ export class MensalidadeModel {
 
     if (filter?.status && filter.status.length > 0) {
       where.status = { in: filter.status };
+    } else {
+      where.status = { not: StatusMensalidade.CANCELADO };
     }
 
     if (filter?.clienteId) {
