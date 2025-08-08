@@ -11,6 +11,7 @@ datasource db {
 enum TipoCatraca {
   ENTRADA
   SAIDA
+  BLOQUEIO
 }
 
 enum StatusMensalidade {
@@ -34,7 +35,7 @@ model Cliente {
   telefone       String?
   dataNascimento DateTime @default(now()) @map("data_nascimento")
   diaMensalidade Int?     @map("dia_mensalidade")
-  catracaId      Int?     @map("catraca_id")
+  catracaId      Int?     @unique @map("catraca_id")
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   planoId        Int      @map("plano_id")
@@ -133,4 +134,16 @@ model LogSistema {
   cliente Cliente? @relation(fields: [clienteId], references: [id])
 
   @@map("logs_sistema")
+}
+
+model CatracaInfo {
+  id            Int     @id
+  ip            String  @unique
+  porta         Int     @unique
+  tipo          Int?
+  conectado     Boolean @default(false)
+  conexaoManual Boolean @default(false) @map("conexao_manual")
+  networkName   String  @map("network_name")
+
+  @@map("catracas_info")
 }

@@ -1,17 +1,17 @@
-import api, { partyUrl } from './@api';
-import { DEFAULT_BODY } from './params/DEFAULT_BODY';
+import { defaultApiLiteNet2Commands } from './@api';
+import { getDefaultBodyCatracaInfo } from './params/getDefaultBodyCatracaInfo';
 
-export const BloquearEntradaCatraca = async () => {
-  await api.post(
-    `${partyUrl.liteNet}/Notify`,
-    { ...DEFAULT_BODY },
-    {
-      params: {
-        duration: 3000, // duração da animação do bloqueio em milissegundos
-        color: 1, // cor do bloqueio (1 = vermelho)
-        showMessage: 1, // id da mensagem a ser exibida
-        tone: 2, // tom do bloqueio (2 = tom de erro)
-      },
+export const bloquearEntradaCatraca = async () => {
+  const DEFAULT_BODY = await getDefaultBodyCatracaInfo();
+  await defaultApiLiteNet2Commands({
+    type: 'post',
+    url: '/Notify',
+    body: { ...DEFAULT_BODY },
+    params: {
+      duration: 3000,
+      color: 1,
+      showMessage: 1,
+      tone: 2,
     },
-  );
+  });
 };

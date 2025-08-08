@@ -1,15 +1,16 @@
-import api, { partyUrl } from './@api';
+import { defaultApiDeviceConnection } from './@api';
+import { getDefaultBodyCatracaInfo } from './params/getDefaultBodyCatracaInfo';
 
 export const desconectarCatraca = async () => {
-  await api.post(
-    `${partyUrl.deviceConection}/Disconnect`,
-    {},
-    {
-      params: {
-        ip: '192.168.4.37',
-        type: 1,
-        network: 'eth0',
-      },
+  const params = await getDefaultBodyCatracaInfo(true);
+  await defaultApiDeviceConnection({
+    type: 'post',
+    url: '/Disconnect',
+    body: {},
+    params: {
+      ip: params.ip,
+      type: params.type,
+      network: params.network,
     },
-  );
+  });
 };

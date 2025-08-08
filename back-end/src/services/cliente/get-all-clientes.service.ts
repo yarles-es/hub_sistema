@@ -2,6 +2,7 @@ import { Service } from 'typedi';
 
 import { ClienteFilter, ClienteResponseGetAll, StatusCliente } from '../../types/cliente.types';
 import { ClienteService } from './@cliente.service';
+import { formatadorCliente } from '../../utils/formatador-cliente';
 
 @Service()
 export class GetAllClientesService {
@@ -17,25 +18,7 @@ export class GetAllClientesService {
 
     const response = await this.clienteService.getAllClientes(page, limit, dates, filter);
 
-    const clientesFormatted = response.data.map((cliente) => {
-      const { Mensalidade, plano, ...rest } = cliente;
-      const pendente = Mensalidade.find((m) => m.status === 'PENDENTE');
-      let status: StatusCliente = 'ATIVO';
-      if (cliente.ativo === false) {
-        status = 'DESATIVADO';
-      } else if (pendente) {
-        status = this.isDataNoPassado(pendente.vencimento) ? 'VENCIDO' : 'ATIVO';
-      } else {
-        status = 'MENSALIDADE_AUSENTE';
-      }
-
-      return {
-        ...rest,
-        status,
-        nomePlano: plano.nome,
-        valorPlano: plano.valor,
-      };
-    });
+    const clientesFormatted = formatadorCliente(response.data);
 
     return {
       data: clientesFormatted,
@@ -43,15 +26,5 @@ export class GetAllClientesService {
       page: response.page,
       limit: response.limit,
     };
-  }
-
-  private isDataNoPassado(data: Date): boolean {
-    const hoje = new Date();
-    hoje.setHours(0, 0, 0, 0);
-
-    const dataComparar = new Date(data);
-    dataComparar.setHours(0, 0, 0, 0);
-
-    return dataComparar < hoje;
   }
 }

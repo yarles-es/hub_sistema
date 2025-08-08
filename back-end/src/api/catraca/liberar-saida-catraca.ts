@@ -1,12 +1,12 @@
 import { defaultApiLiteNet2Commands } from './@api';
 import { getDefaultBodyCatracaInfo } from './params/getDefaultBodyCatracaInfo';
 
-export const liberarEntradaCatraca = async () => {
+export const liberarSaidaCatraca = async () => {
   const DEFAULT_BODY = await getDefaultBodyCatracaInfo();
   await defaultApiLiteNet2Commands({
     type: 'post',
-    url: '/ReleaseEntry',
+    url: '/ReleaseExit',
     body: { ...DEFAULT_BODY },
-    params: { message: 'Bem Vindo!' },
+    params: { message: 'Volte sempre!' },
   });
 };

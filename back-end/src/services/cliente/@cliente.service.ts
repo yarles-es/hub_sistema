@@ -67,4 +67,11 @@ export class ClienteService {
   ): Promise<ClienteGetAllWithMensalidade[]> {
     return this.clienteModel.getAllWithMensalidadeByPlanId(planoId, transaction);
   }
+
+  async findByIdRegistro(
+    idRegistro: number,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<ClienteGetAllWithMensalidade | null> {
+    return this.clienteModel.findByIdRegistro(idRegistro, transaction);
+  }
 }

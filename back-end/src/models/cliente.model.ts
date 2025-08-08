@@ -188,4 +188,24 @@ export class ClienteModel {
       orderBy: { id: 'desc' },
     });
   }
+
+  public async findByIdRegistro(
+    idRegistro: number,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<ClienteGetAllWithMensalidade | null> {
+    const client = transaction || this.prisma;
+    return client.cliente.findUnique({
+      where: { catracaId: idRegistro },
+      include: {
+        Mensalidade: true,
+        plano: {
+          select: {
+            id: true,
+            nome: true,
+            valor: true,
+          },
+        },
+      },
+    });
+  }
 }

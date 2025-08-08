@@ -26,4 +26,28 @@ export class RegistroAcessoModel {
       orderBy: { id: 'desc' },
     });
   }
+
+  public async findAllByClienteId(
+    clienteId: number,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<RegistroAcesso[]> {
+    const initialHoursDay = new Date();
+    initialHoursDay.setHours(0, 0, 0, 0);
+
+    const finalHoursDay = new Date();
+    finalHoursDay.setHours(23, 59, 59, 999);
+
+    const where: Prisma.RegistroAcessoWhereInput = {
+      clienteId,
+      dataHora: {
+        gte: initialHoursDay,
+        lte: finalHoursDay,
+      },
+    };
+    const client = transaction || this.prisma;
+    return client.registroAcesso.findMany({
+      where,
+      orderBy: { dataHora: 'desc' },
+    });
+  }
 }

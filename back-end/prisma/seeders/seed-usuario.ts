@@ -10,7 +10,9 @@ export async function seedUsuario(prisma: PrismaClient) {
     administrador: true,
   };
 
-  await prisma.usuario.create({
-    data: usuario,
+  await prisma.usuario.upsert({
+    where: { email: usuario.email },
+    update: {},
+    create: usuario,
   });
 }
