@@ -41,10 +41,12 @@ model Cliente {
   planoId        Int      @map("plano_id")
   ativo          Boolean  @default(true)
 
-  plano          Plano            @relation(fields: [planoId], references: [id])
-  Mensalidade    Mensalidade[]
-  RegistroAcesso RegistroAcesso[]
-  LogSistema     LogSistema[]
+  plano               Plano              @relation(fields: [planoId], references: [id])
+  Mensalidade         Mensalidade[]
+  RegistroAcesso      RegistroAcesso[]
+  LogSistema          LogSistema[]
+  CadastroBiometriaId Int?
+  CadastroBiometria   CadastroBiometria?
 
   @@map("clientes")
 }
@@ -146,4 +148,14 @@ model CatracaInfo {
   networkName   String  @map("network_name")
 
   @@map("catracas_info")
+}
+
+model CadastroBiometria {
+  id            Int     @id @default(autoincrement())
+  clienteId     Int     @unique @map("cliente_id")
+  Cliente       Cliente @relation(fields: [clienteId], references: [id])
+  idCatraca     Int     @map("id_catraca")
+  primeiraEtapa Boolean @default(false) @map("primeira_etapa")
+  segundaEtapa  Boolean @default(false) @map("segunda_etapa")
+  terceiraEtapa Boolean @default(false) @map("terceira_etapa")
 }

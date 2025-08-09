@@ -1,11 +1,12 @@
 import axios from 'axios';
-import { conectarCatraca } from './conectar-catraca';
+import { conectarCatraca } from './catraca/conectar-catraca';
 
 const url = 'http://localhost:5110/';
 
 export const partyUrl = {
   liteNet: 'LiteNet2Commands', // rota de trabalho do LiteNet2
   deviceConection: 'DeviceConnection', // rota de trabalho das conexões
+  sm25Reader: 'SM25ReaderCommands', // rota de trabalho do leitor SM25
 };
 
 const api = axios.create({
@@ -80,4 +81,20 @@ export const defaultApiLiteNet2Commands = async ({
 
     throw error;
   }
+};
+
+export const defaultApiSM25Reader = <T>({
+  type,
+  url,
+  body,
+  params,
+  reconnect = true,
+}: DefaultApi): Promise<T> => {
+  const fullUrl = `${partyUrl.sm25Reader}${url}`;
+
+  if (type === 'get' || type === 'delete') {
+    return api[type]<T>(fullUrl, { params }).then((res) => res.data);
+  }
+
+  return api[type]<T>(fullUrl, body, { params }).then((res) => res.data);
 };

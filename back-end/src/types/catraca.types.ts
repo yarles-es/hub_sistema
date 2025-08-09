@@ -1,3 +1,10 @@
+export type Webhook = {
+  ip: string;
+  id: number;
+  command: number;
+  type: number;
+};
+
 export type command774 = {
   identification: {
     device: number;
@@ -8,13 +15,36 @@ export type command774 = {
   };
 };
 
-export type WebHook = {
-  ip: string;
-  id: number;
-  command: number;
-  type: number;
+export type WebhookCommand774 = Webhook & {
+  response: command774;
 };
 
-export type WebhookCommand774 = WebHook & {
-  response: command774;
+export type BuscarIdDiposnivelResponse = Webhook & {
+  response: {
+    success: boolean;
+    message: string | null;
+    data: {
+      content: number;
+    };
+  };
+};
+
+export type CancelarOperacaoResponse = Webhook & {
+  response: {
+    success: boolean;
+    message: string | null;
+    data: {
+      content: boolean;
+    };
+  };
+};
+
+export type VerificarTemplateIdResponse = Webhook & {
+  response: {
+    success: boolean;
+    message: string | null;
+    data: {
+      content: string;
+    };
+  };
 };

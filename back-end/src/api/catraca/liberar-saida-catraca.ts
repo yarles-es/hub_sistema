@@ -1,5 +1,5 @@
-import { defaultApiLiteNet2Commands } from './@api';
-import { getDefaultBodyCatracaInfo } from './params/getDefaultBodyCatracaInfo';
+import { getDefaultBodyCatracaInfo } from '../params/getDefaultBodyCatracaInfo';
+import { defaultApiLiteNet2Commands } from '../@api';
 
 export const liberarSaidaCatraca = async () => {
   const DEFAULT_BODY = await getDefaultBodyCatracaInfo();

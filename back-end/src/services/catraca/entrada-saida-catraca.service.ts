@@ -7,6 +7,7 @@ import { formatadorCliente } from '../../utils/formatador-cliente';
 import { StatusCliente } from '../../types/cliente.types';
 import { liberarEntradaCatraca } from '../../api/catraca/liberar-entrada-catraca';
 import { liberarSaidaCatraca } from '../../api/catraca/liberar-saida-catraca';
+import { WebhookCommand774 } from '../../types/catraca.types';
 
 @Service()
 export class EntradasaidaCatracaService {
@@ -17,8 +18,9 @@ export class EntradasaidaCatracaService {
     private readonly clienteService: ClienteService,
   ) {}
 
-  async execute(idRegistro: number) {
-    const cliente = await this.clienteService.findByIdRegistro(idRegistro);
+  async execute(data: WebhookCommand774) {
+    const id = data.response.identification.id;
+    const cliente = await this.clienteService.findByIdRegistro(id);
 
     if (!cliente) {
       bloquearEntradaCatraca();

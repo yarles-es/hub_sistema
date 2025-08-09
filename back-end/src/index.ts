@@ -23,11 +23,6 @@ app.use;
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(express.json({ limit: '50mb' }));
 
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.url}`);
-  next();
-});
-
 app.use('/api', routes);
 
 app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {

@@ -1,5 +1,5 @@
-import { defaultApiDeviceConnection } from './@api';
-import { getDefaultBodyCatracaInfo } from './params/getDefaultBodyCatracaInfo';
+import { getDefaultBodyCatracaInfo } from '../params/getDefaultBodyCatracaInfo';
+import { defaultApiDeviceConnection } from '../@api';
 
 export const conectarCatraca = async () => {
   const params = await getDefaultBodyCatracaInfo(true);

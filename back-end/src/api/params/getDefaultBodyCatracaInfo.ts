@@ -1,5 +1,5 @@
 import Container from 'typedi';
-import { CatracaInfoService } from '../../../services/catraca/@catraca-info.service';
+import { CatracaInfoService } from '../../services/catraca/@catraca-info.service';
 
 const service = Container.get<CatracaInfoService>(CatracaInfoService);
 
