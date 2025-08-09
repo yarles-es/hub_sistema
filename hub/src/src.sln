@@ -1,0 +1,30 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toletus.Hub.API", "Toletus.Hub.API\Toletus.Hub.API.csproj", "{12AE55E4-D77E-9F0C-1BA0-DB9E1566480C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toletus.Hub", "Toletus.Hub\Toletus.Hub.csproj", "{EA2F67FC-6781-BA53-7B9F-F99E22A617E6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{12AE55E4-D77E-9F0C-1BA0-DB9E1566480C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12AE55E4-D77E-9F0C-1BA0-DB9E1566480C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12AE55E4-D77E-9F0C-1BA0-DB9E1566480C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12AE55E4-D77E-9F0C-1BA0-DB9E1566480C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA2F67FC-6781-BA53-7B9F-F99E22A617E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA2F67FC-6781-BA53-7B9F-F99E22A617E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA2F67FC-6781-BA53-7B9F-F99E22A617E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA2F67FC-6781-BA53-7B9F-F99E22A617E6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2C3211B0-226D-4425-9AA6-C9B505896C10}
+	EndGlobalSection
+EndGlobal

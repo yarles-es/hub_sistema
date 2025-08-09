@@ -167,7 +167,7 @@ public class SM25NotificationService : NotificationBaseService
                 or SM25Commands.WriteTemplate
                 or SM25Commands.ClearTemplate
                 or SM25Commands.ClearAllTemplate => sm25Response.ReturnCode == ReturnCodes.ERR_SUCCESS,
-            
+
             _ => sm25Response
         };
 

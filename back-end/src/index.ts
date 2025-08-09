@@ -1,4 +1,3 @@
-import bodyParser from 'body-parser';
 import cors from 'cors';
 import 'dotenv/config';
 import type { NextFunction, Request, Response } from 'express';
@@ -19,9 +18,15 @@ app.use(
   }),
 );
 
-app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
+app.use;
 
-app.use(bodyParser.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+app.use(express.json({ limit: '50mb' }));
+
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+});
 
 app.use('/api', routes);
 
@@ -29,6 +34,6 @@ app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
   asyncError.errorHandling(err, req, res, next);
 });
 
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, '127.0.0.1', () => {
   console.log(`Server is running on port ${PORT}`);
 });

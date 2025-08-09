@@ -267,6 +267,7 @@ public class LiteNet2CommandService : LiteNet2NotificationService
     public async Task<Notification> SetFingerprintIdentificationMode(Device device,
         FingerprintIdentificationMode fingerprintIdentificationMode)
     {
+
         return await ExecuteCommandAsync(
             device,
             LiteNet2Commands.SetFingerprintIdentificationMode,
