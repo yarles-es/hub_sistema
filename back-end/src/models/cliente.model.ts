@@ -76,6 +76,47 @@ export class ClienteModel {
     });
   }
 
+  public async findByDataNascimento(
+    date: string,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<ClienteGetAllWithMensalidade | null> {
+    const client = transaction || this.prisma;
+    const where: any = {};
+
+    const start = new Date(date);
+    start.setUTCHours(0, 0, 0, 0);
+
+    const end = new Date(date);
+    end.setUTCHours(23, 59, 59, 999);
+
+    where.dataNascimento = {
+      gte: start,
+      lte: end,
+    };
+
+    const result = await client.cliente.findMany({
+      where: { dataNascimento: where.dataNascimento },
+      include: {
+        Mensalidade: {
+          where: { status: StatusMensalidade.PENDENTE },
+        },
+        plano: {
+          select: {
+            id: true,
+            nome: true,
+            valor: true,
+          },
+        },
+      },
+    });
+
+    if (result.length === 0) {
+      return null;
+    }
+
+    return result[0];
+  }
+
   public async findAll(
     page: number,
     limit: number,
@@ -197,7 +238,9 @@ export class ClienteModel {
     return client.cliente.findUnique({
       where: { catracaId: idRegistro },
       include: {
-        Mensalidade: true,
+        Mensalidade: {
+          where: { status: StatusMensalidade.PENDENTE },
+        },
         plano: {
           select: {
             id: true,

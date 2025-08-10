@@ -83,18 +83,54 @@ export const defaultApiLiteNet2Commands = async ({
   }
 };
 
-export const defaultApiSM25Reader = <T>({
+export const defaultApiSM25Reader = async <T>({
   type,
   url,
   body,
   params,
   reconnect = true,
 }: DefaultApi): Promise<T> => {
-  const fullUrl = `${partyUrl.sm25Reader}${url}`;
+  try {
+    const fullUrl = `${partyUrl.sm25Reader}${url}`;
 
-  if (type === 'get' || type === 'delete') {
-    return api[type]<T>(fullUrl, { params }).then((res) => res.data);
+    if (type === 'get' || type === 'delete') {
+      const res = await api[type]<T>(fullUrl, { params });
+      return res.data;
+    }
+
+    const res = await api[type]<T>(fullUrl, body, { params });
+    return res.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && reconnect) {
+      const status = error.response?.status;
+      const responseData = error.response?.data;
+      const mensagemErro = responseData?.response?.message || '';
+
+      const erroDeDesconexao =
+        status === 400 &&
+        typeof mensagemErro === 'string' &&
+        mensagemErro.includes('device is not in connected');
+
+      if (erroDeDesconexao) {
+        console.warn('[RECONNECT] SM25 desconectado. Tentando reconectar...');
+        await conectarCatraca();
+
+        const retryUrl = `${partyUrl.sm25Reader}${url}`;
+
+        if (type === 'get' || type === 'delete') {
+          const res = await api[type]<T>(retryUrl, { params });
+          return res.data;
+        }
+
+        const res = await api[type]<T>(retryUrl, body, { params });
+        return res.data;
+      }
+
+      console.error('Erro na requisição para SM25 (não reconectado):', mensagemErro);
+    } else {
+      console.error('Erro inesperado na requisição:', error);
+    }
+
+    throw error;
   }
-
-  return api[type]<T>(fullUrl, body, { params }).then((res) => res.data);
 };

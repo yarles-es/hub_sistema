@@ -18,17 +18,16 @@ app.use(
   }),
 );
 
-app.use;
-
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(express.json({ limit: '50mb' }));
 
+app.get('/api/health', (_req, res) => res.json({ ok: true }));
 app.use('/api', routes);
 
 app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
   asyncError.errorHandling(err, req, res, next);
 });
 
-app.listen(PORT, '127.0.0.1', () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is running on port ${PORT}`);
 });

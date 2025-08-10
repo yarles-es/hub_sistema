@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import { Service } from 'typedi';
 import { CreateCadastroBiometria, UpdateCadastroBiometria } from '../types/cadastro-biometria.types';
 
@@ -9,8 +9,9 @@ export class CadastroBiometriaModel {
     this.prisma = new PrismaClient();
   }
 
-  async create(data: CreateCadastroBiometria) {
-    return this.prisma.cadastroBiometria.create({
+  async create(data: CreateCadastroBiometria, transaction?: Prisma.TransactionClient) {
+    const prisma = transaction || this.prisma;
+    return prisma.cadastroBiometria.create({
       data: {
         clienteId: data.clienteId,
         idCatraca: data.idCatraca,
@@ -18,19 +19,22 @@ export class CadastroBiometriaModel {
     });
   }
 
-  async findFirst() {
-    return this.prisma.cadastroBiometria.findFirst();
+  async findFirst(transaction?: Prisma.TransactionClient) {
+    const prisma = transaction || this.prisma;
+    return prisma.cadastroBiometria.findFirst();
   }
 
-  async update(id: number, data: UpdateCadastroBiometria) {
-    await this.prisma.cadastroBiometria.update({
+  async update(id: number, data: UpdateCadastroBiometria, transaction?: Prisma.TransactionClient) {
+    const prisma = transaction || this.prisma;
+    await prisma.cadastroBiometria.update({
       where: { id },
       data,
     });
   }
 
-  async delete(id: number) {
-    await this.prisma.cadastroBiometria.delete({
+  async delete(id: number, transaction?: Prisma.TransactionClient) {
+    const prisma = transaction || this.prisma;
+    await prisma.cadastroBiometria.delete({
       where: { id },
     });
   }

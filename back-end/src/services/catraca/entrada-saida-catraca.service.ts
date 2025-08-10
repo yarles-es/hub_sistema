@@ -4,7 +4,7 @@ import { ClienteService } from '../cliente/@cliente.service';
 import { bloquearEntradaCatraca } from '../../api/catraca/bloquear-entrada-catraca';
 import { TipoCatraca } from '@prisma/client';
 import { formatadorCliente } from '../../utils/formatador-cliente';
-import { StatusCliente } from '../../types/cliente.types';
+import { ClienteGetAllWithMensalidade, StatusCliente } from '../../types/cliente.types';
 import { liberarEntradaCatraca } from '../../api/catraca/liberar-entrada-catraca';
 import { liberarSaidaCatraca } from '../../api/catraca/liberar-saida-catraca';
 import { WebhookCommand774 } from '../../types/catraca.types';
@@ -19,11 +19,10 @@ export class EntradasaidaCatracaService {
   ) {}
 
   async execute(data: WebhookCommand774) {
-    const id = data.response.identification.id;
-    const cliente = await this.clienteService.findByIdRegistro(id);
+    const cliente = await this.getClienteForCommand(data);
 
     if (!cliente) {
-      bloquearEntradaCatraca();
+      await bloquearEntradaCatraca();
       return;
     }
 
@@ -52,6 +51,35 @@ export class EntradasaidaCatracaService {
     await bloquearEntradaCatraca();
 
     return;
+  }
+
+  private async getClienteForCommand(body: WebhookCommand774): Promise<ClienteGetAllWithMensalidade | null> {
+    const command = body.command;
+    if (command === 774) {
+      const id = body.response.identification.id;
+      return await this.clienteService.findByIdRegistro(id);
+    }
+
+    if (command === 771) {
+      const data = body.response.identification.data;
+      const date = await this.transformDate(data);
+      console.log(date);
+      if (date) {
+        return await this.clienteService.findByDataNascimento(date);
+      }
+    }
+    return null;
+  }
+
+  private async transformDate(data: number) {
+    const strData = data.toString();
+    if (strData.length !== 8) {
+      return;
+    }
+    const dia = strData.slice(0, 2);
+    const mes = strData.slice(2, 4);
+    const ano = strData.slice(4, 8);
+    return `${ano}-${mes}-${dia}`;
   }
 
   private async entradaSaidaCatraca(clienteId: number) {

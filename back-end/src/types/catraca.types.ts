@@ -19,12 +19,41 @@ export type WebhookCommand774 = Webhook & {
   response: command774;
 };
 
+export type WebhookCommand771 = Webhook & {
+  response: command774;
+};
+
 export type BuscarIdDiposnivelResponse = Webhook & {
   response: {
     success: boolean;
     message: string | null;
     data: {
       content: number;
+    };
+  };
+};
+
+export type IniciarCadastroBiometriaResponse = Webhook & {
+  response: {
+    success: boolean;
+    message: string | null;
+    data: {
+      content: string;
+    };
+  };
+};
+
+export type PassosCadastroBiometriaResponse = Webhook & {
+  response: {
+    enroll: string;
+  };
+};
+
+export type ErrorCadastroBiometriaResponse = Webhook & {
+  response: {
+    enrollStatus: {
+      isSuccess: boolean;
+      description: string;
     };
   };
 };

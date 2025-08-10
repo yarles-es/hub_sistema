@@ -74,4 +74,11 @@ export class ClienteService {
   ): Promise<ClienteGetAllWithMensalidade | null> {
     return this.clienteModel.findByIdRegistro(idRegistro, transaction);
   }
+
+  async findByDataNascimento(
+    dataNascimento: string,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<ClienteGetAllWithMensalidade | null> {
+    return this.clienteModel.findByDataNascimento(dataNascimento, transaction);
+  }
 }
