@@ -1,4 +1,5 @@
 import cors from 'cors';
+import http from 'http';
 import 'dotenv/config';
 import type { NextFunction, Request, Response } from 'express';
 import express from 'express';
@@ -23,7 +24,6 @@ app.use(
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(express.json({ limit: '50mb' }));
 
-app.get('/api/health', (_req, res) => res.json({ ok: true }));
 app.use('/api', routes);
 
 app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {

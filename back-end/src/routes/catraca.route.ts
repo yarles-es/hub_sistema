@@ -10,5 +10,7 @@ router.post('/webhook', catracaController.webhook.bind(catracaController));
 router.get('/id-disponivel', catracaController.buscarIdDisponivel.bind(catracaController));
 router.post('/iniciar-cadastro', catracaController.iniciarCadastroBiometria.bind(catracaController));
 router.post('/cancelar-operacao', catracaController.cancelarOperacaoBiometria.bind(catracaController));
+router.get('/cadastro-biometria', catracaController.getCadastroBiometria.bind(catracaController));
+router.delete('/limpar-template/:id', catracaController.limparTemplatePorId.bind(catracaController));
 
 export const catracaRoute = router;

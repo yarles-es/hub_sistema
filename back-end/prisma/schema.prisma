@@ -159,4 +159,5 @@ model CadastroBiometria {
   segundaEtapa  Boolean @default(false) @map("segunda_etapa")
   terceiraEtapa Boolean @default(false) @map("terceira_etapa")
   errorMessage  String? @map("error_message")
+  success       Boolean @default(false)
 }

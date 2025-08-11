@@ -33,7 +33,7 @@ export class EtapasCadastroBiometriaService {
       },
     } = body;
 
-    if (description === messageFailToRegisterBiometria && !isSuccess) {
+    if (description && description === messageFailToRegisterBiometria && !isSuccess) {
       await this.failRegister();
       await bloquearEntradaCatraca();
     }
@@ -93,10 +93,8 @@ export class EtapasCadastroBiometriaService {
           { catracaId: cadastroBiometria.idCatraca },
           tx,
         );
-
-        await this.cadastroBiometriaService.delete(cadastroBiometria.id, tx);
       });
-
+      await this.cadastroBiometriaService.update(cadastroBiometria.id, { success: true });
       await cancelarOperacaoBiometria();
       await notificacaoPositiva();
     } catch (err) {
@@ -113,7 +111,7 @@ export class EtapasCadastroBiometriaService {
       const cadastroBiometria = await this.cadastroBiometriaService.findFirst();
       if (!cadastroBiometria) return;
       await this.cadastroBiometriaService.update(cadastroBiometria.id, {
-        errorMessage: 'Erro ao registrar biometria, possivel dedo já cadastrado na catraca',
+        errorMessage: 'Erro ao registrar biometria',
       });
 
       await cancelarOperacaoBiometria();

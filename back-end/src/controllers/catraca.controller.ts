@@ -14,6 +14,8 @@ import { EtapasCadastroBiometriaService } from '../services/catraca/etapas-cadas
 import { IniciarCadastroBiometriaService } from '../services/catraca/iniciar-cadastro-biometria.service';
 import { bloquearEntradaCatraca } from '../api/catraca/bloquear-entrada-catraca';
 import { CancelarOperacaoBiometriaService } from '../services/catraca/cancelar-operacao-biometria.service';
+import { GetFirstCadastroBiometriaService } from '../services/catraca/get-first-cadastro-biometria.service';
+import { LimparTemplatePorIdService } from '../services/catraca/limpar-template-por-id.service';
 
 @Service()
 export class CatracaController {
@@ -23,12 +25,13 @@ export class CatracaController {
     private readonly etapasCadastroBiometriaService: EtapasCadastroBiometriaService,
     private readonly iniciarCadastroBiometriaService: IniciarCadastroBiometriaService,
     private readonly cancelarOperacaoBiometriaService: CancelarOperacaoBiometriaService,
+    private readonly getFirstCadastroBiometriaService: GetFirstCadastroBiometriaService,
+    private readonly limparTemplatePorIdService: LimparTemplatePorIdService,
   ) {}
   public async webhook(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const body = req.body as Webhook;
       const { command } = body;
-      console.log(body);
 
       if (command === 774 || command === 771) {
         // comando manda para o controle de entrada e saida do usuario
@@ -85,6 +88,28 @@ export class CatracaController {
       await this.cancelarOperacaoBiometriaService.execute();
 
       res.status(204).send();
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async getCadastroBiometria(_req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const result = await this.getFirstCadastroBiometriaService.execute();
+
+      res.status(200).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async limparTemplatePorId(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { id } = req.params;
+
+      const result = await this.limparTemplatePorIdService.execute(Number(id));
+
+      res.status(200).json(result);
     } catch (error) {
       next(error);
     }

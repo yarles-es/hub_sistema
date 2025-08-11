@@ -1,6 +1,10 @@
 import { Prisma, PrismaClient } from '@prisma/client';
 import { Service } from 'typedi';
-import { CreateCadastroBiometria, UpdateCadastroBiometria } from '../types/cadastro-biometria.types';
+import {
+  CreateCadastroBiometria,
+  GetCadastroBiometria,
+  UpdateCadastroBiometria,
+} from '../types/cadastro-biometria.types';
 
 @Service()
 export class CadastroBiometriaModel {
@@ -19,9 +23,17 @@ export class CadastroBiometriaModel {
     });
   }
 
-  async findFirst(transaction?: Prisma.TransactionClient) {
+  async findFirst(transaction?: Prisma.TransactionClient): Promise<GetCadastroBiometria | null> {
     const prisma = transaction || this.prisma;
-    return prisma.cadastroBiometria.findFirst();
+    return prisma.cadastroBiometria.findFirst({
+      include: {
+        Cliente: {
+          select: {
+            nome: true,
+          },
+        },
+      },
+    });
   }
 
   async update(id: number, data: UpdateCadastroBiometria, transaction?: Prisma.TransactionClient) {
