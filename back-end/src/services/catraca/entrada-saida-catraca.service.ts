@@ -63,7 +63,6 @@ export class EntradasaidaCatracaService {
     if (command === 771) {
       const data = body.response.identification.data;
       const date = await this.transformDate(data);
-      console.log(date);
       if (date) {
         return await this.clienteService.findByDataNascimento(date);
       }

@@ -17,6 +17,7 @@ import { withTransaction } from '../../utils/withTransaction';
 import { cancelarOperacaoBiometria } from '../../api/biometria/cancelar-operacao-biometria';
 import { bloquearEntradaCatraca } from '../../api/catraca/bloquear-entrada-catraca';
 import { notificacaoPositiva } from '../../api/catraca/notificacao-positiva';
+import { Prisma } from '@prisma/client';
 
 @Service()
 export class EtapasCadastroBiometriaService {
@@ -86,22 +87,24 @@ export class EtapasCadastroBiometriaService {
     }
 
     try {
-      withTransaction(async (tx) => {
+      await withTransaction(async (tx) => {
         await this.clienteService.updateCliente(
           cadastroBiometria.clienteId,
-          {
-            catracaId: cadastroBiometria.idCatraca,
-          },
+          { catracaId: cadastroBiometria.idCatraca },
           tx,
         );
 
         await this.cadastroBiometriaService.delete(cadastroBiometria.id, tx);
-        await cancelarOperacaoBiometria();
-        await notificacaoPositiva();
       });
-    } catch {
+
+      await cancelarOperacaoBiometria();
+      await notificacaoPositiva();
+    } catch (err) {
+      if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
+        await this.failRegister();
+        return;
+      }
       await this.failRegister();
-      return;
     }
   }
 

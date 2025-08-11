@@ -13,6 +13,7 @@ import { BuscaIdDisponivelRegistroService } from '../services/catraca/busca-id-d
 import { EtapasCadastroBiometriaService } from '../services/catraca/etapas-cadastro-biometria.service';
 import { IniciarCadastroBiometriaService } from '../services/catraca/iniciar-cadastro-biometria.service';
 import { bloquearEntradaCatraca } from '../api/catraca/bloquear-entrada-catraca';
+import { CancelarOperacaoBiometriaService } from '../services/catraca/cancelar-operacao-biometria.service';
 
 @Service()
 export class CatracaController {
@@ -21,6 +22,7 @@ export class CatracaController {
     private readonly buscaIdDisponivelRegistroService: BuscaIdDisponivelRegistroService,
     private readonly etapasCadastroBiometriaService: EtapasCadastroBiometriaService,
     private readonly iniciarCadastroBiometriaService: IniciarCadastroBiometriaService,
+    private readonly cancelarOperacaoBiometriaService: CancelarOperacaoBiometriaService,
   ) {}
   public async webhook(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
@@ -28,13 +30,9 @@ export class CatracaController {
       const { command } = body;
       console.log(body);
 
-      if (command === 774) {
+      if (command === 774 || command === 771) {
         // comando manda para o controle de entrada e saida do usuario
         await this.entradasaidaCatracaService.execute(req.body as WebhookCommand774);
-
-        res.status(200).send();
-      } else if (command === 771) {
-        await this.entradasaidaCatracaService.execute(req.body as WebhookCommand771);
 
         res.status(200).send();
       } else if (command === 775) {
@@ -77,6 +75,16 @@ export class CatracaController {
       const id = await this.buscaIdDisponivelRegistroService.execute();
 
       res.status(200).json({ id });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async cancelarOperacaoBiometria(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      await this.cancelarOperacaoBiometriaService.execute();
+
+      res.status(204).send();
     } catch (error) {
       next(error);
     }
