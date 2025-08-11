@@ -77,3 +77,28 @@ export type VerificarTemplateIdResponse = Webhook & {
     };
   };
 };
+
+export type MensagensCatracaResponse = {
+  message1: string;
+  message2: string;
+};
+
+export type BuscarMensagemCatracaResponse = Webhook & {
+  response: {
+    success: boolean;
+    message: string | null;
+    data: {
+      content: string;
+    };
+  };
+};
+
+export type BuscarDuracaoInteracaoCatracaResponse = Webhook & {
+  response: {
+    success: boolean;
+    message: string | null;
+    data: {
+      content: number;
+    };
+  };
+};

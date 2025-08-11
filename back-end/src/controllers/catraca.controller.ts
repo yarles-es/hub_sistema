@@ -16,6 +16,7 @@ import { bloquearEntradaCatraca } from '../api/catraca/bloquear-entrada-catraca'
 import { CancelarOperacaoBiometriaService } from '../services/catraca/cancelar-operacao-biometria.service';
 import { GetFirstCadastroBiometriaService } from '../services/catraca/get-first-cadastro-biometria.service';
 import { LimparTemplatePorIdService } from '../services/catraca/limpar-template-por-id.service';
+import { BuscaMensagensCatracaService } from '../services/catraca/busca-mensagens-catraca.service';
 
 @Service()
 export class CatracaController {
@@ -27,6 +28,7 @@ export class CatracaController {
     private readonly cancelarOperacaoBiometriaService: CancelarOperacaoBiometriaService,
     private readonly getFirstCadastroBiometriaService: GetFirstCadastroBiometriaService,
     private readonly limparTemplatePorIdService: LimparTemplatePorIdService,
+    private readonly buscaMensagensCatracaService: BuscaMensagensCatracaService,
   ) {}
   public async webhook(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
@@ -108,6 +110,16 @@ export class CatracaController {
       const { id } = req.params;
 
       const result = await this.limparTemplatePorIdService.execute(Number(id));
+
+      res.status(200).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async buscarMensagens(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const result = await this.buscaMensagensCatracaService.execute();
 
       res.status(200).json(result);
     } catch (error) {

@@ -36,13 +36,13 @@ export const defaultApiDeviceConnection = ({ type, url, body, params }: DefaultA
   return api[type](fullUrl, body, { params });
 };
 
-export const defaultApiLiteNet2Commands = async ({
+export const defaultApiLiteNet2Commands = async <T>({
   type,
   url,
   body,
   params,
   reconnect = true,
-}: DefaultApi) => {
+}: DefaultApi): Promise<T> => {
   try {
     const fullUrl = `${partyUrl.liteNet}${url}`;
 
