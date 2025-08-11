@@ -132,6 +132,7 @@ const ClientPage = () => {
               setModals("");
             }}
             client={clients?.data.find((client) => client.id === itemSelected)}
+            refetchClients={refetch}
           />
         )}
 

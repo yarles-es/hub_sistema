@@ -8,6 +8,7 @@ type Props = {
   onClose: () => void;
   onCloseAndGetClient: () => void;
   client: Client | undefined;
+  refetchClients: () => void;
 };
 
 const ModalEditClient: React.FC<Props> = ({
@@ -15,10 +16,15 @@ const ModalEditClient: React.FC<Props> = ({
   onClose,
   onCloseAndGetClient,
   client,
+  refetchClients,
 }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <FormEditClient onClose={onCloseAndGetClient} client={client} />
+      <FormEditClient
+        onClose={onCloseAndGetClient}
+        client={client}
+        refetch={refetchClients}
+      />
     </Modal>
   );
 };

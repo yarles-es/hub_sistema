@@ -48,4 +48,5 @@ export type CreateClient = {
 
 export type UpdateClient = Partial<CreateClient> & {
   id: number;
+  idCatraca?: number | null;
 };

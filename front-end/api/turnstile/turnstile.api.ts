@@ -22,3 +22,14 @@ export const startLinkWithTurnstile = async (
 export const cancelTurnstileOperation = async () => {
   return await genericRequest<void>("post", "catraca/cancelar-operacao");
 };
+
+export const getFirstRegisterTurnstile = async () => {
+  return await genericRequest<RegisterTurnstile>(
+    "get",
+    "catraca/cadastro-biometria"
+  );
+};
+
+export const cleanTemplateById = async (id: number) => {
+  return await genericRequest<void>("delete", `catraca/limpar-template/${id}`);
+};

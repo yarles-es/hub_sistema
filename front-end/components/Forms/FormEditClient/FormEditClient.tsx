@@ -4,6 +4,7 @@ import { Controller, useForm } from "react-hook-form";
 import DefaultFormatContainerForm from "../DefaultFormatContainerForm";
 
 import { updateClient } from "@/api/client/client.api";
+import { cleanTemplateById } from "@/api/turnstile/turnstile.api";
 import Button from "@/components/Buttons/Button";
 import Input from "@/components/Inputs/Input";
 import InputPhone from "@/components/Inputs/InputPhone";
@@ -14,12 +15,13 @@ import { Client, UpdateClient } from "@/types/Client";
 type Props = {
   onClose: () => void;
   client: Client | undefined;
+  refetch: () => void;
 };
 
-const FormEditClient: React.FC<Props> = ({ onClose, client }) => {
+const FormEditClient: React.FC<Props> = ({ onClose, client, refetch }) => {
   const alert = useAlert();
 
-  const { handleSubmit, formState, control, watch } = useForm<UpdateClient>({
+  const { handleSubmit, formState, control, setValue } = useForm<UpdateClient>({
     mode: "onBlur",
     defaultValues: client
       ? {
@@ -31,6 +33,7 @@ const FormEditClient: React.FC<Props> = ({ onClose, client }) => {
             new Date(client.dataNascimento).toISOString().split("T")[0] || "",
           planoId: client.planoId ?? undefined,
           diaMensalidade: client.diaMensalidade ?? undefined,
+          idCatraca: client.catracaId ?? null,
         }
       : undefined,
   });
@@ -60,6 +63,21 @@ const FormEditClient: React.FC<Props> = ({ onClose, client }) => {
     onClose();
     return null;
   }
+
+  const handleCleanTemplate = () => {
+    if (client?.catracaId) {
+      cleanTemplateById(client.catracaId)
+        .then(() => {
+          setValue("idCatraca", null);
+          refetch();
+          alert("Template limpo com sucesso!", "success");
+        })
+        .catch((error) => {
+          alert(error.message, "error");
+          console.error(error);
+        });
+    }
+  };
 
   return (
     <DefaultFormatContainerForm title="Editar cliente">
@@ -173,6 +191,36 @@ const FormEditClient: React.FC<Props> = ({ onClose, client }) => {
                 )}
               />
             </div>
+          </div>
+          <div className="flex flex-col justify-center items-center mb-5">
+            <Controller
+              control={control}
+              name="idCatraca"
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  value={
+                    field.value !== null && field.value !== undefined
+                      ? field.value
+                      : ""
+                  }
+                  label="ID Catraca:"
+                  placeholder={field.value ? field.value.toString() : ""}
+                  disabled
+                  className="max-w-[80px] text-center"
+                  error={errors.idCatraca?.message}
+                />
+              )}
+            />
+            <Button
+              type="button"
+              className={`flex w-full lg:w-30 justify-center p-1 rounded`}
+              primary
+              disabled={!client.catracaId}
+              onClick={handleCleanTemplate}
+            >
+              Desvincular
+            </Button>
           </div>
           <div className="flex justify-center items-center">
             <Button
