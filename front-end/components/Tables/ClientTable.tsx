@@ -29,6 +29,7 @@ const ClientTable: React.FC<Props> = ({ clients, onOpenItemSelect }) => {
   const titles: Array<Title | null> = [
     { key: "id", label: "ID", type: "number", order: true },
     { key: "nome", label: "Nome", type: "string", order: true },
+    { key: "catracaId", label: "Catraca ID", type: "number", order: true },
     { key: "email", label: "Email", type: "string", order: true },
     { key: "telefone", label: "Telefone", type: "string", order: true },
     {
@@ -133,6 +134,19 @@ const ClientTable: React.FC<Props> = ({ clients, onOpenItemSelect }) => {
               </td>
               <td className="py-4 px-4 text-black dark:text-white">
                 <p>{client.nome}</p>
+              </td>
+              <td className="py-4 px-4 text-black dark:text-white">
+                {client.catracaId ? (
+                  <p>{client.catracaId}</p>
+                ) : (
+                  <div className="flex space-x-3">
+                    <ButtonActionNew
+                      onClick={() =>
+                        onOpenItemSelect(client.id, "linkTurnstile")
+                      }
+                    />
+                  </div>
+                )}
               </td>
               <td className="py-4 px-4 text-black dark:text-white">
                 <p>{client.email}</p>

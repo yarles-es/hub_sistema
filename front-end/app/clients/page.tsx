@@ -12,6 +12,7 @@ import ModalActiveClient from "@/components/Modals/ClientModals/ModalActiveClien
 import ModalCreateClient from "@/components/Modals/ClientModals/ModalCreateClient";
 import ModalDisableClient from "@/components/Modals/ClientModals/ModalDisableClient";
 import ModalEditClient from "@/components/Modals/ClientModals/ModalEditClient";
+import ModalLinkTurnstile from "@/components/Modals/ClientModals/ModalLinkTurnstile";
 import ModalSearchClient from "@/components/Modals/ClientModals/ModalSearchClient";
 import PageTransition from "@/components/PageTransition/PageTransition";
 import Pagination from "@/components/Pagination/Pagination";
@@ -69,6 +70,7 @@ const ClientPage = () => {
     active: () => setModals("active"),
     search: () => setModals("search"),
     disable: () => setModals("disable"),
+    linkTurnstile: () => setModals("linkTurnstile"),
   };
 
   const onOpenModal = (id: number, type: ModalClientType) => {
@@ -161,6 +163,18 @@ const ClientPage = () => {
           <ModalSearchClient
             isOpen={modals === "search"}
             onClose={() => setModals("")}
+          />
+        )}
+
+        {modals === "linkTurnstile" && (
+          <ModalLinkTurnstile
+            isOpen={modals === "linkTurnstile"}
+            onClose={() => setModals("")}
+            onCloseAndGetClient={() => {
+              refetch();
+              setModals("");
+            }}
+            client={clients?.data.find((client) => client.id === itemSelected)}
           />
         )}
       </div>
