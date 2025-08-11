@@ -102,3 +102,13 @@ export type BuscarDuracaoInteracaoCatracaResponse = Webhook & {
     };
   };
 };
+
+export type BuscarTipoControleFluxoCatracaResponse = Webhook & {
+  response: {
+    success: boolean;
+    message: string | null;
+    data: {
+      content: number | null;
+    };
+  };
+};

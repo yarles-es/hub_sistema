@@ -3,7 +3,7 @@ import { buscarDuracaoInteracaoCatraca } from '../../api/catraca/buscar-duracao-
 import { BadRequestError } from '../../errors/BadRequestError';
 
 @Service()
-export class BuscaMensagensCatracaService {
+export class BuscaDuracaoInteracaoCatracaService {
   async execute() {
     try {
       const {
