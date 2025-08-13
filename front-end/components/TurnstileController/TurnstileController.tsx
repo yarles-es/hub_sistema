@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 
 import Button from "../Buttons/Button";
+import TurnstileConfig from "../TurnstileConfig/TurnstileConfig";
 
 import {
   freeTurnstile,
@@ -38,7 +39,7 @@ const TurnstileController = () => {
   };
 
   return (
-    <div className="xl:w-1/2 rounded-sm border border-stroke bg-white px-1.5 shadow-default dark:border-strokedark dark:bg-boxdark text-xs overflow-y-auto h-[calc(100dvh-175px)] md:h-[calc(100vh-130px)]  overscroll-none">
+    <div className="xl:w-1/2 rounded-sm border border-stroke bg-white px-1.5 shadow-default dark:border-strokedark dark:bg-boxdark text-xs overflow-y-auto h-[calc(100dvh-175px)] md:h-[calc(100vh-130px)]  overscroll-none flex flex-col justify-center">
       <div className="p-6 flex justify-center items-center flex-wrap gap-2 mt-5">
         <Button
           className="flex w-full lg:w-60 justify-center rounded p-3 text-lg m-2"
@@ -65,6 +66,7 @@ const TurnstileController = () => {
           Catraca Livre
         </Button>
       </div>
+      <TurnstileConfig />
     </div>
   );
 };

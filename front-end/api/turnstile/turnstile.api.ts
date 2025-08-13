@@ -45,3 +45,84 @@ export const releaseTurnstileExit = async () => {
 export const freeTurnstile = async () => {
   return await genericRequest<void>("post", `catraca/liberar-entrada-saida`);
 };
+
+export const setFirstMessage = async (mensagem: string) => {
+  return await genericRequest<void>("post", `catraca/setar-primeira-mensagem`, {
+    mensagem,
+  });
+};
+
+export const setSecondMessage = async (mensagem: string) => {
+  return await genericRequest<void>("post", `catraca/setar-segunda-mensagem`, {
+    mensagem,
+  });
+};
+
+export const setMessageBloq = async (mensagem: string) => {
+  return await genericRequest<void>("post", `catraca/setar-mensagem-bloqueio`, {
+    mensagem,
+  });
+};
+
+export const setClockwiseDirection = async (sentidoHorario: boolean) => {
+  return await genericRequest<void>("post", `catraca/setar-sentido-horario`, {
+    sentidoHorario,
+  });
+};
+
+export const setBiometryFlowType = async (tipo: number) => {
+  return await genericRequest<void>(
+    "post",
+    `catraca/setar-tipo-fluxo-biometria`,
+    {
+      tipo,
+    }
+  );
+};
+
+export const setFlowControlType = async (tipo: number) => {
+  return await genericRequest<void>(
+    "post",
+    `catraca/setar-tipo-controle-fluxo`,
+    {
+      tipo,
+    }
+  );
+};
+
+export const setDurationInteraction = async (duracao: number) => {
+  return await genericRequest<void>("post", `catraca/setar-duracao-interacao`, {
+    duracao,
+  });
+};
+
+export const connectTurnstile = async () => {
+  return await genericRequest<void>("post", `catraca/conectar`, {});
+};
+
+export const disconnectTurnstile = async () => {
+  return await genericRequest<void>("post", `catraca/desconectar`, {});
+};
+
+export const getMessages = async () => {
+  return await genericRequest<{
+    primeiraMensagem: string;
+    segundaMensagem: string;
+  }>("get", `catraca/buscar-mensagens`, {});
+};
+
+export const getBiometryFlowType = async () => {
+  return await genericRequest<{ tipo: number }>(
+    "get",
+    `catraca/buscar-tipo-fluxo-biometria`,
+    {}
+  );
+};
+
+export const getDurationInteraction = async () => {
+  return await genericRequest<{ duracao: number }>(
+    "get",
+    `catraca/buscar-duracao-interacao`,
+    {}
+  );
+};
