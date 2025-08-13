@@ -10,5 +10,5 @@ export const buscarDuracaoInteracaoCatraca = async () => {
     body: { ...DEFAULT_BODY },
   });
 
-  return result;
+  return result.data;
 };

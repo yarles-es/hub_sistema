@@ -28,7 +28,6 @@ import { SetarMensagemBloqueioCatracaService } from '../services/catraca/setar-m
 import { SetarSentidoHorarioCatracaService } from '../services/catraca/setar-sentido-horario-catraca.service';
 import { SetarTipoControleFluxoCatracaService } from '../services/catraca/setar-tipo-controle-fluxo-catraca.service';
 import { SetarTipoFluxoBiometriaCatracaService } from '../services/catraca/setar-tipo-fluxo-biometria-catraca.service';
-import { BuscarTipoControleFluxoService } from '../services/catraca/buscar-tipo-controle-fluxo.service';
 
 @Service()
 export class CatracaController {
@@ -54,7 +53,6 @@ export class CatracaController {
     private readonly setarSentidoHorarioCatracaService: SetarSentidoHorarioCatracaService,
     private readonly setarTipoControleFluxoCatracaService: SetarTipoControleFluxoCatracaService,
     private readonly setarTipoFluxoBiometriaCatracaService: SetarTipoFluxoBiometriaCatracaService,
-    private readonly buscarTipoControleFluxoService: BuscarTipoControleFluxoService,
   ) {}
   public async webhook(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
@@ -156,16 +154,6 @@ export class CatracaController {
   public async buscarDuracaoInteracao(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const result = await this.buscaDuracaoInteracaoCatracaService.execute();
-
-      res.status(200).json(result);
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  public async buscarTipoControleFluxo(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const result = await this.buscarTipoControleFluxoService.execute();
 
       res.status(200).json(result);
     } catch (error) {
@@ -299,7 +287,7 @@ export class CatracaController {
     try {
       const { tipo } = req.body;
 
-      await this.setarTipoFluxoBiometriaCatracaService.execute(tipo as number);
+      await this.setarTipoFluxoBiometriaCatracaService.execute(Number(tipo));
 
       res.status(204).send();
     } catch (error) {

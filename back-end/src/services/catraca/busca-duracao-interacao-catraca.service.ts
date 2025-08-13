@@ -4,7 +4,7 @@ import { BadRequestError } from '../../errors/BadRequestError';
 
 @Service()
 export class BuscaDuracaoInteracaoCatracaService {
-  async execute() {
+  async execute(): Promise<{ duracao: number }> {
     try {
       const {
         response: {
@@ -12,7 +12,7 @@ export class BuscaDuracaoInteracaoCatracaService {
         },
       } = await buscarDuracaoInteracaoCatraca();
 
-      return { duration: content };
+      return { duracao: content };
     } catch (error) {
       throw new BadRequestError('Erro ao buscar duração da interação com a catraca');
     }

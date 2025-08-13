@@ -79,36 +79,42 @@ export type VerificarTemplateIdResponse = Webhook & {
 };
 
 export type MensagensCatracaResponse = {
-  message1: string;
-  message2: string;
+  primeiraMensagem: string;
+  segundaMensagem: string;
 };
 
-export type BuscarMensagemCatracaResponse = Webhook & {
-  response: {
-    success: boolean;
-    message: string | null;
-    data: {
-      content: string;
+export type BuscarMensagemCatracaResponse = {
+  data: Webhook & {
+    response: {
+      success: boolean;
+      message: string | null;
+      data: {
+        content: string;
+      };
     };
   };
 };
 
-export type BuscarDuracaoInteracaoCatracaResponse = Webhook & {
-  response: {
-    success: boolean;
-    message: string | null;
-    data: {
-      content: number;
+export type BuscarDuracaoInteracaoCatracaResponse = {
+  data: Webhook & {
+    response: {
+      success: boolean;
+      message: string | null;
+      data: {
+        content: number;
+      };
     };
   };
 };
 
-export type BuscarTipoControleFluxoCatracaResponse = Webhook & {
-  response: {
-    success: boolean;
-    message: string | null;
-    data: {
-      content: number | null;
+export type BuscarTipoControleFluxoCatracaResponse = {
+  data: Webhook & {
+    response: {
+      success: boolean;
+      message: string | null;
+      data: {
+        content: number | null;
+      };
     };
   };
 };

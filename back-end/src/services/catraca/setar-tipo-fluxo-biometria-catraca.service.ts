@@ -6,7 +6,7 @@ import { setarTipoFluxoBiometriaCatraca } from '../../api/catraca/setar-tipo-flu
 export class SetarTipoFluxoBiometriaCatracaService {
   async execute(tipo: number): Promise<void> {
     try {
-      if (!tipo || typeof tipo !== 'number') {
+      if (tipo === undefined || typeof tipo !== 'number') {
         throw new BadRequestError('Tipo de controle de fluxo inválido');
       }
 

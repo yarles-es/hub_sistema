@@ -9,7 +9,7 @@ export const buscarPrimeiraMensagemCatraca = async () => {
     url: '/GetMessageLine1',
     body: { ...DEFAULT_BODY },
   });
-  return result;
+  return result.data;
 };
 
 export const buscarSegundaMensagemCatraca = async () => {
@@ -19,5 +19,5 @@ export const buscarSegundaMensagemCatraca = async () => {
     url: '/GetMessageLine2',
     body: { ...DEFAULT_BODY },
   });
-  return result;
+  return result.data;
 };

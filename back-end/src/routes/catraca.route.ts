@@ -14,8 +14,6 @@ router.get('/buscar-mensagens', catracaController.buscarMensagens.bind(catracaCo
 
 router.get('/buscar-duracao-interacao', catracaController.buscarDuracaoInteracao.bind(catracaController));
 
-router.get('/buscar-tipo-controle-fluxo', catracaController.buscarTipoControleFluxo.bind(catracaController));
-
 router.post('/webhook', catracaController.webhook.bind(catracaController));
 
 router.post('/iniciar-cadastro', catracaController.iniciarCadastroBiometria.bind(catracaController));

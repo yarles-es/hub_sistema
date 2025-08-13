@@ -10,22 +10,15 @@ import { MensagensCatracaResponse } from '../../types/catraca.types';
 export class BuscaMensagensCatracaService {
   public async execute(): Promise<MensagensCatracaResponse> {
     try {
-      const {
-        response: {
-          data: { content: message1 },
-        },
-      } = await buscarPrimeiraMensagemCatraca();
-      const {
-        response: {
-          data: { content: message2 },
-        },
-      } = await buscarSegundaMensagemCatraca();
+      const result = await buscarPrimeiraMensagemCatraca();
+      const result2 = await buscarSegundaMensagemCatraca();
 
       return {
-        message1,
-        message2,
+        primeiraMensagem: result.response.data.content,
+        segundaMensagem: result2.response.data.content,
       };
     } catch (error) {
+      console.log(error);
       throw new BadRequestError('Erro ao buscar mensagens da catraca');
     }
   }
