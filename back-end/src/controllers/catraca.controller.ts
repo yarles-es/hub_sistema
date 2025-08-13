@@ -5,7 +5,6 @@ import {
   IniciarCadastroBiometriaResponse,
   PassosCadastroBiometriaResponse,
   Webhook,
-  WebhookCommand771,
   WebhookCommand774,
 } from '../types/catraca.types';
 import { EntradasaidaCatracaService } from '../services/catraca/entrada-saida-catraca.service';
