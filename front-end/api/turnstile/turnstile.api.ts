@@ -33,3 +33,15 @@ export const getFirstRegisterTurnstile = async () => {
 export const cleanTemplateById = async (id: number) => {
   return await genericRequest<void>("delete", `catraca/limpar-template/${id}`);
 };
+
+export const releaseTurnstileEntry = async () => {
+  return await genericRequest<void>("post", `catraca/liberar-entrada`);
+};
+
+export const releaseTurnstileExit = async () => {
+  return await genericRequest<void>("post", `catraca/liberar-saida`);
+};
+
+export const freeTurnstile = async () => {
+  return await genericRequest<void>("post", `catraca/liberar-entrada-saida`);
+};

@@ -1,0 +1,24 @@
+"use client";
+
+import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+import PageTransition from "@/components/PageTransition/PageTransition";
+import TurnstileController from "@/components/TurnstileController/TurnstileController";
+
+const TurnstilePanelPage = () => {
+  return (
+    <PageTransition>
+      <div>
+        <Breadcrumb pageName="Painel da Catraca" />
+      </div>
+      <div className="flex flex-col xl:flex-row gap-4">
+        <TurnstileController />
+
+        <div className="xl:w-1/2 rounded-sm border border-stroke bg-white px-1.5 shadow-default dark:border-strokedark dark:bg-boxdark text-xs overflow-y-auto h-[calc(100dvh-175px)] md:h-[calc(100vh-130px)]  overscroll-none">
+          <div>{/* <Button>Click Me</Button> */}</div>
+        </div>
+      </div>
+    </PageTransition>
+  );
+};
+
+export default TurnstilePanelPage;
