@@ -1,6 +1,7 @@
 import { Prisma, PrismaClient, RegistroAcesso } from '@prisma/client';
 import { Service } from 'typedi';
-import { CreateRegistroAcesso } from '../types/registro-acesso.types';
+import { CreateRegistroAcesso, FindAllForDay } from '../types/registro-acesso.types';
+import { toIntOrNull } from '../utils/toIntOrNull';
 
 @Service()
 export class RegistroAcessoModel {
@@ -16,7 +17,9 @@ export class RegistroAcessoModel {
   ): Promise<RegistroAcesso> {
     const client = transaction || this.prisma;
     return client.registroAcesso.create({
-      data: registro,
+      data: {
+        ...registro,
+      },
     });
   }
 
@@ -24,6 +27,44 @@ export class RegistroAcessoModel {
     const client = transaction || this.prisma;
     return client.registroAcesso.findMany({
       orderBy: { id: 'desc' },
+    });
+  }
+
+  public async findAllForDay(id?: number, transaction?: Prisma.TransactionClient): Promise<FindAllForDay> {
+    const client = transaction || this.prisma;
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+
+    const parsedId = toIntOrNull(id);
+
+    const where: Prisma.RegistroAcessoWhereInput = {
+      dataHora: {
+        gte: startOfDay,
+        lte: endOfDay,
+      },
+      ...(parsedId !== null ? { id: { gte: parsedId } } : {}),
+    };
+
+    const result = await client.registroAcesso.findMany({
+      where,
+      orderBy: { id: 'desc' },
+      include: {
+        cliente: {
+          select: {
+            nome: true,
+          },
+        },
+      },
+    });
+
+    return result.map((registro) => {
+      const { cliente, ...rest } = registro;
+      return {
+        ...rest,
+        nomeCliente: cliente?.nome ?? 'NÃO IDENTIFICADO',
+      };
     });
   }
 

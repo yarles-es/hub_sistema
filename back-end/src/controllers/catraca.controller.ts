@@ -28,6 +28,7 @@ import { SetarMensagemBloqueioCatracaService } from '../services/catraca/setar-m
 import { SetarSentidoHorarioCatracaService } from '../services/catraca/setar-sentido-horario-catraca.service';
 import { SetarTipoControleFluxoCatracaService } from '../services/catraca/setar-tipo-controle-fluxo-catraca.service';
 import { SetarTipoFluxoBiometriaCatracaService } from '../services/catraca/setar-tipo-fluxo-biometria-catraca.service';
+import { EntradaNaoIdentificadaService } from '../services/catraca/entrada-nao-identificada.service';
 
 @Service()
 export class CatracaController {
@@ -53,6 +54,7 @@ export class CatracaController {
     private readonly setarSentidoHorarioCatracaService: SetarSentidoHorarioCatracaService,
     private readonly setarTipoControleFluxoCatracaService: SetarTipoControleFluxoCatracaService,
     private readonly setarTipoFluxoBiometriaCatracaService: SetarTipoFluxoBiometriaCatracaService,
+    private readonly entradaNaoIdentificadaService: EntradaNaoIdentificadaService,
   ) {}
   public async webhook(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
@@ -66,7 +68,7 @@ export class CatracaController {
         res.status(200).send();
       } else if (command === 775) {
         // comando quando n identifica alguem na catraca
-        await bloquearEntradaCatraca();
+        await this.entradaNaoIdentificadaService.execute();
 
         res.status(200).send();
       } else if (command === 259) {

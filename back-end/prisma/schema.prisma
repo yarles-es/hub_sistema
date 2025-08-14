@@ -113,13 +113,13 @@ model PagamentoAvulso {
 
 model RegistroAcesso {
   id          Int         @id @default(autoincrement())
-  clienteId   Int         @map("cliente_id")
+  clienteId   Int?        @map("cliente_id")
   tipoCatraca TipoCatraca @map("tipo_catraca")
   dataHora    DateTime    @default(now()) @map("data_hora")
   createdAt   DateTime    @default(now()) @map("created_at")
   updatedAt   DateTime    @updatedAt @map("updated_at")
 
-  cliente Cliente @relation(fields: [clienteId], references: [id])
+  cliente Cliente? @relation(fields: [clienteId], references: [id])
 
   @@map("registros_acesso")
 }

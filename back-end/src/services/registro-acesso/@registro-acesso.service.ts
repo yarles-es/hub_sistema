@@ -18,6 +18,13 @@ export class RegistroAcessoService {
     return await this.registroAcessoModel.findAll(transaction);
   }
 
+  public async findAllRegistrosForDay(
+    id?: number,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<RegistroAcesso[]> {
+    return await this.registroAcessoModel.findAllForDay(id, transaction);
+  }
+
   public async findAllRegistrosByClienteId(
     clienteId: number,
     transaction?: Prisma.TransactionClient,

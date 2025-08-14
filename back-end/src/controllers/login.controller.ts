@@ -11,7 +11,6 @@ export class LoginController {
     try {
       const { user } = req.body;
       const token = this.loginService.login(user);
-      console.log('token login', token);
       setAuthHeaders(res, token);
       return res.status(204).send();
     } catch (error) {
