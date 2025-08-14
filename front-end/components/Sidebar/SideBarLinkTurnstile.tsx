@@ -3,23 +3,7 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-type SideBarLinkTurnstileProps = {
-  handleClick: () => void;
-  open: boolean;
-  sidebarExpanded: boolean;
-  setSidebarExpanded: React.Dispatch<React.SetStateAction<boolean>>;
-  setSidebarOpen: (arg: boolean) => void;
-  sidebarOpen: boolean;
-};
-
-const SideBarLinkTurnstile: React.FC<SideBarLinkTurnstileProps> = ({
-  handleClick,
-  open,
-  setSidebarExpanded,
-  sidebarExpanded,
-  setSidebarOpen,
-  sidebarOpen,
-}) => {
+const SideBarLinkTurnstile: React.FC = () => {
   const pathname = usePathname();
 
   return (

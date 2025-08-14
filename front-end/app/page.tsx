@@ -6,5 +6,5 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
-  return <>{/* <!-- itens da tela inicial --> */}</>;
+  return <>teste</>;
 }
