@@ -1,12 +1,12 @@
 import { Service } from 'typedi';
 import { BadRequestError } from '../../errors/BadRequestError';
-import { liberarLivreCatraca } from '../../api/catraca/liberar-livre-catraca';
+import { liberarSaidaCatraca } from '../../api/catraca/liberar-saida-catraca';
 
 @Service()
 export class LiberarSaidaCatracaService {
   async execute() {
     try {
-      await liberarLivreCatraca();
+      await liberarSaidaCatraca();
     } catch (error) {
       throw new BadRequestError('Erro ao liberar a saída da catraca');
     }

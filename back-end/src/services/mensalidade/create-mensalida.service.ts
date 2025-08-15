@@ -21,12 +21,15 @@ export class CreateMensalidadeService {
   public async execute(
     data: CreateMensalidadeServiceParams,
     transaction?: Prisma.TransactionClient,
-  ): Promise<Mensalidade> {
+  ): Promise<Mensalidade | undefined> {
     const { clienteId, dataVencimentoAnterior } = data;
     const cliente = await this.clienteService.getClienteById(clienteId, transaction);
+
     if (!cliente) {
       throw new BadRequestError('Cliente não encontrado.');
     }
+
+    if (cliente.isento) return;
 
     const mensalidades = await this.mensalidadeService.findMensalidadesByClienteIdAndStatus(
       clienteId,

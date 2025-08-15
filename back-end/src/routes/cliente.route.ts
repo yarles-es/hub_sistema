@@ -13,6 +13,10 @@ router
   .get('/get-all', clienteController.getAll.bind(clienteController))
   .put('/disable/:id', clienteController.disable.bind(clienteController))
   .put('/active/:id', clienteController.active.bind(clienteController))
-  .get('/get-by-name/:name', clienteController.getByName.bind(clienteController));
+  .get('/get-by-name/:name', clienteController.getByName.bind(clienteController))
+  .get(
+    '/get-all-by-birthday-people-month',
+    clienteController.getAllByBirthdayPeopleMonth.bind(clienteController),
+  );
 
 export const clienteRoute = router;

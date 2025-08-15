@@ -28,6 +28,10 @@ export class UpdateClienteService {
 
     const transformedData: UpdateClient = this.transformData(data);
 
+    if (transformedData.isento) {
+      await this.cancelMonthlyFeeIfCustomerIsExempt(id);
+    }
+
     const updatedData: UpdateClient = {
       nome: transformedData.nome ? transformedData.nome.trim().toUpperCase() : undefined,
       email: transformedData.email ? transformedData.email.trim().toLowerCase() : undefined,
@@ -36,6 +40,7 @@ export class UpdateClienteService {
       planoId: transformedData.planoId ? Number(transformedData.planoId) : undefined,
       dataNascimento: transformedData.dataNascimento ? new Date(transformedData.dataNascimento) : undefined,
       diaMensalidade: transformedData.diaMensalidade ? Number(transformedData.diaMensalidade) : undefined,
+      isento: typeof transformedData.isento === 'boolean' ? transformedData.isento : undefined,
     };
 
     return this.clienteService.updateCliente(id, updatedData);
@@ -55,6 +60,19 @@ export class UpdateClienteService {
       ...data,
       dataNascimento: date,
     };
+  }
+
+  private async cancelMonthlyFeeIfCustomerIsExempt(clienteId: number) {
+    const [mensalidade] = await this.mensalidadeService.findMensalidadesByClienteIdAndStatus(
+      clienteId,
+      StatusMensalidade.PENDENTE,
+    );
+
+    if (!mensalidade) return;
+
+    await this.mensalidadeService.updateMensalidade(mensalidade.id, {
+      status: StatusMensalidade.CANCELADO,
+    });
   }
 
   private async editMonthlyFeeIfPlanIdIsChanged(clienteId: number, newPlanoId: number): Promise<void> {

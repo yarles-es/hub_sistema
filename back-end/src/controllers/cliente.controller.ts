@@ -10,6 +10,7 @@ import { UpdateClienteService } from '../services/cliente/update-cliente.service
 import { CreateClienteRequest, StatusCliente } from '../types/cliente.types';
 import { safeParseDate, safeParseInt, safeParseString } from '../utils/safeTypes';
 import { GetAllClientesByNameService } from '../services/cliente/get-all-clientes-by-name.service';
+import { GetAllByBirthdayPeopleMonthService } from '../services/cliente/get-all-by-birthday-people-month.service';
 
 @Service()
 export class ClienteController {
@@ -22,6 +23,7 @@ export class ClienteController {
     private readonly disableClienteService: DisableClienteService,
     private readonly activeClienteService: ActiveClienteService,
     private readonly getAllClientesByNameService: GetAllClientesByNameService,
+    private readonly getAllByBirthdayPeopleMonthService: GetAllByBirthdayPeopleMonthService,
   ) {}
 
   async create(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -117,6 +119,15 @@ export class ClienteController {
     try {
       const cliente = await this.activeClienteService.execute(Number(req.params.id));
       res.status(200).json(cliente);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getAllByBirthdayPeopleMonth(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const clientes = await this.getAllByBirthdayPeopleMonthService.execute();
+      res.status(200).json(clientes);
     } catch (error) {
       next(error);
     }

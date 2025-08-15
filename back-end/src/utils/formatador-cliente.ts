@@ -15,7 +15,10 @@ export const formatadorCliente = (clientes: ClienteGetAllWithMensalidade[]): Cli
     const { Mensalidade, plano, ...rest } = cliente;
     const pendente = Mensalidade.find((m) => m.status === 'PENDENTE');
     let status: StatusCliente = 'ATIVO';
-    if (cliente.ativo === false) {
+
+    if (cliente.isento) {
+      status = 'ISENTO';
+    } else if (cliente.ativo === false) {
       status = 'DESATIVADO';
     } else if (pendente) {
       status = isDataNoPassado(pendente.vencimento) ? 'VENCIDO' : 'ATIVO';

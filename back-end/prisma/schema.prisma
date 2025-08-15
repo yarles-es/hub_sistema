@@ -40,6 +40,7 @@ model Cliente {
   updatedAt      DateTime @updatedAt
   planoId        Int      @map("plano_id")
   ativo          Boolean  @default(true)
+  isento         Boolean  @default(false)
 
   plano               Plano              @relation(fields: [planoId], references: [id])
   Mensalidade         Mensalidade[]

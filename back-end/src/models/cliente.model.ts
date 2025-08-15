@@ -76,6 +76,39 @@ export class ClienteModel {
     });
   }
 
+  public async findByBirthdayPeopleMonth(
+    transaction?: Prisma.TransactionClient,
+  ): Promise<ClienteGetAllWithMensalidade[]> {
+    const prisma = transaction ?? this.prisma;
+    const month = new Date().getMonth() + 1;
+
+    const ids = await prisma.$queryRaw<Array<{ id: number }>>`
+    SELECT "id"
+    FROM "clientes"
+    WHERE "data_nascimento" IS NOT NULL
+      AND EXTRACT(MONTH FROM "data_nascimento") = ${month}
+  `;
+
+    if (ids.length === 0) return [];
+
+    const result = await prisma.cliente.findMany({
+      where: { id: { in: ids.map((r) => r.id) } },
+      include: {
+        Mensalidade: true,
+        plano: { select: { id: true, nome: true, valor: true } },
+      },
+      orderBy: { dataNascimento: 'asc' },
+    });
+
+    result.sort((a, b) => {
+      const da = a.dataNascimento ? new Date(a.dataNascimento).getDate() : 0;
+      const db = b.dataNascimento ? new Date(b.dataNascimento).getDate() : 0;
+      return da - db;
+    });
+
+    return result;
+  }
+
   public async findByDataNascimento(
     date: string,
     transaction?: Prisma.TransactionClient,

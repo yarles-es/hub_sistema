@@ -11,7 +11,6 @@ import { EntradasaidaCatracaService } from '../services/catraca/entrada-saida-ca
 import { BuscaIdDisponivelRegistroService } from '../services/catraca/busca-id-disponivel-registro.service';
 import { EtapasCadastroBiometriaService } from '../services/catraca/etapas-cadastro-biometria.service';
 import { IniciarCadastroBiometriaService } from '../services/catraca/iniciar-cadastro-biometria.service';
-import { bloquearEntradaCatraca } from '../api/catraca/bloquear-entrada-catraca';
 import { CancelarOperacaoBiometriaService } from '../services/catraca/cancelar-operacao-biometria.service';
 import { GetFirstCadastroBiometriaService } from '../services/catraca/get-first-cadastro-biometria.service';
 import { LimparTemplatePorIdService } from '../services/catraca/limpar-template-por-id.service';

@@ -24,7 +24,7 @@ export type UpdateClientRequest = Partial<
 
 export type UpdateClient = Partial<Omit<Cliente, 'id' | 'createdAt' | 'updatedAt'>>;
 
-export type StatusCliente = 'ATIVO' | 'DESATIVADO' | 'VENCIDO' | 'MENSALIDADE_AUSENTE';
+export type StatusCliente = 'ATIVO' | 'DESATIVADO' | 'VENCIDO' | 'MENSALIDADE_AUSENTE' | 'ISENTO';
 
 export type ClienteFilter = {
   nome?: string;
@@ -36,7 +36,7 @@ export type ClienteFilter = {
   planoId?: number;
 };
 
-export type ClienteGetAll = Cliente & { status: StatusCliente; nomePlano: string; valorPlano: number };
+export type ClienteGetAll = Cliente & { status: StatusCliente; nomePlano?: string; valorPlano?: number };
 
 export type ClienteGetAllWithMensalidade = Cliente & {
   Mensalidade: Mensalidade[];
