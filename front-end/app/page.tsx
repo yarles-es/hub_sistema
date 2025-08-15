@@ -1,10 +1,25 @@
-import { Metadata } from "next";
+"use client";
 
-export const metadata: Metadata = {
-  title: "ACADEMIA",
-  description: "Sistema de gerenciamento Academia",
-};
+import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+import PageTransition from "@/components/PageTransition/PageTransition";
+import AccessRegistrationTable from "@/components/Tables/AccessRegistrationTable";
+import TurnstileController from "@/components/TurnstileController/TurnstileController";
 
 export default function Home() {
-  return <>teste</>;
+  return (
+    <PageTransition>
+      <div>
+        <Breadcrumb pageName="Início" init />
+      </div>
+      <div className="flex flex-col xl:flex-row gap-4">
+        <TurnstileController init />
+
+        <div className="xl:w-1/2 rounded-sm border border-stroke bg-white px-1.5 shadow-default dark:border-strokedark dark:bg-boxdark text-xs overflow-y-auto h-[calc(100dvh-175px)] md:h-[calc(100vh-130px)]  overscroll-none">
+          <div className="mt-1.5 xl:mt-3">
+            <AccessRegistrationTable />
+          </div>
+        </div>
+      </div>
+    </PageTransition>
+  );
 }

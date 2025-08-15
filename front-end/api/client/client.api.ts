@@ -41,3 +41,10 @@ export const activeClient = async (id: number) => {
 export const getClientByName = async (name: string) => {
   return await genericRequest<Client[]>("get", `cliente/get-by-name/${name}`);
 };
+
+export const getAllByBirthdayPeopleMonth = async () => {
+  return await genericRequest<Client[]>(
+    "get",
+    `cliente/get-all-by-birthday-people-month`
+  );
+};

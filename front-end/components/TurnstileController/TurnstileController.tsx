@@ -1,6 +1,9 @@
+import React from "react";
+
 import { useMutation } from "@tanstack/react-query";
 
 import Button from "../Buttons/Button";
+import BirthdayPeopleTable from "../Tables/BirthdayPeopleTable";
 import TurnstileConfig from "../TurnstileConfig/TurnstileConfig";
 
 import {
@@ -10,7 +13,11 @@ import {
 } from "@/api/turnstile/turnstile.api";
 import useAlert from "@/hooks/useAlert";
 
-const TurnstileController = () => {
+type Props = {
+  init?: boolean;
+};
+
+const TurnstileController: React.FC<Props> = ({ init }) => {
   const alert = useAlert();
 
   const { mutate, isPending } = useMutation({
@@ -66,7 +73,7 @@ const TurnstileController = () => {
           Catraca Livre
         </Button>
       </div>
-      <TurnstileConfig />
+      {!init ? <TurnstileConfig /> : <BirthdayPeopleTable />}
     </div>
   );
 };

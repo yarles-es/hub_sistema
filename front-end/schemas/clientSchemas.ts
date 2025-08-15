@@ -31,6 +31,7 @@ const createClientSchema = z.object({
     .number()
     .int("Plano deve ser um número inteiro")
     .min(1, "Plano é obrigatório"),
+  isento: z.boolean().optional().default(false),
 });
 
 export { createClientSchema };

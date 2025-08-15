@@ -6,6 +6,7 @@ import DefaultFormatContainerForm from "../DefaultFormatContainerForm";
 
 import { createClient } from "@/api/client/client.api";
 import Button from "@/components/Buttons/Button";
+import CheckBox from "@/components/CheckBox/CheckBox";
 import Input from "@/components/Inputs/Input";
 import InputPhone from "@/components/Inputs/InputPhone";
 import SelectPlano from "@/components/Selects/SelectPlano";
@@ -29,6 +30,7 @@ const FormNewClient: React.FC<Props> = ({ onClose }) => {
         dataNascimento: "",
         planoId: 0,
         diaMensalidade: undefined,
+        isento: false,
       },
     });
 
@@ -77,7 +79,7 @@ const FormNewClient: React.FC<Props> = ({ onClose }) => {
                 error={errors.email?.message}
               />
             </div>
-            <div className="w-full xl:w-1/3">
+            <div className="w-full xl:w-1/4">
               <Controller
                 control={control}
                 name="diaMensalidade"
@@ -86,7 +88,7 @@ const FormNewClient: React.FC<Props> = ({ onClose }) => {
                     {...field}
                     type="number"
                     label="Dia da Mensalidade:"
-                    placeholder="Digite o dia da mensalidade"
+                    placeholder="Digite o dia"
                     error={errors.diaMensalidade?.message}
                     min={1}
                     max={31}
@@ -100,6 +102,22 @@ const FormNewClient: React.FC<Props> = ({ onClose }) => {
                       }
                     }}
                   />
+                )}
+              />
+            </div>
+            <div className="w-full xl:w-1/4 flex items-center justify-center mt-5">
+              <Controller
+                control={control}
+                name="isento"
+                render={({ field }) => (
+                  <CheckBox
+                    classLabel="mb-3"
+                    id="isento"
+                    checked={field.value}
+                    onChange={(e) => field.onChange(e.target.checked)}
+                  >
+                    <span className="text-white">Isento</span>
+                  </CheckBox>
                 )}
               />
             </div>

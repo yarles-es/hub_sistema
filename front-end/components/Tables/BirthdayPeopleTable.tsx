@@ -1,35 +1,50 @@
-import { UseAccessRegistrations } from "@/hooks/useAccessRegistrations";
+import { useQuery } from "@tanstack/react-query";
+
+import { getAllByBirthdayPeopleMonth } from "@/api/client/client.api";
+import { Client } from "@/types/Client";
 import { Title } from "@/types/Tables";
-import { formatDateWithHours } from "@/utils/formatStringDate";
+import formatStringDate from "@/utils/formatStringDate";
 import { isNotNull } from "@/utils/tableGuardType";
 
-const AccessRegistrationTable = () => {
-  const { items } = UseAccessRegistrations();
-
+const BirthdayPeopleTable: React.FC = () => {
   const titles: Array<Title | null> = [
     {
-      key: "nomeCliente",
-      label: "Nome do Cliente",
+      key: "nome",
+      label: "Nome",
       type: "string",
       order: false,
     },
     {
-      key: "tipoCatraca",
-      label: "Tipo de Catraca",
-      type: "string",
+      key: "nascimento",
+      label: "Data de Nascimento",
+      type: "date",
       order: false,
     },
-    { key: "dataHora", label: "Hora e Data", type: "date", order: false },
   ];
 
   const titlesFiltered = titles.filter(isNotNull);
 
+  const { data } = useQuery({
+    queryKey: ["birthdayPeople"],
+    queryFn: async () => getAllByBirthdayPeopleMonth(),
+    retry: 0,
+  });
+
+  const validateBirthdayNow = (client: Client) => {
+    const today = new Date();
+    const birthDate = new Date(client.dataNascimento);
+    return (
+      birthDate.getMonth() === today.getMonth() &&
+      birthDate.getDate() === today.getDate()
+    );
+  };
+
   return (
     <>
       <p className="m-5 text-center text-base font-bold text-black dark:text-white">
-        Registros de Acesso
+        Aniversáriantes do Mês
       </p>
-      <div className="rounded-sm border border-stroke bg-white px-1.5 shadow-default dark:border-strokedark dark:bg-boxdark text-xs overflow-y-auto h-[calc(100dvh-175px)] md:h-[calc(100vh-200px)]  overscroll-none">
+      <div className="rounded-sm border border-stroke bg-white px-1.5 shadow-default dark:border-strokedark dark:bg-boxdark text-xs overflow-y-auto max-h-[calc(100dvh-175px)] md:max-h-[calc(100vh-200px)]  overscroll-none">
         <table className="w-full table-auto">
           <thead className="bg-gray-50 sticky top-0 z-1">
             <tr className="bg-gray-2 text-left dark:bg-meta-4">
@@ -59,29 +74,24 @@ const AccessRegistrationTable = () => {
             </tr>
           </thead>
           <tbody>
-            {items?.map((item) => (
+            {data?.map((client) => (
               <tr
-                key={item.id}
+                key={client.id}
                 className="border-b border-gray-200 dark:border-strokedark"
               >
-                <td className="py-4 px-4 text-black dark:text-white">
-                  {item.nomeCliente}
-                </td>
-                <td className="py-4 px-4 text-black dark:text-white">
+                <td className={`py-4 px-4 text-black dark:text-white `}>
                   <p
-                    className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-xs font-medium ${
-                      item.tipoCatraca === "ENTRADA"
-                        ? "bg-success text-success"
-                        : item.tipoCatraca === "SAIDA"
-                        ? "bg-warning text-warning"
-                        : "bg-danger text-danger"
+                    className={`${
+                      validateBirthdayNow(client)
+                        ? "font-bold text-success"
+                        : ""
                     }`}
                   >
-                    {item.tipoCatraca}
+                    {client.nome}
                   </p>
                 </td>
                 <td className="py-4 px-4 text-black dark:text-white">
-                  {formatDateWithHours(new Date(item.dataHora))}
+                  {formatStringDate({ date: client.dataNascimento })}
                 </td>
               </tr>
             ))}
@@ -92,4 +102,4 @@ const AccessRegistrationTable = () => {
   );
 };
 
-export default AccessRegistrationTable;
+export default BirthdayPeopleTable;

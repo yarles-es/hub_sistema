@@ -176,6 +176,8 @@ const ClientTable: React.FC<Props> = ({ clients, onOpenItemSelect }) => {
                       ? "bg-success text-success"
                       : client.status === "MENSALIDADE_AUSENTE"
                       ? "bg-warning text-warning"
+                      : client.status === "ISENTO"
+                      ? "bg-meta-5 text-meta-5"
                       : "bg-danger text-danger"
                   }`}
                 >

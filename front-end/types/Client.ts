@@ -2,7 +2,8 @@ export type StatusClient =
   | "ATIVO"
   | "DESATIVADO"
   | "VENCIDO"
-  | "MENSALIDADE_AUSENTE";
+  | "MENSALIDADE_AUSENTE"
+  | "ISENTO";
 
 export type Client = {
   id: number;
@@ -18,6 +19,7 @@ export type Client = {
   updatedAt: Date;
   nomePlano: string;
   valorPlano: number;
+  isento: boolean;
 };
 
 export type GetAllClient = {
@@ -43,6 +45,7 @@ export type CreateClient = {
   telefone: string;
   dataNascimento: string;
   planoId: number;
+  isento: boolean;
   diaMensalidade?: number;
 };
 

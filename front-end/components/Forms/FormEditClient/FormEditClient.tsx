@@ -6,6 +6,7 @@ import DefaultFormatContainerForm from "../DefaultFormatContainerForm";
 import { updateClient } from "@/api/client/client.api";
 import { cleanTemplateById } from "@/api/turnstile/turnstile.api";
 import Button from "@/components/Buttons/Button";
+import CheckBox from "@/components/CheckBox/CheckBox";
 import Input from "@/components/Inputs/Input";
 import InputPhone from "@/components/Inputs/InputPhone";
 import SelectPlano from "@/components/Selects/SelectPlano";
@@ -34,6 +35,7 @@ const FormEditClient: React.FC<Props> = ({ onClose, client, refetch }) => {
           planoId: client.planoId ?? undefined,
           diaMensalidade: client.diaMensalidade ?? undefined,
           idCatraca: client.catracaId ?? null,
+          isento: client.isento ?? false,
         }
       : undefined,
   });
@@ -116,7 +118,7 @@ const FormEditClient: React.FC<Props> = ({ onClose, client, refetch }) => {
                 )}
               />
             </div>
-            <div className="w-full xl:w-1/3">
+            <div className="w-full xl:w-1/4">
               <Controller
                 control={control}
                 name="diaMensalidade"
@@ -125,7 +127,7 @@ const FormEditClient: React.FC<Props> = ({ onClose, client, refetch }) => {
                     {...field}
                     type="number"
                     label="Dia da Mensalidade:"
-                    placeholder="Digite o dia da mensalidade"
+                    placeholder="Digite o dia"
                     error={errors.diaMensalidade?.message}
                     min={1}
                     max={31}
@@ -139,6 +141,22 @@ const FormEditClient: React.FC<Props> = ({ onClose, client, refetch }) => {
                       }
                     }}
                   />
+                )}
+              />
+            </div>
+            <div className="w-full xl:w-1/4 flex items-center justify-center mt-5">
+              <Controller
+                control={control}
+                name="isento"
+                render={({ field }) => (
+                  <CheckBox
+                    classLabel="mb-3"
+                    id="isento"
+                    checked={field.value || false}
+                    onChange={(e) => field.onChange(e.target.checked)}
+                  >
+                    <span className="text-white">Isento</span>
+                  </CheckBox>
                 )}
               />
             </div>
