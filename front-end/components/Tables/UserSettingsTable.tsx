@@ -106,9 +106,11 @@ const UserSettingsTable: React.FC<TableProps> = ({
                       INATIVO
                     </p>
                   )}
-                  <ButtonActionEdit
-                    onClick={() => onOpenItemSelect(user.id, "status")}
-                  />
+                  {administration && (
+                    <ButtonActionEdit
+                      onClick={() => onOpenItemSelect(user.id, "status")}
+                    />
+                  )}
                 </div>
               </td>
 
