@@ -5,3 +5,5 @@ export type CreateUsuario = Omit<Usuario, 'id' | 'createdAt' | 'updatedAt' | 'at
 export type UpdateUsuario = Partial<Omit<Usuario, 'id' | 'createdAt' | 'updatedAt'>>;
 
 export type UsuarioResponse = Omit<Usuario, 'senha'>;
+
+export type UserWithLogin = Omit<Usuario, 'senha' | 'createdAt' | 'updatedAt'>;

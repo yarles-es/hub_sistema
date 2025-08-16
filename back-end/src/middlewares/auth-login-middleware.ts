@@ -1,15 +1,10 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Response } from 'express';
 import Container from 'typedi';
 import { JwtToken } from '../auth/jwt-token.auth';
 
-import { Usuario } from '@prisma/client';
 import { UnauthorizedError } from '../errors/UnauthorizedError';
-
-type UserWithLogin = Omit<Usuario, 'senha' | 'createdAt' | 'updatedAt'>;
-
-interface AuthenticatedRequest extends Request {
-  user?: UserWithLogin;
-}
+import { UserWithLogin } from '../types/usuario.types';
+import { AuthenticatedRequest } from '../types/Request.types';
 
 const jwt = Container.get(JwtToken<UserWithLogin>);
 

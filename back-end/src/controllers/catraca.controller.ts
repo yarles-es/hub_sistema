@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Response } from 'express';
 import { Service } from 'typedi';
 import {
   ErrorCadastroBiometriaResponse,
@@ -28,6 +28,8 @@ import { SetarSentidoHorarioCatracaService } from '../services/catraca/setar-sen
 import { SetarTipoControleFluxoCatracaService } from '../services/catraca/setar-tipo-controle-fluxo-catraca.service';
 import { SetarTipoFluxoBiometriaCatracaService } from '../services/catraca/setar-tipo-fluxo-biometria-catraca.service';
 import { EntradaNaoIdentificadaService } from '../services/catraca/entrada-nao-identificada.service';
+import { CreateLogService } from '../services/log-sistema/create-log.service';
+import { AuthenticatedRequest } from '../types/Request.types';
 
 @Service()
 export class CatracaController {
@@ -54,8 +56,9 @@ export class CatracaController {
     private readonly setarTipoControleFluxoCatracaService: SetarTipoControleFluxoCatracaService,
     private readonly setarTipoFluxoBiometriaCatracaService: SetarTipoFluxoBiometriaCatracaService,
     private readonly entradaNaoIdentificadaService: EntradaNaoIdentificadaService,
+    private readonly log: CreateLogService,
   ) {}
-  public async webhook(req: Request, res: Response, next: NextFunction): Promise<void> {
+  public async webhook(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
       const body = req.body as Webhook;
       const { command } = body;
@@ -88,11 +91,19 @@ export class CatracaController {
     }
   }
 
-  public async iniciarCadastroBiometria(req: Request, res: Response, next: NextFunction): Promise<void> {
+  public async iniciarCadastroBiometria(
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
+      const user = req.user!;
+
       const { clienteId, catracaId } = req.body;
 
       const result = await this.iniciarCadastroBiometriaService.execute(clienteId, catracaId);
+
+      await this.log.execute(user.id, 'Iniciou cadastro de biometria', clienteId);
 
       res.status(201).json(result);
     } catch (error) {
@@ -100,9 +111,17 @@ export class CatracaController {
     }
   }
 
-  public async buscarIdDisponivel(_req: Request, res: Response, next: NextFunction): Promise<void> {
+  public async buscarIdDisponivel(
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
+      const user = req.user!;
+
       const id = await this.buscaIdDisponivelRegistroService.execute();
+
+      await this.log.execute(user.id, 'Buscou ID disponível da Catraca');
 
       res.status(200).json({ id });
     } catch (error) {
@@ -110,9 +129,17 @@ export class CatracaController {
     }
   }
 
-  public async cancelarOperacaoBiometria(req: Request, res: Response, next: NextFunction): Promise<void> {
+  public async cancelarOperacaoBiometria(
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
+      const user = req.user!;
+
       await this.cancelarOperacaoBiometriaService.execute();
+
+      await this.log.execute(user.id, 'Cancelou operação de biometria');
 
       res.status(204).send();
     } catch (error) {
@@ -120,9 +147,17 @@ export class CatracaController {
     }
   }
 
-  public async getCadastroBiometria(_req: Request, res: Response, next: NextFunction): Promise<void> {
+  public async getCadastroBiometria(
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
+      const user = req.user!;
+
       const result = await this.getFirstCadastroBiometriaService.execute();
+
+      await this.log.execute(user.id, 'Buscou primeiro cadastro de biometria');
 
       res.status(200).json(result);
     } catch (error) {
@@ -130,19 +165,27 @@ export class CatracaController {
     }
   }
 
-  public async limparTemplatePorId(req: Request, res: Response, next: NextFunction): Promise<void> {
+  public async limparTemplatePorId(
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
+      const user = req.user!;
+
       const { id } = req.params;
 
       const result = await this.limparTemplatePorIdService.execute(Number(id));
 
+      await this.log.execute(user.id, 'Limpou template por ID', Number(id));
+
       res.status(200).json(result);
     } catch (error) {
       next(error);
     }
   }
 
-  public async buscarMensagens(req: Request, res: Response, next: NextFunction): Promise<void> {
+  public async buscarMensagens(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
       const result = await this.buscaMensagensCatracaService.execute();
 
@@ -152,7 +195,11 @@ export class CatracaController {
     }
   }
 
-  public async buscarDuracaoInteracao(req: Request, res: Response, next: NextFunction): Promise<void> {
+  public async buscarDuracaoInteracao(
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const result = await this.buscaDuracaoInteracaoCatracaService.execute();
 
@@ -162,27 +209,35 @@ export class CatracaController {
     }
   }
 
-  public async liberarSaida(req: Request, res: Response, next: NextFunction): Promise<void> {
+  public async liberarSaida(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
+      const user = req.user!;
+
       await this.liberarSaidaCatracaService.execute();
 
+      await this.log.execute(user.id, 'Liberou saída da Catraca');
+
       res.status(204).send();
     } catch (error) {
       next(error);
     }
   }
 
-  public async liberarEntrada(req: Request, res: Response, next: NextFunction): Promise<void> {
+  public async liberarEntrada(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
+      const user = req.user!;
+
       await this.liberarEntradaCatracaService.execute();
 
+      await this.log.execute(user.id, 'Liberou entrada da Catraca');
+
       res.status(204).send();
     } catch (error) {
       next(error);
     }
   }
 
-  public async conectar(req: Request, res: Response, next: NextFunction): Promise<void> {
+  public async conectar(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
       await this.conectarCatracaService.execute();
 
@@ -192,7 +247,7 @@ export class CatracaController {
     }
   }
 
-  public async desconectar(req: Request, res: Response, next: NextFunction): Promise<void> {
+  public async desconectar(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
       await this.desconectarCatracaService.execute();
 
@@ -202,9 +257,13 @@ export class CatracaController {
     }
   }
 
-  public async liberarLivre(req: Request, res: Response, next: NextFunction): Promise<void> {
+  public async liberarLivre(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
+      const user = req.user!;
+
       await this.liberarLivreCatracaService.execute();
+
+      await this.log.execute(user.id, 'Liberou livre da Catraca');
 
       res.status(204).send();
     } catch (error) {
@@ -212,83 +271,139 @@ export class CatracaController {
     }
   }
 
-  public async setarDuracaoInteracao(req: Request, res: Response, next: NextFunction): Promise<void> {
+  public async setarDuracaoInteracao(
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
+      const user = req.user!;
+
       const { duracao } = req.body;
 
       await this.setarDuracaoInteracaoCatracaService.execute(duracao as number);
 
+      await this.log.execute(user.id, 'Setou duração de interação da Catraca');
+
       res.status(204).send();
     } catch (error) {
       next(error);
     }
   }
 
-  public async setarPrimeiraMensagem(req: Request, res: Response, next: NextFunction): Promise<void> {
+  public async setarPrimeiraMensagem(
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
+      const user = req.user!;
+
       const { mensagem } = req.body;
 
       await this.setarPrimeiraMensagemCatracaService.execute(mensagem);
 
+      await this.log.execute(user.id, 'Setou primeira mensagem da Catraca');
+
       res.status(204).send();
     } catch (error) {
       next(error);
     }
   }
 
-  public async setarSegundaMensagem(req: Request, res: Response, next: NextFunction): Promise<void> {
+  public async setarSegundaMensagem(
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
+      const user = req.user!;
+
       const { mensagem } = req.body;
 
       await this.setarSegundaMensagemCatracaService.execute(mensagem);
 
+      await this.log.execute(user.id, 'Setou segunda mensagem da Catraca');
+
       res.status(204).send();
     } catch (error) {
       next(error);
     }
   }
 
-  public async setarMensagemBloqueio(req: Request, res: Response, next: NextFunction): Promise<void> {
+  public async setarMensagemBloqueio(
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
+      const user = req.user!;
+
       const { mensagem } = req.body;
 
       await this.setarMensagemBloqueioCatracaService.execute(mensagem);
 
+      await this.log.execute(user.id, 'Setou mensagem de bloqueio da Catraca');
+
       res.status(204).send();
     } catch (error) {
       next(error);
     }
   }
 
-  public async setarSentidoHorario(req: Request, res: Response, next: NextFunction): Promise<void> {
+  public async setarSentidoHorario(
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
+      const user = req.user!;
+
       const { sentidoHorario } = req.body;
 
       await this.setarSentidoHorarioCatracaService.execute(sentidoHorario);
 
+      await this.log.execute(user.id, 'Setou sentido horário da Catraca');
+
       res.status(204).send();
     } catch (error) {
       next(error);
     }
   }
 
-  public async setarTipoControleFluxo(req: Request, res: Response, next: NextFunction): Promise<void> {
+  public async setarTipoControleFluxo(
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
+      const user = req.user!;
+
       const { tipo } = req.body;
 
       await this.setarTipoControleFluxoCatracaService.execute(tipo as number);
 
+      await this.log.execute(user.id, 'Setou tipo de controle de fluxo da Catraca');
+
       res.status(204).send();
     } catch (error) {
       next(error);
     }
   }
 
-  public async setarTipoFluxoBiometria(req: Request, res: Response, next: NextFunction): Promise<void> {
+  public async setarTipoFluxoBiometria(
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
+      const user = req.user!;
+
       const { tipo } = req.body;
 
       await this.setarTipoFluxoBiometriaCatracaService.execute(Number(tipo));
+
+      await this.log.execute(user.id, 'Setou tipo de fluxo de biometria da Catraca');
 
       res.status(204).send();
     } catch (error) {

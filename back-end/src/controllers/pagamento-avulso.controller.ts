@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Response } from 'express';
 import { Service } from 'typedi';
 import { CreatePagamentoAvulsoService } from '../services/pagamento-avulso/create-pagamento-avulso.service';
 import { DeletePagamentoAvulsoService } from '../services/pagamento-avulso/delete-pagamento-avulso.service';
@@ -12,6 +12,8 @@ import {
   safeParseInt,
   safeParseString,
 } from '../utils/safeTypes';
+import { CreateLogService } from '../services/log-sistema/create-log.service';
+import { AuthenticatedRequest } from '../types/Request.types';
 
 @Service()
 export class PagamentoAvulsoController {
@@ -21,51 +23,74 @@ export class PagamentoAvulsoController {
     private readonly getPagamentoAvulsoByIdService: GetPagamentoAvulsoByIdService,
     private readonly updatePagamentoAvulsoService: UpdatePagamentoAvulsoService,
     private readonly getAllPagamentosAvulsoService: GetAllPagamentosAvulsoService,
+    private readonly log: CreateLogService,
   ) {}
 
-  async create(req: Request, res: Response, next: NextFunction) {
+  async create(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
+      const user = req.user!;
+
       const pagamento = await this.createPagamentoAvulsoService.execute(req.body as CreatePagamentoAvulso);
+
+      await this.log.execute(user.id, `Criou diária id: ${pagamento.id}`);
+
       res.status(201).json(pagamento);
     } catch (error) {
       next(error);
     }
   }
 
-  async delete(req: Request, res: Response, next: NextFunction) {
+  async delete(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
+      const user = req.user!;
+
       const id = parseInt(req.params.id, 10);
+
       await this.deletePagamentoAvulsoService.execute(id);
+
+      await this.log.execute(user.id, `Deletou diária id: ${id}`);
+
       res.status(204).send();
     } catch (error) {
       next(error);
     }
   }
 
-  async getById(req: Request, res: Response, next: NextFunction) {
+  async getById(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
+      const user = req.user!;
+
       const id = parseInt(req.params.id, 10);
+
       const pagamento = await this.getPagamentoAvulsoByIdService.execute(id);
+
+      await this.log.execute(user.id, `Consultou diária id: ${pagamento.id}`);
       res.status(200).json(pagamento);
     } catch (error) {
       next(error);
     }
   }
 
-  async update(req: Request, res: Response, next: NextFunction) {
+  async update(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
+      const user = req.user!;
+
       const id = parseInt(req.params.id, 10);
+
       const updatedPagamento = await this.updatePagamentoAvulsoService.execute(
         id,
         req.body as UpdatePagamentoAvulso,
       );
+
+      await this.log.execute(user.id, `Atualizou diária id: ${updatedPagamento.id}`);
+
       res.status(200).json(updatedPagamento);
     } catch (error) {
       next(error);
     }
   }
 
-  async getAll(req: Request, res: Response, next: NextFunction) {
+  async getAll(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
       const { numberPage, limit, initialDate, finalDate, observacao, nomeCliente, formaPagamento } =
         req.query;

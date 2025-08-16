@@ -1,4 +1,4 @@
-import { FormPagamento, Prisma, StatusMensalidade } from '@prisma/client';
+import { FormPagamento, Mensalidade, Prisma, StatusMensalidade } from '@prisma/client';
 import { Service } from 'typedi';
 import { BadRequestError } from '../../errors/BadRequestError';
 import { MensalidadeService } from './@mensalidade.service';
@@ -15,7 +15,11 @@ export class PayMensalidadeService {
     private readonly updateMensalidadeService: UpdateMensalidadeService,
   ) {}
 
-  public async execute({ mensalidadeId, formaPagamento, valorPago }: PaymentMensalidade): Promise<void> {
+  public async execute({
+    mensalidadeId,
+    formaPagamento,
+    valorPago,
+  }: PaymentMensalidade): Promise<Mensalidade> {
     const mensalidade = await this.mensalidadeService.findMensalidadeById(mensalidadeId);
     if (!mensalidade) {
       throw new BadRequestError('Mensalidade não encontrada.');
@@ -25,8 +29,8 @@ export class PayMensalidadeService {
       throw new BadRequestError('Mensalidade não está pendente.');
     }
 
-    await withTransaction(async (tx) => {
-      await this.updateMensalidadeService.execute(
+    const response = await withTransaction(async (tx) => {
+      const mensalidade = await this.updateMensalidadeService.execute(
         mensalidadeId,
         {
           status: StatusMensalidade.PAGO,
@@ -43,6 +47,10 @@ export class PayMensalidadeService {
         },
         tx,
       );
+
+      return mensalidade;
     });
+
+    return response;
   }
 }

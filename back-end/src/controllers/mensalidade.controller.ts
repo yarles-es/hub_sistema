@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Response } from 'express';
 import { Service } from 'typedi';
 import { CreateMensalidadeService } from '../services/mensalidade/create-mensalida.service';
 import { DeleteMensalidadeService } from '../services/mensalidade/delete-mensalidade.service';
@@ -13,6 +13,8 @@ import {
   safeParseStatusMensalidadeArray,
 } from '../utils/safeTypes';
 import { CancelMensalidadeService } from '../services/mensalidade/cancel-mensalidade.service';
+import { CreateLogService } from '../services/log-sistema/create-log.service';
+import { AuthenticatedRequest } from '../types/Request.types';
 
 @Service()
 export class MensalidadeController {
@@ -24,70 +26,117 @@ export class MensalidadeController {
     private readonly payMensalidadeService: PayMensalidadeService,
     private readonly getAllMensalidadesService: GetAllMensalidadesService,
     private readonly cancelMensalidadeService: CancelMensalidadeService,
+    private readonly log: CreateLogService,
   ) {}
 
-  async create(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async create(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
+      const user = req.user!;
+
       const mensalidade = await this.createMensalidadeService.execute({
         clienteId: Number(req.params.clienteId),
       });
+
+      if (mensalidade) {
+        await this.log.execute(user.id, `Criou mensalidade id: ${mensalidade.id}`, mensalidade.clienteId);
+      }
+
       res.status(201).json(mensalidade);
     } catch (error) {
       next(error);
     }
   }
 
-  async payMensalidade(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async payMensalidade(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
+      const user = req.user!;
+
       const { formaPagamento, valorPago } = req.body;
+
       const mensalidade = await this.payMensalidadeService.execute({
         mensalidadeId: Number(req.params.id),
         formaPagamento,
         valorPago,
       });
+
+      if (mensalidade) {
+        await this.log.execute(user.id, `Pagou mensalidade id: ${mensalidade.id}`, mensalidade.clienteId);
+      }
+
       res.status(200).json(mensalidade);
     } catch (error) {
       next(error);
     }
   }
 
-  async getById(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getById(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
+      const user = req.user!;
+
       const mensalidade = await this.getMensalidadeByIdService.execute(Number(req.params.id));
+
       res.status(200).json(mensalidade);
+
+      if (mensalidade) {
+        await this.log.execute(user.id, `Consultou mensalidade id: ${mensalidade.id}`, mensalidade.clienteId);
+      }
     } catch (error) {
       next(error);
     }
   }
 
-  async getByClienteId(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getByClienteId(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
+      const user = req.user!;
+
       const mensalidades = await this.getMensalidadeByClienteIdService.execute(Number(req.params.clienteId));
+
+      if (mensalidades.length > 0) {
+        await this.log.execute(user.id, 'Consultou mensalidades', Number(mensalidades[0].clienteId));
+      }
+
       res.status(200).json(mensalidades);
     } catch (error) {
       next(error);
     }
   }
 
-  async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async delete(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      await this.deleteMensalidadeService.execute(Number(req.params.id));
+      const user = req.user!;
+
+      const mensalidade = await this.deleteMensalidadeService.execute(Number(req.params.id));
+
+      if (mensalidade)
+        await this.log.execute(user.id, `Deletou mensalidade id: ${mensalidade.id}`, mensalidade.clienteId);
+
       res.status(204).send();
     } catch (error) {
       next(error);
     }
   }
 
-  async cancel(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async cancel(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      await this.cancelMensalidadeService.execute(Number(req.params.id));
+      const user = req.user!;
+
+      const mensalidade = await this.cancelMensalidadeService.execute(Number(req.params.id));
+
+      if (mensalidade) {
+        await this.log.execute(
+          user.id,
+          `Cancelou mensalidade do id: ${mensalidade.id}`,
+          mensalidade.clienteId,
+        );
+      }
+
       res.status(204).send();
     } catch (error) {
       next(error);
     }
   }
 
-  async getAll(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getAll(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
       const { numberPage, limit, clienteId, initialDate, finalDate, status, formaPagamento } = req.query;
       const page = safeParseInt(numberPage) || 1;

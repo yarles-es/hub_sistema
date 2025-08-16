@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Response } from 'express';
 import { Service } from 'typedi';
 import { ActiveClienteService } from '../services/cliente/active-cliente.service';
 import { CreateClienteService } from '../services/cliente/create-cliente.service';
@@ -11,6 +11,8 @@ import { CreateClienteRequest, StatusCliente } from '../types/cliente.types';
 import { safeParseDate, safeParseInt, safeParseString } from '../utils/safeTypes';
 import { GetAllClientesByNameService } from '../services/cliente/get-all-clientes-by-name.service';
 import { GetAllByBirthdayPeopleMonthService } from '../services/cliente/get-all-by-birthday-people-month.service';
+import { CreateLogService } from '../services/log-sistema/create-log.service';
+import { AuthenticatedRequest } from '../types/Request.types';
 
 @Service()
 export class ClienteController {
@@ -24,58 +26,85 @@ export class ClienteController {
     private readonly activeClienteService: ActiveClienteService,
     private readonly getAllClientesByNameService: GetAllClientesByNameService,
     private readonly getAllByBirthdayPeopleMonthService: GetAllByBirthdayPeopleMonthService,
+    private readonly log: CreateLogService,
   ) {}
 
-  async create(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async create(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
+      const user = req.user!;
+
       const cliente = await this.createClienteService.execute(req.body as CreateClienteRequest);
+
+      await this.log.execute(user.id, 'Criou cliente', cliente.id);
+
       res.status(201).json(cliente);
     } catch (error) {
       next(error);
     }
   }
 
-  async getById(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getById(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
+      const user = req.user!;
+
       const cliente = await this.getClienteByIdService.execute(Number(req.params.id));
+
+      await this.log.execute(user.id, 'Buscou cliente por ID', cliente.id);
+
       res.status(200).json(cliente);
     } catch (error) {
       next(error);
     }
   }
 
-  async getByEmail(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getByEmail(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
+      const user = req.user!;
+
       const cliente = await this.getClienteByEmailService.execute(req.params.email as string);
+
+      await this.log.execute(user.id, 'Buscou cliente por email', cliente.id);
+
       res.status(200).json(cliente);
     } catch (error) {
       next(error);
     }
   }
 
-  async update(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async update(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
+      const user = req.user!;
+
       const updatedCliente = await this.updateClienteService.execute(
         Number(req.params.id),
         req.body as Partial<CreateClienteRequest>,
       );
+
+      await this.log.execute(user.id, 'Atualizou cliente', updatedCliente.id);
+
       res.status(200).json(updatedCliente);
     } catch (error) {
       next(error);
     }
   }
 
-  async getByName(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getByName(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
+      const user = req.user!;
+
       const name = req.params.name as string;
+
       const clientes = await this.getAllClientesByNameService.execute(name);
+
+      await this.log.execute(user.id, 'Buscou clientes por nome');
+
       res.status(200).json(clientes);
     } catch (error) {
       next(error);
     }
   }
 
-  async getAll(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getAll(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
       const { numberPage, limit, nome, email, telefone, dataNascimento, diaMensalidade, status, planoId } =
         req.query;
@@ -106,27 +135,42 @@ export class ClienteController {
     }
   }
 
-  async disable(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async disable(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
+      const user = req.user!;
+
       const cliente = await this.disableClienteService.execute(Number(req.params.id));
+
+      await this.log.execute(user.id, 'Desativou cliente', cliente.id);
+
       res.status(200).json(cliente);
     } catch (error) {
       next(error);
     }
   }
 
-  async active(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async active(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
+      const user = req.user!;
+
       const cliente = await this.activeClienteService.execute(Number(req.params.id));
+
+      await this.log.execute(user.id, 'Ativou cliente', cliente.id);
+
       res.status(200).json(cliente);
     } catch (error) {
       next(error);
     }
   }
 
-  async getAllByBirthdayPeopleMonth(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getAllByBirthdayPeopleMonth(
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const clientes = await this.getAllByBirthdayPeopleMonthService.execute();
+
       res.status(200).json(clientes);
     } catch (error) {
       next(error);

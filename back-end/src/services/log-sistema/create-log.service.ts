@@ -1,5 +1,4 @@
 import { Service } from 'typedi';
-import { BadRequestError } from '../../errors/BadRequestError';
 import { ClienteService } from '../cliente/@cliente.service';
 import { LogSistemaService } from './@log-sistema.service';
 
@@ -18,11 +17,13 @@ export class CreateLogService {
 
   private async validate(usuarioId: number, acao: string, clienteId?: number): Promise<void> {
     if (clienteId && !(await this.clienteService.getClienteById(clienteId))) {
-      throw new BadRequestError('Cliente não encontrado');
+      console.error('erro ao registrar log, cliente não encontrado');
+      return;
     }
 
     if (!usuarioId || !acao) {
-      throw new BadRequestError('Usuário ID e ação são obrigatórios');
+      console.error('erro ao registrar log, usuário ID e ação são obrigatórios');
+      return;
     }
   }
 }
