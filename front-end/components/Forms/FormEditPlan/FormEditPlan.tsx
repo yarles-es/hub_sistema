@@ -84,7 +84,7 @@ const FormEditPlan: React.FC<Props> = ({ onClose, plan }) => {
               </p>
             </div>
           </div>
-          <div className="mb-4.5 flex gap-6 xl:flex-row">
+          <div className="mb-4.5 flex gap-6 xl:flex-row flex-col">
             <div className="w-full xl:w-1/3">
               <Controller
                 control={control}

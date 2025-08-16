@@ -106,7 +106,7 @@ const FormLinkTurnstile: React.FC<Props> = ({ onClose, client }) => {
         <form>
           <div className="p-6.5">
             <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
-              <div className="w-full flex flex-col justify-center items-center">
+              <div className="w-full flex flex-col justify-center items-center text-center">
                 {availableId?.id && (
                   <p className="text-sm text-gray-400 mb-4">
                     id da catraca disponível:{" "}
@@ -171,7 +171,10 @@ const FormLinkTurnstile: React.FC<Props> = ({ onClose, client }) => {
                         type="button"
                         className="flex w-full lg:w-50 justify-center rounded p-3"
                         success
-                        onClick={onClose}
+                        onClick={async () => {
+                          await cancelTurnstileOperation();
+                          onClose();
+                        }}
                       >
                         finalizar
                       </Button>

@@ -1,5 +1,6 @@
 import Modal from "../Modal";
 
+import { cancelTurnstileOperation } from "@/api/turnstile/turnstile.api";
 import FormLinkTurnstile from "@/components/Forms/FormLinkTurnstile/FormLinkTurnstile";
 import { Client } from "@/types/Client";
 
@@ -17,7 +18,13 @@ const ModalLinkTurnstile: React.FC<Props> = ({
   client,
 }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal
+      isOpen={isOpen}
+      onClose={async () => {
+        await cancelTurnstileOperation();
+        onClose();
+      }}
+    >
       <FormLinkTurnstile onClose={onCloseAndGetClient} client={client} />
     </Modal>
   );

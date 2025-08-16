@@ -56,7 +56,7 @@ const FormNewUser: React.FC<FormNewUserProps> = ({ onClose }) => {
     <DefaultFormatContainerForm title="Novo usuário">
       <form onSubmit={handleSubmit(handleSubmitData)}>
         <div className="p-6.5">
-          <div className="mb-4.5 flex gap-6 xl:flex-row">
+          <div className="mb-4.5 flex gap-6 xl:flex-row flex-col">
             <div className="w-full xl:w-1/2">
               <Input
                 {...register("nome")}

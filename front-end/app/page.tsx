@@ -8,15 +8,17 @@ import TurnstileController from "@/components/TurnstileController/TurnstileContr
 export default function Home() {
   return (
     <PageTransition>
-      <div>
+      {/* esse container controla toda a rolagem */}
+      <div className="h-[100dvh] overflow-y-auto">
         <Breadcrumb pageName="Início" init />
-      </div>
-      <div className="flex flex-col xl:flex-row gap-4">
-        <TurnstileController init />
 
-        <div className="xl:w-1/2 rounded-sm border border-stroke bg-white px-1.5 shadow-default dark:border-strokedark dark:bg-boxdark text-xs overflow-y-auto h-[calc(100dvh-175px)] md:h-[calc(100vh-130px)]  overscroll-none">
-          <div className="mt-1.5 xl:mt-3">
-            <AccessRegistrationTable />
+        <div className="flex flex-col xl:flex-row gap-4">
+          <TurnstileController init />
+
+          <div className="xl:w-1/2 rounded-sm border border-stroke bg-white px-1.5 shadow-default dark:border-strokedark dark:bg-boxdark text-xs">
+            <div className="mt-1.5 xl:mt-3">
+              <AccessRegistrationTable />
+            </div>
           </div>
         </div>
       </div>

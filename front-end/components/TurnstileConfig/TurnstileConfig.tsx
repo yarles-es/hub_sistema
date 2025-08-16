@@ -302,7 +302,7 @@ const TurnstileConfig = () => {
                 </div>
               </div>
             </div>
-            <div className="mb-4.5 flex gap-6 xl:flex-row">
+            <div className="mb-4.5 flex gap-6 xl:flex-row flex-col items-center justify-center">
               <div className="w-full flex flex-col justify-center items-center m-5">
                 <p className={`mb-2.5 block text-black dark:text-white`}>
                   Sentido horário?

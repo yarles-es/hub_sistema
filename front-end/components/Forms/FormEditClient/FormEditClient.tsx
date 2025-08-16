@@ -85,7 +85,7 @@ const FormEditClient: React.FC<Props> = ({ onClose, client, refetch }) => {
     <DefaultFormatContainerForm title="Editar cliente">
       <form onSubmit={handleSubmit(handleSubmitData)}>
         <div className="p-6.5">
-          <div className="mb-4.5 flex gap-6 xl:flex-row">
+          <div className="mb-4.5 flex gap-6 xl:flex-row flex-col">
             <div className="w-full xl:w-1/3">
               <Controller
                 control={control}
@@ -162,7 +162,7 @@ const FormEditClient: React.FC<Props> = ({ onClose, client, refetch }) => {
             </div>
           </div>
 
-          <div className="mb-4.5 flex gap-6 xl:flex-row">
+          <div className="mb-4.5 flex gap-6 xl:flex-row flex-col">
             <div className="w-full xl:w-1/3">
               <Controller
                 control={control}

@@ -2,9 +2,8 @@ import axios, { AxiosResponse } from "axios";
 
 import { useAuthStore } from "@/store/auth";
 
-const urlLink = "http://localhost:3000/api";
-// const urlLink = "http://132.255.199.130:65509/api";
-// const urlLink = "http://192.168.4.5:30100/api";
+// const urlLink = "http://localhost:3000/api";
+const urlLink = "http://132.255.196.159:3000/api";
 
 export const api = () => {
   const apiInstance = axios.create({

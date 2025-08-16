@@ -52,7 +52,7 @@ const FormPayMonthlyFee: React.FC<Props> = ({ onClose, monthlyFee }) => {
       <form onSubmit={handleSubmit(handleSubmitData)}>
         <div className="p-6.5">
           <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
-            <div className="w-full flex flex-col justify-center items-center">
+            <div className="w-full flex flex-col justify-center items-center text-center">
               <h1 className="mb-4">
                 <strong className="text-meta-3 text-lg">Atenção!</strong>
               </h1>

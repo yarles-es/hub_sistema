@@ -42,7 +42,7 @@ const LogsPage = () => {
     error,
   } = useQuery({
     queryKey: ["logs", queryParams],
-    queryFn: () => getLogs(queryParams),
+    // queryFn: () => getLogs(queryParams),
     retry: 0,
     staleTime: 0,
   });
@@ -89,3 +89,5 @@ const LogsPage = () => {
     </PageTransition>
   );
 };
+
+export default LogsPage;
