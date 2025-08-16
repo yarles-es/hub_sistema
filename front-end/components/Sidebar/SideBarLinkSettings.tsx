@@ -87,9 +87,9 @@ const SideBarLinkSettings: React.FC<SideBarLinkSettingsProps> = ({
           <li>
             <Link
               onClick={(e) => setSidebarOpen(!sidebarOpen)}
-              href="/settings/turnstile"
+              href="/settings/logs"
               className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${
-                pathname === "/settings/turnstile" && "text-white"
+                pathname === "/settings/logs" && "text-white"
               } `}
             >
               Logs

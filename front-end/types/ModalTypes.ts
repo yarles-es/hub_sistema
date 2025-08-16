@@ -19,3 +19,5 @@ export type ModalClientType =
 export type ModalMonthlyFeeType = "cancel" | "search" | "pay" | "";
 
 export type ModalPlanType = "create" | "edit" | "";
+
+export type ModalLogType = "search" | "";
