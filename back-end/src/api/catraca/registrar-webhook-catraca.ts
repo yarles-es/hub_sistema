@@ -1,4 +1,4 @@
-import { defaultApiDeviceConnection, defaultApiWebhook } from '../@api';
+import { defaultApiWebhook } from '../@api';
 
 export const registrarWebhookCatraca = async () => {
   const endpoint = 'http://localhost:3000/api/catraca/webhook';

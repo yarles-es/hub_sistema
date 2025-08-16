@@ -7,7 +7,6 @@ import { GetMensalidadeByClienteIdService } from '../services/mensalidade/get-me
 import { GetMensalidadeByIdService } from '../services/mensalidade/get-mensalidade-by-id.service';
 import { PayMensalidadeService } from '../services/mensalidade/pay-mensalidade.service';
 import {
-  safeParseDate,
   safeParseFormPagamentoArray,
   safeParseInt,
   safeParseStatusMensalidadeArray,
@@ -15,6 +14,7 @@ import {
 import { CancelMensalidadeService } from '../services/mensalidade/cancel-mensalidade.service';
 import { CreateLogService } from '../services/log-sistema/create-log.service';
 import { AuthenticatedRequest } from '../types/Request.types';
+import { buildUtcRange } from '../utils/date-range';
 
 @Service()
 export class MensalidadeController {
@@ -142,15 +142,18 @@ export class MensalidadeController {
       const page = safeParseInt(numberPage) || 1;
       const limitNumber = safeParseInt(limit) || 30;
       const clienteIdQuery = safeParseInt(clienteId);
-      const initialDateQuery = safeParseDate(initialDate);
-      const finalDateQuery = safeParseDate(finalDate);
       const statusQuery = safeParseStatusMensalidadeArray(status);
       const formaPagamentoQuery = safeParseFormPagamentoArray(formaPagamento);
 
+      const { startAtUtc, endAtUtc } = buildUtcRange(
+        initialDate as string | undefined,
+        finalDate as string | undefined,
+      );
+
       const mensalidades = await this.getAllMensalidadesService.execute(page, limitNumber, {
         clienteId: clienteIdQuery,
-        initialDate: initialDateQuery,
-        finalDate: finalDateQuery,
+        initialDate: startAtUtc,
+        finalDate: endAtUtc,
         status: statusQuery,
         formaPagamento: formaPagamentoQuery,
       });

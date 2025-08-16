@@ -1,6 +1,6 @@
 import { LogSistema, Prisma, PrismaClient } from '@prisma/client';
 import { Service } from 'typedi';
-import { GetLog } from '../types/log-sistema.types';
+import { GetLog, GetLogResponseModel } from '../types/log-sistema.types';
 
 @Service()
 export class LogSistemaModel {
@@ -25,24 +25,26 @@ export class LogSistemaModel {
     });
   }
 
-  public async getLogs(page: number, limit: number, filter?: GetLog, transaction?: Prisma.TransactionClient) {
+  public async getLogs(
+    page: number,
+    limit: number,
+    filter?: GetLog,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<GetLogResponseModel> {
     const client = transaction || this.prisma;
     const where: Prisma.LogSistemaWhereInput = {};
 
-    if (filter?.initialDate) {
-      where.dataHora = {
-        gte: filter.initialDate,
-      };
+    const dataHora: Prisma.DateTimeFilter = {};
+
+    if (filter?.initialDate) dataHora.gte = filter.initialDate;
+    if (filter?.finalDate) dataHora.lte = filter.finalDate;
+
+    if (Object.keys(dataHora).length > 0) {
+      where.dataHora = dataHora;
     }
 
-    if (filter?.finalDate) {
-      where.dataHora = {
-        lte: filter.finalDate,
-      };
-    }
-
-    if (filter?.userId) {
-      where.usuarioId = filter.userId;
+    if (filter?.usuarioId) {
+      where.usuarioId = filter.usuarioId;
     }
 
     if (filter?.clienteId) {

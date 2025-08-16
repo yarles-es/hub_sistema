@@ -1,7 +1,7 @@
 import { Service } from 'typedi';
 import { LogSistemaModel } from '../../models/log-sistema.model';
 import { Prisma } from '@prisma/client';
-import { GetLog } from '../../types/log-sistema.types';
+import { GetLog, GetLogResponseModel } from '../../types/log-sistema.types';
 
 @Service()
 export class LogSistemaService {
@@ -21,7 +21,7 @@ export class LogSistemaService {
     limitNumber: number,
     data?: GetLog,
     transaction?: Prisma.TransactionClient,
-  ) {
+  ): Promise<GetLogResponseModel> {
     return await this.logSistemaModel.getLogs(page, limitNumber, data, transaction);
   }
 }

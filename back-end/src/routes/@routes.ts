@@ -18,8 +18,9 @@ const loginMiddleware = Container.get(LoginMiddleware);
 
 router.use('/login', loginMiddleware.execute.bind(loginMiddleware), loginRoute);
 
-router.use(validateJWT);
 router.use('/catraca', catracaRoute);
+
+router.use(validateJWT);
 
 router.use('/cliente', clienteRoute);
 router.use('/mensalidade', mensalidadeRoute);

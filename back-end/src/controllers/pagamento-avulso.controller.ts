@@ -6,14 +6,10 @@ import { GetAllPagamentosAvulsoService } from '../services/pagamento-avulso/get-
 import { GetPagamentoAvulsoByIdService } from '../services/pagamento-avulso/get-pagamento-avulso-by-id.service';
 import { UpdatePagamentoAvulsoService } from '../services/pagamento-avulso/update-pagamento-avulso.service';
 import { CreatePagamentoAvulso, UpdatePagamentoAvulso } from '../types/pagamento-avulso.types';
-import {
-  safeParseDate,
-  safeParseFormPagamentoArray,
-  safeParseInt,
-  safeParseString,
-} from '../utils/safeTypes';
+import { safeParseFormPagamentoArray, safeParseInt, safeParseString } from '../utils/safeTypes';
 import { CreateLogService } from '../services/log-sistema/create-log.service';
 import { AuthenticatedRequest } from '../types/Request.types';
+import { buildUtcRange } from '../utils/date-range';
 
 @Service()
 export class PagamentoAvulsoController {
@@ -97,15 +93,18 @@ export class PagamentoAvulsoController {
 
       const limitNumber = safeParseInt(limit) || 30;
       const page = safeParseInt(numberPage) || 1;
-      const initial = safeParseDate(new Date(`${initialDate as string}T00:00:00`));
-      const final = safeParseDate(new Date(`${finalDate as string}T23:59:59`));
       const observacaoValue = safeParseString(observacao);
       const nomeClienteValue = safeParseString(nomeCliente);
       const formaPagamentoValue = safeParseFormPagamentoArray(formaPagamento);
 
+      const { startAtUtc, endAtUtc } = buildUtcRange(
+        initialDate as string | undefined,
+        finalDate as string | undefined,
+      );
+
       const pagamentos = await this.getAllPagamentosAvulsoService.execute(page, limitNumber, {
-        initialDate: initial,
-        finalDate: final,
+        initialDate: startAtUtc,
+        finalDate: endAtUtc,
         observacao: observacaoValue,
         nomeCliente: nomeClienteValue,
         formaPagamento: formaPagamentoValue,

@@ -61,42 +61,35 @@ export class PagamentoAvulsoModel {
     const where: Prisma.PagamentoAvulsoWhereInput = {};
 
     if (filters) {
-      if (filters.initialDate) {
-        where.dataHora = { gte: filters.initialDate };
+      const dataHora: Prisma.DateTimeFilter = {};
+      if (filters.initialDate) dataHora.gte = filters.initialDate;
+      if (filters.finalDate) dataHora.lte = filters.finalDate;
+
+      if (Object.keys(dataHora).length > 0) {
+        where.dataHora = dataHora;
       }
-      if (filters.finalDate) {
-        where.dataHora = { lte: filters.finalDate };
+
+      if (filters.nomeCliente?.trim()) {
+        where.nomeCliente = { contains: filters.nomeCliente.trim(), mode: 'insensitive' };
       }
-      if (filters.nomeCliente) {
-        where.nomeCliente = { contains: filters.nomeCliente, mode: 'insensitive' };
+      if (filters.observacao?.trim()) {
+        where.observacao = { contains: filters.observacao.trim(), mode: 'insensitive' };
       }
-      if (filters.observacao) {
-        where.observacao = { contains: filters.observacao, mode: 'insensitive' };
-      }
-      if (filters.formaPagamento && filters.formaPagamento.length > 0) {
-        where.formaPagamento = {
-          in: filters.formaPagamento,
-        };
+      if (filters.formaPagamento?.length) {
+        where.formaPagamento = { in: filters.formaPagamento };
       }
     }
 
     const [data, total] = await Promise.all([
       client.pagamentoAvulso.findMany({
         where,
-        skip: (pageNumber - 1) * limitNumber,
+        skip: Math.max(0, (pageNumber - 1) * limitNumber),
         take: limitNumber,
-        orderBy: {
-          dataHora: 'desc',
-        },
+        orderBy: { dataHora: 'desc' },
       }),
       client.pagamentoAvulso.count({ where }),
     ]);
 
-    return {
-      data,
-      total,
-      page: pageNumber,
-      limit: limitNumber,
-    };
+    return { data, total, page: pageNumber, limit: limitNumber };
   }
 }

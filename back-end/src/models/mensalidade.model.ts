@@ -80,12 +80,13 @@ export class MensalidadeModel {
     const client = transaction || this.prisma;
     const where: Prisma.MensalidadeWhereInput = {};
 
-    if (filter?.initialDate) {
-      where.vencimento = { gte: filter.initialDate };
-    }
+    const vencimento: Prisma.DateTimeFilter = {};
 
-    if (filter?.finalDate) {
-      where.vencimento = { lte: filter.finalDate };
+    if (filter?.initialDate) vencimento.gte = filter.initialDate;
+    if (filter?.finalDate) vencimento.lte = filter.finalDate;
+
+    if (Object.keys(vencimento).length > 0) {
+      where.vencimento = vencimento;
     }
 
     if (filter?.status && filter.status.length > 0) {
