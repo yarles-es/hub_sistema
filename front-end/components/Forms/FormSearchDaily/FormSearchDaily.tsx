@@ -88,20 +88,12 @@ const FormSearchDaily: React.FC<Props> = ({ onClose }) => {
             </div>
           </div>
           <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
-            <div className="w-full xl:w-1/3">
+            <div className="w-full xl:w-1/2">
               <Input
                 {...register("initialDate")}
                 type="date"
                 label="Data inicial:"
                 error={errors.initialDate?.message}
-              />
-            </div>
-            <div className="w-full xl:w-1/2">
-              <Input
-                {...register("finalDate")}
-                type="date"
-                label="Data final:"
-                error={errors.finalDate?.message}
               />
             </div>
             <div className="w-full xl:w-1/2">

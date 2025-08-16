@@ -28,17 +28,16 @@ const FormSearchClient: React.FC<Props> = ({ onClose }) => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const { handleSubmit, formState, control, register, watch } =
-    useForm<FormValues>({
-      defaultValues: {
-        nome: "",
-        email: "",
-        telefone: "",
-        dataNascimento: "",
-        status: undefined,
-        planoId: undefined,
-      },
-    });
+  const { handleSubmit, formState, control, register } = useForm<FormValues>({
+    defaultValues: {
+      nome: "",
+      email: "",
+      telefone: "",
+      dataNascimento: "",
+      status: undefined,
+      planoId: undefined,
+    },
+  });
 
   const { errors } = formState;
 

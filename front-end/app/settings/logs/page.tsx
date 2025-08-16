@@ -5,10 +5,14 @@ import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 
+import { getLogs } from "@/api/logs/logs.api";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Button from "@/components/Buttons/Button";
+import ModalSearchLog from "@/components/Modals/LogModals/ModalSearchLog";
 import PageTransition from "@/components/PageTransition/PageTransition";
+import Pagination from "@/components/Pagination/Pagination";
 import HeaderTable from "@/components/Tables/HeaderTable/HeaderTable";
+import LogsTable from "@/components/Tables/LogsTable";
 import useAlert from "@/hooks/useAlert";
 import { LIMIT_WITH_PAGE, NUMBER_PAGE } from "@/schemas/paginationSchemas";
 import { ModalLogType } from "@/types/ModalTypes";
@@ -24,25 +28,24 @@ const LogsPage = () => {
     search: () => setModals("search"),
   };
 
+  const initialDate =
+    searchParams.get("initialDate") ?? new Date().toISOString().split("T")[0];
+
   const queryParams = useMemo(
     () => ({
-      userId: searchParams.get("userId") || undefined,
-      clienteId: searchParams.get("clientId") || undefined,
       numberPage: Number(searchParams.get("page")) || NUMBER_PAGE,
       limit: Number(searchParams.get("limit")) || LIMIT_WITH_PAGE,
-      initialDate: searchParams.get("initialDate") || undefined,
+      usuarioId: Number(searchParams.get("usuarioId")) || undefined,
+      clienteId: Number(searchParams.get("clienteId")) || undefined,
+      initialDate,
       finalDate: searchParams.get("finalDate") || undefined,
     }),
-    [searchParams]
+    [searchParams, initialDate]
   );
 
-  const {
-    data: logs,
-    refetch,
-    error,
-  } = useQuery({
+  const { data: logs, error } = useQuery({
     queryKey: ["logs", queryParams],
-    // queryFn: () => getLogs(queryParams),
+    queryFn: () => getLogs(queryParams),
     retry: 0,
     staleTime: 0,
   });
@@ -78,13 +81,22 @@ const LogsPage = () => {
         {logs ? (
           <div className="mt-1.5 xl:mt-3">
             <PageTransition>
-              <table></table>
+              <LogsTable logs={logs.data} onOpenItemSelect={onOpenModal} />
             </PageTransition>
-            <p>pagination</p>
+            <Pagination
+              limit={logs.limit}
+              page={logs.page}
+              total={logs.total}
+            />
           </div>
         ) : null}
 
-        {modals === "search" && <p>modal de busca</p>}
+        {modals === "search" && (
+          <ModalSearchLog
+            isOpen={modals === "search"}
+            onClose={() => setModals("")}
+          />
+        )}
       </div>
     </PageTransition>
   );
