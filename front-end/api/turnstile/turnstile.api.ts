@@ -122,3 +122,7 @@ export const getDurationInteraction = async () => {
     {}
   );
 };
+
+export const restartTurnstile = async () => {
+  return await genericRequest<void>("post", `catraca/reiniciar`, {});
+};

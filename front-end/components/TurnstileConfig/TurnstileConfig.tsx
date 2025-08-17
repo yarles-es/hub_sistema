@@ -10,6 +10,7 @@ import Input from "../Inputs/Input";
 import {
   getDurationInteraction,
   getMessages,
+  restartTurnstile,
   setBiometryFlowType,
   setClockwiseDirection,
   setDurationInteraction,
@@ -125,6 +126,16 @@ const TurnstileConfig = () => {
     },
   });
 
+  const { mutate: restart } = useMutation({
+    mutationFn: restartTurnstile,
+    onSuccess: () => {
+      alert("Catraca reiniciada com sucesso!", "success");
+    },
+    onError: () => {
+      alert("Erro ao reiniciar a catraca.", "error");
+    },
+  });
+
   const handleSetFirstMessage = async (data: string) => {
     if (data.trim() === "") {
       alert("A primeira mensagem não pode estar vazia.", "error");
@@ -168,6 +179,10 @@ const TurnstileConfig = () => {
       return;
     }
     biometryFlowType(Number(data));
+  };
+
+  const handleRestartTurnstile = () => {
+    restart();
   };
 
   return (
@@ -326,6 +341,23 @@ const TurnstileConfig = () => {
                   </Button>
                 </div>
               </div>
+
+              <div className="w-full flex flex-col justify-center items-center m-5">
+                <p className={`mb-2.5 block text-black dark:text-white`}>
+                  Reiniciar catraca:
+                </p>
+                <div className="flex justify-center items-center gap-3">
+                  <Button
+                    type="button"
+                    className={`flex w-full lg:w-30 justify-center p-3 rounded`}
+                    success
+                    onClick={() => handleRestartTurnstile()}
+                  >
+                    reiniciar
+                  </Button>
+                </div>
+              </div>
+
               <div className="w-full flex flex-col justify-center items-center m-5">
                 <p
                   className={`mb-2.5 block text-black dark:text-white text-sm`}

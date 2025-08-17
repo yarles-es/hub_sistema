@@ -136,22 +136,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
               <SideBarLinkPlans />
 
-              <SidebarLinkGroup
-                activeCondition={
-                  pathname === "/turnstile" || pathname.includes("turnstile")
-                }
-              >
-                {(handleClick, open) => (
-                  <SideBarLinkTurnstile
-                    handleClick={handleClick}
-                    open={open}
-                    setSidebarExpanded={setSidebarExpanded}
-                    sidebarExpanded={sidebarExpanded}
-                    setSidebarOpen={setSidebarOpen}
-                    sidebarOpen={sidebarOpen}
-                  />
-                )}
-              </SidebarLinkGroup>
+              <SideBarLinkTurnstile />
 
               <SidebarLinkGroup
                 activeCondition={

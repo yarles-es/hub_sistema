@@ -3,6 +3,8 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import useViewPermission from "@/hooks/useViewPermission";
+
 type SideBarLinkSettingsProps = {
   handleClick: () => void;
   open: boolean;
@@ -21,6 +23,8 @@ const SideBarLinkSettings: React.FC<SideBarLinkSettingsProps> = ({
   sidebarOpen,
 }) => {
   const pathname = usePathname();
+
+  const administration = useViewPermission();
 
   return (
     <React.Fragment>
@@ -95,17 +99,19 @@ const SideBarLinkSettings: React.FC<SideBarLinkSettingsProps> = ({
               Logs
             </Link>
           </li>
-          <li>
-            <Link
-              onClick={(e) => setSidebarOpen(!sidebarOpen)}
-              href="/settings/backup"
-              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${
-                pathname === "/settings/backup" && "text-white"
-              } `}
-            >
-              Backup
-            </Link>
-          </li>
+          {administration && (
+            <li>
+              <Link
+                onClick={(e) => setSidebarOpen(!sidebarOpen)}
+                href="/settings/backup"
+                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${
+                  pathname === "/settings/backup" && "text-white"
+                } `}
+              >
+                Backup
+              </Link>
+            </li>
+          )}
         </ul>
       </div>
     </React.Fragment>

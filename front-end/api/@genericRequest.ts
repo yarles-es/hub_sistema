@@ -1,30 +1,42 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { AxiosResponse, Method, AxiosRequestConfig } from "axios";
 
 import api from "./@api";
 
-type HttpMethod = "get" | "post" | "put" | "delete" | "patch";
-
-interface GenericRequestOptions {
+type GenericRequestOptions = {
   body?: any;
   responseType?: AxiosRequestConfig["responseType"];
   signal?: AbortSignal;
-  returnFullResponse?: boolean;
   headers?: Record<string, string>;
   onDownloadProgress?: AxiosRequestConfig["onDownloadProgress"];
-}
+  returnFullResponse?: boolean;
+};
 
-export const genericRequest = async <T>(
-  method: HttpMethod,
+export async function genericRequest<T>(
+  method: Method | "get" | "post" | "put" | "delete" | "patch",
+  url: string,
+  options?: Omit<GenericRequestOptions, "returnFullResponse"> & {
+    returnFullResponse?: false;
+  }
+): Promise<T>;
+
+export async function genericRequest<T>(
+  method: Method | "get" | "post" | "put" | "delete" | "patch",
+  url: string,
+  options: GenericRequestOptions & { returnFullResponse: true }
+): Promise<AxiosResponse<T>>;
+
+export async function genericRequest<T>(
+  method: Method | "get" | "post" | "put" | "delete" | "patch",
   url: string,
   options: GenericRequestOptions = {}
-): Promise<T | AxiosResponse<T>> => {
+): Promise<T | AxiosResponse<T>> {
   const {
     body,
     responseType = "json",
     signal,
-    returnFullResponse,
     headers,
     onDownloadProgress,
+    returnFullResponse,
   } = options;
 
   const token = localStorage.getItem("token");
@@ -38,13 +50,15 @@ export const genericRequest = async <T>(
       responseType,
       signal,
       headers: {
-        ...(token ? { Authorization: `${token}` } : {}),
+        ...(token ? { Authorization: token } : {}),
         ...(headers ?? {}),
       },
       onDownloadProgress,
     });
 
-    return returnFullResponse ? (response as AxiosResponse<T>) : response.data;
+    return returnFullResponse
+      ? (response as AxiosResponse<T>)
+      : (response.data as T);
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
       if (error.response?.data instanceof Blob) {
@@ -59,4 +73,4 @@ export const genericRequest = async <T>(
     }
     throw new Error("Erro na requisição");
   }
-};
+}
