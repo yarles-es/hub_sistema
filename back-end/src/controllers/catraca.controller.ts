@@ -31,6 +31,7 @@ import { CreateLogService } from '../services/log-sistema/create-log.service';
 import { AuthenticatedRequest } from '../types/Request.types';
 import { LiberarLivreCatracaService } from '../services/catraca/liberar-livre-catraca.service';
 import { LiberarSaidaCatracaService } from '../services/catraca/liberar-saida-catraca.service';
+import { ReiniciarCatracaService } from '../services/catraca/reiniciar-catraca.service';
 
 @Service()
 export class CatracaController {
@@ -57,6 +58,7 @@ export class CatracaController {
     private readonly setarTipoControleFluxoCatracaService: SetarTipoControleFluxoCatracaService,
     private readonly setarTipoFluxoBiometriaCatracaService: SetarTipoFluxoBiometriaCatracaService,
     private readonly entradaNaoIdentificadaService: EntradaNaoIdentificadaService,
+    private readonly reiniciarCatracaService: ReiniciarCatracaService,
     private readonly log: CreateLogService,
   ) {}
   public async webhook(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
@@ -385,6 +387,20 @@ export class CatracaController {
       await this.setarTipoControleFluxoCatracaService.execute(tipo as number);
 
       await this.log.execute(user.id, 'Setou tipo de controle de fluxo da Catraca');
+
+      res.status(204).send();
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async reiniciarCatraca(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const user = req.user!;
+
+      await this.reiniciarCatracaService.execute();
+
+      await this.log.execute(user.id, 'Reiniciou a Catraca');
 
       res.status(204).send();
     } catch (error) {

@@ -1,7 +1,11 @@
 import axios from 'axios';
 import { conectarCatraca } from './catraca/conectar-catraca';
 
-const url = 'http://localhost:5110/';
+const url = process.env.CATRACA_BASE_URL;
+
+if (!url) {
+  throw new Error('CATRACA_BASE_URL is not defined');
+}
 
 export const partyUrl = {
   liteNet: 'LiteNet2Commands', // rota de trabalho do LiteNet2
@@ -12,7 +16,7 @@ export const partyUrl = {
 
 const api = axios.create({
   baseURL: url,
-  timeout: 10000,
+  timeout: 20000,
   headers: {
     'Content-Type': 'application/json',
   },

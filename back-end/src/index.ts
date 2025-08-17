@@ -1,5 +1,4 @@
 import cors from 'cors';
-import http from 'http';
 import 'dotenv/config';
 import type { NextFunction, Request, Response } from 'express';
 import express from 'express';
@@ -37,7 +36,11 @@ conectarCatraca()
     console.log('Catraca connected successfully');
   })
   .catch((err) => {
-    console.error('erro:', err.response.data.message);
+    if (err.status === 400) {
+      console.log('catraca já conectada!');
+    } else {
+      console.error('Erro ao conectar a catraca:', err);
+    }
   });
 
 // faz registro do webhook na inicialização

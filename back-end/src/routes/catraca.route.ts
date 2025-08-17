@@ -47,6 +47,8 @@ router.post('/conectar', catracaController.conectar.bind(catracaController));
 
 router.post('/desconectar', catracaController.desconectar.bind(catracaController));
 
+router.post('/reiniciar', catracaController.reiniciarCatraca.bind(catracaController));
+
 router.delete('/limpar-template/:id', catracaController.limparTemplatePorId.bind(catracaController));
 
 export const catracaRoute = router;

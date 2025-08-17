@@ -7,7 +7,7 @@ export const getDefaultBodyCatracaInfo = async (network?: boolean) => {
   const catracaInfo = await service.getCatracaInfo();
 
   if (!catracaInfo) {
-    throw new Error('Catraca info not found');
+    throw new Error('Informação da catraca não encontrada');
   }
 
   const response: {
