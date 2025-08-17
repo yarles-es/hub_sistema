@@ -17,7 +17,8 @@ const PORT = Number(process.env.PORT) || 3000;
 
 app.use(
   cors({
-    exposedHeaders: ['Content-Disposition', 'authorization'],
+    origin: '*',
+    exposedHeaders: ['Content-Disposition', 'Content-Type', 'Content-Length', 'authorization'],
   }),
 );
 

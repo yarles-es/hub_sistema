@@ -16,7 +16,6 @@ import { GetFirstCadastroBiometriaService } from '../services/catraca/get-first-
 import { LimparTemplatePorIdService } from '../services/catraca/limpar-template-por-id.service';
 import { BuscaMensagensCatracaService } from '../services/catraca/busca-mensagens-catraca.service';
 import { BuscaDuracaoInteracaoCatracaService } from '../services/catraca/busca-duracao-interacao-catraca.service';
-import { LiberarSaidaCatracaService } from '../services/catraca/liberar-saida-catraca.service';
 import { LiberarEntradaCatracaService } from '../services/catraca/liberar-entrada-catraca.service';
 import { ConectarCatracaService } from '../services/catraca/conectar-catraca.service';
 import { DesconectarCatracaService } from '../services/catraca/desconectar-catraca.service';
@@ -30,6 +29,8 @@ import { SetarTipoFluxoBiometriaCatracaService } from '../services/catraca/setar
 import { EntradaNaoIdentificadaService } from '../services/catraca/entrada-nao-identificada.service';
 import { CreateLogService } from '../services/log-sistema/create-log.service';
 import { AuthenticatedRequest } from '../types/Request.types';
+import { LiberarLivreCatracaService } from '../services/catraca/liberar-livre-catraca.service';
+import { LiberarSaidaCatracaService } from '../services/catraca/liberar-saida-catraca.service';
 
 @Service()
 export class CatracaController {
@@ -47,7 +48,7 @@ export class CatracaController {
     private readonly liberarEntradaCatracaService: LiberarEntradaCatracaService,
     private readonly desconectarCatracaService: DesconectarCatracaService,
     private readonly conectarCatracaService: ConectarCatracaService,
-    private readonly liberarLivreCatracaService: LiberarSaidaCatracaService,
+    private readonly liberarLivreCatracaService: LiberarLivreCatracaService,
     private readonly setarDuracaoInteracaoCatracaService: SetarDuracaoInteracaoCatracaService,
     private readonly setarPrimeiraMensagemCatracaService: SetarPrimeiraMensagemCatracaService,
     private readonly setarSegundaMensagemCatracaService: SetarSegundaMensagemCatracaService,

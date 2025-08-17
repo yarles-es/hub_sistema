@@ -11,6 +11,7 @@ import { pagamentoAvulsoRoute } from './pagamento-avulso.route';
 import { planoRoute } from './plano.route';
 import { registroAcessoRoute } from './registro-acesso.route';
 import { usuarioRoute } from './usuario.route';
+import { backupRoute } from './admin-backup.route';
 
 const router = Router();
 
@@ -22,6 +23,7 @@ router.use('/catraca', catracaRoute);
 
 router.use(validateJWT);
 
+router.use('/backup', backupRoute);
 router.use('/cliente', clienteRoute);
 router.use('/mensalidade', mensalidadeRoute);
 router.use('/log-sistema', logSistemaRoute);
