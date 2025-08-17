@@ -18,16 +18,16 @@ export const getAllClients = async (data: GetAllClient) => {
 };
 
 export const createClient = async (data: CreateClient) => {
-  return await genericRequest<ClientResponseGetAll>(
-    "post",
-    "cliente/create",
-    data
-  );
+  return await genericRequest<ClientResponseGetAll>("post", "cliente/create", {
+    body: data,
+  });
 };
 
 export const updateClient = async (data: UpdateClient) => {
   const { id, ...rest } = data;
-  return await genericRequest<Client>("put", `cliente/update/${id}`, rest);
+  return await genericRequest<Client>("put", `cliente/update/${id}`, {
+    body: rest,
+  });
 };
 
 export const disableClient = async (id: number) => {

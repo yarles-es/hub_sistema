@@ -7,7 +7,9 @@ type Login = {
 
 export const loginApp = async ({ login, senha }: Login): Promise<void> => {
   await genericRequest<void>("post", "/login", {
-    login,
-    senha,
+    body: {
+      login,
+      senha,
+    },
   });
 };

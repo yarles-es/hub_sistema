@@ -11,7 +11,9 @@ export const createPlan = async (data: CreatePlano) => {
     ...data,
     valor: parseFloat(data.valor.replace(",", ".")),
   };
-  return await genericRequest<Plano>("post", "plano/create", formatedData);
+  return await genericRequest<Plano>("post", "plano/create", {
+    body: formatedData,
+  });
 };
 
 export const updatePlan = async (data: UpdatePlano) => {
@@ -19,17 +21,19 @@ export const updatePlan = async (data: UpdatePlano) => {
     ...data,
     valor: data.valor ? parseFloat(data.valor.replace(",", ".")) : undefined,
   };
-  return await genericRequest<Plano>("put", `plano/update/${id}`, rest);
+  return await genericRequest<Plano>("put", `plano/update/${id}`, {
+    body: rest,
+  });
 };
 
 export const disablePlan = async (id: number) => {
   return await genericRequest<void>("put", `plano/update/${id}`, {
-    ativo: false,
+    body: { ativo: false },
   });
 };
 
 export const activatePlan = async (id: number) => {
   return await genericRequest<void>("put", `plano/update/${id}`, {
-    ativo: true,
+    body: { ativo: true },
   });
 };

@@ -29,5 +29,7 @@ export const payMonthlyFee = async (data: PaymentMonthlyFee) => {
     valorPago: data.valorPago ? parseFloat(data.valorPago) : null,
   };
 
-  return await genericRequest<void>("put", `mensalidade/pay/${id}`, rest);
+  return await genericRequest<void>("put", `mensalidade/pay/${id}`, {
+    body: rest,
+  });
 };

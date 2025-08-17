@@ -20,8 +20,7 @@ export const getAllDaily = async (data: GetAllDaily) => {
 export const createDaily = async (data: CreateDaily) => {
   const valor = parseFloat(data.valor);
   return await genericRequest<Daily>("post", "pagamento-avulso/create", {
-    ...data,
-    valor,
+    body: { ...data, valor },
   });
 };
 
@@ -39,7 +38,7 @@ export const updateDaily = async (data: UpdateDaily) => {
     "put",
     `pagamento-avulso/update/${data.id}`,
     {
-      ...rest,
+      body: { ...rest },
     }
   );
 };

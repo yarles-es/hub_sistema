@@ -15,7 +15,7 @@ export const startLinkWithTurnstile = async (
   return await genericRequest<RegisterTurnstile>(
     "post",
     "catraca/iniciar-cadastro",
-    data
+    { body: data }
   );
 };
 
@@ -48,25 +48,25 @@ export const freeTurnstile = async () => {
 
 export const setFirstMessage = async (mensagem: string) => {
   return await genericRequest<void>("post", `catraca/setar-primeira-mensagem`, {
-    mensagem,
+    body: { mensagem },
   });
 };
 
 export const setSecondMessage = async (mensagem: string) => {
   return await genericRequest<void>("post", `catraca/setar-segunda-mensagem`, {
-    mensagem,
+    body: { mensagem },
   });
 };
 
 export const setMessageBloq = async (mensagem: string) => {
   return await genericRequest<void>("post", `catraca/setar-mensagem-bloqueio`, {
-    mensagem,
+    body: { mensagem },
   });
 };
 
 export const setClockwiseDirection = async (sentidoHorario: boolean) => {
   return await genericRequest<void>("post", `catraca/setar-sentido-horario`, {
-    sentidoHorario,
+    body: { sentidoHorario },
   });
 };
 
@@ -74,9 +74,7 @@ export const setBiometryFlowType = async (tipo: number) => {
   return await genericRequest<void>(
     "post",
     `catraca/setar-tipo-fluxo-biometria`,
-    {
-      tipo,
-    }
+    { body: { tipo } }
   );
 };
 
@@ -84,15 +82,13 @@ export const setFlowControlType = async (tipo: number) => {
   return await genericRequest<void>(
     "post",
     `catraca/setar-tipo-controle-fluxo`,
-    {
-      tipo,
-    }
+    { body: { tipo } }
   );
 };
 
 export const setDurationInteraction = async (duracao: number) => {
   return await genericRequest<void>("post", `catraca/setar-duracao-interacao`, {
-    duracao,
+    body: { duracao },
   });
 };
 

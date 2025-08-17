@@ -8,7 +8,7 @@ type EditUserStatus = {
 };
 
 export const createUser = async (user: CreateUser): Promise<User> => {
-  return await genericRequest<User>("post", "usuario/create", user);
+  return await genericRequest<User>("post", "usuario/create", { body: user });
 };
 
 export const findAllUsers = async (): Promise<User[]> => {
@@ -20,7 +20,7 @@ export const updateUserStatus = async ({
   userId,
 }: EditUserStatus): Promise<User> => {
   return await genericRequest<User>("put", `usuario/edit-status/${userId}`, {
-    status,
+    body: { status },
   });
 };
 
@@ -28,5 +28,7 @@ export const updateUser = async (
   idUser: number,
   user: UpdateUsuario
 ): Promise<User> => {
-  return await genericRequest<User>("put", `usuario/update/${idUser}`, user);
+  return await genericRequest<User>("put", `usuario/update/${idUser}`, {
+    body: user,
+  });
 };
