@@ -1,0 +1,14 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.pagamentoAvulsoRoute = void 0;
+const express_1 = require("express");
+const typedi_1 = require("typedi");
+const pagamento_avulso_controller_1 = require("../controllers/pagamento-avulso.controller");
+const pagamentoAvulsoController = typedi_1.Container.get(pagamento_avulso_controller_1.PagamentoAvulsoController);
+const route = (0, express_1.Router)();
+route.post('/create', pagamentoAvulsoController.create.bind(pagamentoAvulsoController));
+route.get('/get-by-id/:id', pagamentoAvulsoController.getById.bind(pagamentoAvulsoController));
+route.put('/update/:id', pagamentoAvulsoController.update.bind(pagamentoAvulsoController));
+route.delete('/delete/:id', pagamentoAvulsoController.delete.bind(pagamentoAvulsoController));
+route.get('/get-all', pagamentoAvulsoController.getAll.bind(pagamentoAvulsoController));
+exports.pagamentoAvulsoRoute = route;

@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: "erp_rhm_frontend",
+      name: "frontend_academia",
       cwd: __dirname,
       script: "npm",
       args: "start",
@@ -12,10 +12,10 @@ module.exports = {
 
       instances: 1,
       autorestart: true,
-      max_restarts: 5,
+      max_restarts: 10,
       min_uptime: "30s",
       exp_backoff_restart_delay: 2000,
-      watch: false,
+      watch: true,
     },
   ],
 };

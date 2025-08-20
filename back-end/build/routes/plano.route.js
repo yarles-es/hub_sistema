@@ -1,0 +1,14 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.planoRoute = void 0;
+const express_1 = require("express");
+const typedi_1 = require("typedi");
+const plano_controller_1 = require("../controllers/plano.controller");
+const router = (0, express_1.Router)();
+const planoController = typedi_1.Container.get(plano_controller_1.PlanoController);
+router.post('/create', planoController.createPlano.bind(planoController));
+router.get('/get-all', planoController.getAllPlanos.bind(planoController));
+router.get('/get/:id', planoController.getPlanoById.bind(planoController));
+router.put('/update/:id', planoController.updatePlano.bind(planoController));
+router.delete('/delete/:id', planoController.deletePlano.bind(planoController));
+exports.planoRoute = router;
