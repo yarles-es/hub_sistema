@@ -37,11 +37,11 @@ export class UpdateUsuarioService {
     if (usuario.senha !== undefined && usuario.senha.length < 6)
       throw new BadRequestError('Senha deve ter pelo menos 6 caracteres.');
 
-    if (typeof usuario.ativo !== 'boolean') {
+    if (usuario.ativo && typeof usuario.ativo !== 'boolean') {
       throw new BadRequestError('O campo "ativo" deve ser um booleano.');
     }
 
-    if (typeof usuario.administrador !== 'boolean') {
+    if (usuario.administrador && typeof usuario.administrador !== 'boolean') {
       throw new BadRequestError('O campo "administrador" deve ser um booleano.');
     }
   }
