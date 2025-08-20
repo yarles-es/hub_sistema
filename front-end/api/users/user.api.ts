@@ -28,7 +28,14 @@ export const updateUser = async (
   idUser: number,
   user: UpdateUsuario
 ): Promise<User> => {
+  const editedUser: UpdateUsuario = {
+    email: user.email ?? undefined,
+    nome: user.nome ?? undefined,
+    ativo: user.ativo ?? undefined,
+    senha: user.senha ?? undefined,
+    administrador: user.administrador ?? undefined,
+  };
   return await genericRequest<User>("put", `usuario/update/${idUser}`, {
-    body: user,
+    body: editedUser,
   });
 };
