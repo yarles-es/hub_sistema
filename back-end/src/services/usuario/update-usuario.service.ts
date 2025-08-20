@@ -23,7 +23,9 @@ export class UpdateUsuarioService {
   async validate(usuario: UpdateUsuario): Promise<void> {
     if (usuario.email && !validateEmail(usuario.email)) throw new BadRequestError('Email inválido.');
     if (usuario.nome && usuario.nome.trim() === '') throw new BadRequestError('Nome não pode ser vazio.');
-    if (usuario.senha && usuario.senha.trim() === '') throw new BadRequestError('Senha não pode ser vazia.');
+    if (usuario.senha === '' || usuario.senha?.trim() === '') {
+      throw new BadRequestError('Senha não pode ser vazia.');
+    }
     if (usuario.senha && usuario.senha.length < 6)
       throw new BadRequestError('Senha deve ter pelo menos 6 caracteres.');
 
