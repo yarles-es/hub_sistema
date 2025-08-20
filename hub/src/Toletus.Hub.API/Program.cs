@@ -20,7 +20,7 @@ void ConfigureServices(WebApplicationBuilder builder)
     InitializeNotificationServices();
 
     var boards = LiteNet2Devices.SearchLiteNet2Boards( // codigo adicionado manualmente
-    IPAddress.Parse("192.168.4.5") // ip da maquina que se comunica
+    IPAddress.Parse("192.168.4.38") // ip da maquina que se comunica
     );
     LiteNet2Devices.SetBoards([.. boards]);
 
