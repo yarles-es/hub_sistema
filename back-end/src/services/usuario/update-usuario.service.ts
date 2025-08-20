@@ -15,24 +15,33 @@ export class UpdateUsuarioService {
     await this.validate(usuario);
 
     const existingUser = await this.usuarioService.findById(id);
+
     if (!existingUser) throw new NotFoundError('Usuário não encontrado.');
 
     return await this.usuarioService.update(id, usuario);
   }
 
   async validate(usuario: UpdateUsuario): Promise<void> {
-    if (usuario.email && !validateEmail(usuario.email)) throw new BadRequestError('Email inválido.');
-    if (usuario.nome && usuario.nome.trim() === '') throw new BadRequestError('Nome não pode ser vazio.');
+    if (usuario.email?.trim() !== '' && !validateEmail(usuario.email || '')) {
+      throw new BadRequestError('Email inválido.');
+    }
+
+    if (usuario.nome?.trim() === '') {
+      throw new BadRequestError('Nome não pode ser vazio.');
+    }
+
     if (usuario.senha === '' || usuario.senha?.trim() === '') {
       throw new BadRequestError('Senha não pode ser vazia.');
     }
-    if (usuario.senha && usuario.senha.length < 6)
+
+    if (usuario.senha !== undefined && usuario.senha.length < 6)
       throw new BadRequestError('Senha deve ter pelo menos 6 caracteres.');
 
-    if (usuario.ativo && typeof usuario.ativo !== 'boolean') {
+    if (typeof usuario.ativo !== 'boolean') {
       throw new BadRequestError('O campo "ativo" deve ser um booleano.');
     }
-    if (usuario.administrador && typeof usuario.administrador !== 'boolean') {
+
+    if (typeof usuario.administrador !== 'boolean') {
       throw new BadRequestError('O campo "administrador" deve ser um booleano.');
     }
   }
