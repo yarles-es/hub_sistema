@@ -47,11 +47,17 @@ function backupPostgres(outputDir) {
             throw new Error('DATABASE_URL não definida no .env');
         const { safeUrl, password, dbName, host } = parseDbUrl(dbUrl);
         const outDir = yield ensureBackupsDir(outputDir);
-        const file = buildFilename('backup', host, dbName, 'sql.gz');
-        const outPath = node_path_1.default.join(outDir, file);
-        const cmd = `pg_dump --no-owner --format=plain --dbname="${safeUrl}" | gzip > "${outPath}"`;
-        yield exec(cmd, { env: Object.assign(Object.assign({}, process.env), { PGPASSWORD: password }) });
-        return outPath;
+        const base = buildFilename('backup', host, dbName, 'sql');
+        const sqlPath = node_path_1.default.join(outDir, base);
+        const dumpCmd = `pg_dump --no-owner --format=plain --dbname="${safeUrl}" --file "${sqlPath}"`;
+        yield exec(dumpCmd, { env: Object.assign(Object.assign({}, process.env), { PGPASSWORD: password }) });
+        const gzPath = sqlPath + '.gz';
+        const gzipCmd = `gzip -f "${sqlPath}"`;
+        yield exec(gzipCmd, { env: process.env });
+        const st = yield (0, promises_1.stat)(gzPath);
+        if (!st.size)
+            throw new Error('Backup vazio: verifique credenciais/acesso ao DB.');
+        return gzPath;
     });
 }
 function restorePostgresFromFile(filePath_1) {
@@ -68,7 +74,7 @@ function restorePostgresFromFile(filePath_1) {
         const lower = filePath.toLowerCase();
         let cmd;
         if (lower.endsWith('.sql.gz')) {
-            cmd = `gunzip -c "${filePath}" | psql "${safeUrl}" -v ON_ERROR_STOP=1`;
+            cmd = `gzip -dc "${filePath}" | psql "${safeUrl}" -v ON_ERROR_STOP=1`;
         }
         else if (lower.endsWith('.sql')) {
             cmd = `psql "${safeUrl}" -v ON_ERROR_STOP=1 -f "${filePath}"`;

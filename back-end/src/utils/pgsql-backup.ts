@@ -1,6 +1,6 @@
 import { promisify } from 'node:util';
 import { exec as execCb } from 'node:child_process';
-import { mkdir, access } from 'node:fs/promises';
+import { mkdir, access, stat as fstat } from 'node:fs/promises';
 import { constants, createReadStream } from 'node:fs';
 import path from 'node:path';
 
@@ -30,13 +30,20 @@ export async function backupPostgres(outputDir?: string) {
 
   const { safeUrl, password, dbName, host } = parseDbUrl(dbUrl);
   const outDir = await ensureBackupsDir(outputDir);
-  const file = buildFilename('backup', host, dbName, 'sql.gz');
-  const outPath = path.join(outDir, file);
 
-  const cmd = `pg_dump --no-owner --format=plain --dbname="${safeUrl}" | gzip > "${outPath}"`;
-  await exec(cmd, { env: { ...process.env, PGPASSWORD: password } });
+  const base = buildFilename('backup', host, dbName, 'sql');
+  const sqlPath = path.join(outDir, base);
+  const dumpCmd = `pg_dump --no-owner --format=plain --dbname="${safeUrl}" --file "${sqlPath}"`;
+  await exec(dumpCmd, { env: { ...process.env, PGPASSWORD: password } });
 
-  return outPath;
+  const gzPath = sqlPath + '.gz';
+  const gzipCmd = `gzip -f "${sqlPath}"`;
+  await exec(gzipCmd, { env: process.env });
+
+  const st = await fstat(gzPath);
+  if (!st.size) throw new Error('Backup vazio: verifique credenciais/acesso ao DB.');
+
+  return gzPath;
 }
 
 export async function restorePostgresFromFile(filePath: string, { dropAndRecreatePublic = true } = {}) {
@@ -55,7 +62,7 @@ export async function restorePostgresFromFile(filePath: string, { dropAndRecreat
   const lower = filePath.toLowerCase();
   let cmd: string;
   if (lower.endsWith('.sql.gz')) {
-    cmd = `gunzip -c "${filePath}" | psql "${safeUrl}" -v ON_ERROR_STOP=1`;
+    cmd = `gzip -dc "${filePath}" | psql "${safeUrl}" -v ON_ERROR_STOP=1`;
   } else if (lower.endsWith('.sql')) {
     cmd = `psql "${safeUrl}" -v ON_ERROR_STOP=1 -f "${filePath}"`;
   } else {
