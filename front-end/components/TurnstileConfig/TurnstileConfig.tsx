@@ -358,7 +358,7 @@ const TurnstileConfig = () => {
                 </div>
               </div>
 
-              <div className="w-full flex flex-col justify-center items-center m-5">
+              {/* <div className="w-full flex flex-col justify-center items-center m-5">
                 <p
                   className={`mb-2.5 block text-black dark:text-white text-sm`}
                 >
@@ -404,7 +404,7 @@ const TurnstileConfig = () => {
                     enviar
                   </Button>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </form>

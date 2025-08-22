@@ -132,7 +132,7 @@ const ClientTable: React.FC<Props> = ({ clients, onOpenItemSelect }) => {
               <td className="py-4 px-4 text-black dark:text-white xl:pl-11">
                 <p>{client.id}</p>
               </td>
-              <td className="py-4 px-4 text-black dark:text-white">
+              <td className="py-4 px-4 text-black dark:text-white min-w-[150px]">
                 <p>{client.nome}</p>
               </td>
               <td className="py-4 px-4 text-black dark:text-white">
@@ -152,7 +152,7 @@ const ClientTable: React.FC<Props> = ({ clients, onOpenItemSelect }) => {
                 <p>{client.email}</p>
               </td>
 
-              <td className="py-4 px-4 text-black dark:text-white">
+              <td className="py-4 px-4 text-black dark:text-white min-w-[130px]">
                 <p>
                   {client.telefone.replace(
                     /^(\d{2})(\d{5})(\d{4})$/,
