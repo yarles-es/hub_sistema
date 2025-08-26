@@ -1,4 +1,4 @@
-const SP_OFFSET_HOURS = 3;
+const SP_OFFSET_HOURS = 0;
 
 function toUtcDayStart(dateStr: string): Date {
   const [y, m, d] = dateStr.split('-').map(Number);

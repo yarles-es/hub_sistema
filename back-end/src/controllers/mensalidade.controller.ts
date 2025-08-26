@@ -15,6 +15,7 @@ import { CancelMensalidadeService } from '../services/mensalidade/cancel-mensali
 import { CreateLogService } from '../services/log-sistema/create-log.service';
 import { AuthenticatedRequest } from '../types/Request.types';
 import { buildUtcRange } from '../utils/date-range';
+import { FindAllMensalidadePendenteByClienteIdService } from '../services/mensalidade/find-all-mensalidade-pendente-by-cliente-id.service';
 
 @Service()
 export class MensalidadeController {
@@ -26,6 +27,7 @@ export class MensalidadeController {
     private readonly payMensalidadeService: PayMensalidadeService,
     private readonly getAllMensalidadesService: GetAllMensalidadesService,
     private readonly cancelMensalidadeService: CancelMensalidadeService,
+    private readonly findAllMensalidadePendenteByClienteIdService: FindAllMensalidadePendenteByClienteIdService,
     private readonly log: CreateLogService,
   ) {}
 
@@ -157,6 +159,22 @@ export class MensalidadeController {
         status: statusQuery,
         formaPagamento: formaPagamentoQuery,
       });
+
+      res.status(200).json(mensalidades);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getAllPendingByClienteId(
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const clienteId = Number(req.params.clienteId);
+
+      const mensalidades = await this.findAllMensalidadePendenteByClienteIdService.execute(clienteId);
 
       res.status(200).json(mensalidades);
     } catch (error) {

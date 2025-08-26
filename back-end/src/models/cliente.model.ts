@@ -4,6 +4,7 @@ import {
   ClienteFilter,
   ClienteGetAllWithMensalidade,
   ClientResponseGetAllModel,
+  CountTypeClientes,
   CreateCliente,
   UpdateClient,
 } from '../types/cliente.types';
@@ -150,7 +151,7 @@ export class ClienteModel {
     return result[0];
   }
 
-  public async findAll(
+  public async findAllFiltered(
     page: number,
     limit: number,
     dates: { dataInicialMensalidade?: Date; dataFinalMensalidade?: Date },
@@ -234,6 +235,55 @@ export class ClienteModel {
       page,
       limit,
     };
+  }
+
+  public async countTypeClientes(transaction?: Prisma.TransactionClient): Promise<CountTypeClientes> {
+    const client = transaction || this.prisma;
+
+    const resumo = await client.cliente.groupBy({
+      by: ['ativo', 'isento'],
+      _count: { _all: true },
+    });
+
+    const desativados = resumo.find((r) => r.ativo === false)?._count._all ?? 0;
+    const isentos = resumo.find((r) => r.ativo === true && r.isento === true)?._count._all ?? 0;
+    const universoAN = resumo.find((r) => r.ativo === true && r.isento === false)?._count._all ?? 0;
+
+    const today0 = new Date();
+    today0.setHours(0, 0, 0, 0);
+    const vencidos = await client.cliente.count({
+      where: {
+        ativo: true,
+        isento: false,
+        Mensalidade: {
+          some: {
+            status: 'PENDENTE',
+            vencimento: { lt: today0 },
+          },
+        },
+      },
+    });
+
+    const ativos = await client.cliente.count({
+      where: {
+        ativo: true,
+        isento: false,
+        Mensalidade: {
+          some: {
+            status: 'PENDENTE',
+            vencimento: { gte: today0 },
+          },
+          none: {
+            status: 'PENDENTE',
+            vencimento: { lt: today0 },
+          },
+        },
+      },
+    });
+
+    const mensalidadeInexistente = universoAN - (vencidos + ativos);
+
+    return { ativos, vencidos, desativados, isentos, mensalidadeInexistente };
   }
 
   async getAllWithMensalidadeByPlanId(

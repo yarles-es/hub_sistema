@@ -5,7 +5,7 @@ import { ClienteService } from './@cliente.service';
 import { formatadorCliente } from '../../utils/formatador-cliente';
 
 @Service()
-export class GetAllClientesService {
+export class GetAllClientesFilteredService {
   constructor(private readonly clienteService: ClienteService) {}
 
   async execute(page: number, limit: number, filter?: ClienteFilter): Promise<ClienteResponseGetAll> {
@@ -16,7 +16,7 @@ export class GetAllClientesService {
 
     delete filter?.status;
 
-    const response = await this.clienteService.getAllClientes(page, limit, dates, filter);
+    const response = await this.clienteService.getAllClientesFiltered(page, limit, dates, filter);
 
     const clientesFormatted = formatadorCliente(response.data);
 

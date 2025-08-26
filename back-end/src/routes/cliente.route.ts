@@ -10,13 +10,14 @@ router
   .get('/get-by-id/:id', clienteController.getById.bind(clienteController))
   .post('/create', clienteController.create.bind(clienteController))
   .put('/update/:id', clienteController.update.bind(clienteController))
-  .get('/get-all', clienteController.getAll.bind(clienteController))
+  .get('/get-all', clienteController.getAllFiltered.bind(clienteController))
   .put('/disable/:id', clienteController.disable.bind(clienteController))
   .put('/active/:id', clienteController.active.bind(clienteController))
   .get('/get-by-name/:name', clienteController.getByName.bind(clienteController))
   .get(
     '/get-all-by-birthday-people-month',
     clienteController.getAllByBirthdayPeopleMonth.bind(clienteController),
-  );
+  )
+  .get('/get-count-clientes', clienteController.getCountTypeClientes.bind(clienteController));
 
 export const clienteRoute = router;

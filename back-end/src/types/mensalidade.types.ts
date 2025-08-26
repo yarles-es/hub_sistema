@@ -14,8 +14,12 @@ export type MensalidadeFilter = {
   formaPagamento?: FormPagamento[];
 };
 
+export type MensalidadeWithCliente = Mensalidade & {
+  cliente: Pick<Cliente, 'nome' | 'email'>;
+};
+
 export type MensalidadeResponseGetAll = {
-  data: (Mensalidade & { cliente: Pick<Cliente, 'nome' | 'email'> })[];
+  data: MensalidadeWithCliente[];
   total: number;
   page: number;
   limit: number;

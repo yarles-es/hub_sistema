@@ -4,6 +4,7 @@ import {
   CreateMensalidade,
   MensalidadeFilter,
   MensalidadeResponseGetAll,
+  MensalidadeWithCliente,
   UpdateMensalidade,
 } from '../types/mensalidade.types';
 
@@ -24,10 +25,21 @@ export class MensalidadeModel {
     });
   }
 
-  public async findById(id: number, transaction?: Prisma.TransactionClient): Promise<Mensalidade | null> {
+  public async findById(
+    id: number,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<MensalidadeWithCliente | null> {
     const client = transaction || this.prisma;
     return client.mensalidade.findUnique({
       where: { id },
+      include: {
+        cliente: {
+          select: {
+            nome: true,
+            email: true,
+          },
+        },
+      },
     });
   }
 
@@ -129,5 +141,29 @@ export class MensalidadeModel {
       page,
       limit,
     };
+  }
+
+  public async findAllPendingByClienteId(
+    clienteId: number,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<MensalidadeResponseGetAll['data']> {
+    const client = transaction || this.prisma;
+
+    const data = await client.mensalidade.findMany({
+      where: { clienteId, status: StatusMensalidade.PENDENTE },
+      orderBy: {
+        vencimento: 'desc',
+      },
+      include: {
+        cliente: {
+          select: {
+            nome: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    return data;
   }
 }

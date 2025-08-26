@@ -70,21 +70,25 @@ export class EntradasaidaCatracaService {
     return null;
   }
 
-  private async transformDate(data: number) {
-    const strData = data.toString();
-    if (strData.length !== 8) {
-      return;
-    }
+  private transformDate(data: number): string | null {
+    const strData = data.toString().padStart(8, '0');
+    if (!/^\d{8}$/.test(strData)) return null;
+
     const dia = strData.slice(0, 2);
     const mes = strData.slice(2, 4);
     const ano = strData.slice(4, 8);
+
+    const date = new Date(`${ano}-${mes}-${dia}`);
+    if (isNaN(date.getTime())) return null;
+
     return `${ano}-${mes}-${dia}`;
   }
 
   private async entradaSaidaCatraca(clienteId: number) {
     const registrosAcesso = await this.registroAcessoService.findAllRegistrosByClienteId(clienteId);
+    const registrosAcessoFiltrado = registrosAcesso.filter((r) => r.tipoCatraca !== TipoCatraca.BLOQUEIO);
 
-    if (registrosAcesso.length === 0) {
+    if (registrosAcessoFiltrado.length === 0) {
       await this.registroAcessoService.createRegistroAcesso({
         clienteId,
         tipoCatraca: TipoCatraca.ENTRADA,
@@ -95,7 +99,7 @@ export class EntradasaidaCatracaService {
       return;
     }
 
-    if (registrosAcesso[0]?.tipoCatraca === TipoCatraca.SAIDA) {
+    if (registrosAcessoFiltrado[0]?.tipoCatraca === TipoCatraca.SAIDA) {
       await this.registroAcessoService.createRegistroAcesso({
         clienteId,
         tipoCatraca: TipoCatraca.ENTRADA,
@@ -106,7 +110,7 @@ export class EntradasaidaCatracaService {
       return;
     }
 
-    if (registrosAcesso[0]?.tipoCatraca === TipoCatraca.ENTRADA) {
+    if (registrosAcessoFiltrado[0]?.tipoCatraca === TipoCatraca.ENTRADA) {
       await this.registroAcessoService.createRegistroAcesso({
         clienteId,
         tipoCatraca: TipoCatraca.SAIDA,

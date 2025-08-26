@@ -56,3 +56,11 @@ export type ClientResponseGetAllModel = {
   page: number;
   limit: number;
 };
+
+export type CountTypeClientes = {
+  ativos: number;
+  vencidos: number;
+  desativados: number;
+  mensalidadeInexistente: number;
+  isentos: number;
+};

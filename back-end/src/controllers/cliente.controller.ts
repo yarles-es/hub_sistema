@@ -3,7 +3,7 @@ import { Service } from 'typedi';
 import { ActiveClienteService } from '../services/cliente/active-cliente.service';
 import { CreateClienteService } from '../services/cliente/create-cliente.service';
 import { DisableClienteService } from '../services/cliente/disable-cliente.service';
-import { GetAllClientesService } from '../services/cliente/get-all-clientes.service';
+import { GetAllClientesFilteredService } from '../services/cliente/get-all-clientes-filtered.service';
 import { GetClienteByEmailService } from '../services/cliente/get-cliente-by-email.service';
 import { GetClienteByIdService } from '../services/cliente/get-cliente-by-id.service';
 import { UpdateClienteService } from '../services/cliente/update-cliente.service';
@@ -13,6 +13,7 @@ import { GetAllClientesByNameService } from '../services/cliente/get-all-cliente
 import { GetAllByBirthdayPeopleMonthService } from '../services/cliente/get-all-by-birthday-people-month.service';
 import { CreateLogService } from '../services/log-sistema/create-log.service';
 import { AuthenticatedRequest } from '../types/Request.types';
+import { GetCountTypeClientesService } from '../services/cliente/get-count-type-clientes.service';
 
 @Service()
 export class ClienteController {
@@ -21,11 +22,12 @@ export class ClienteController {
     private readonly getClienteByIdService: GetClienteByIdService,
     private readonly getClienteByEmailService: GetClienteByEmailService,
     private readonly updateClienteService: UpdateClienteService,
-    private readonly getAllClientesService: GetAllClientesService,
+    private readonly getAllClientesFilteredService: GetAllClientesFilteredService,
     private readonly disableClienteService: DisableClienteService,
     private readonly activeClienteService: ActiveClienteService,
     private readonly getAllClientesByNameService: GetAllClientesByNameService,
     private readonly getAllByBirthdayPeopleMonthService: GetAllByBirthdayPeopleMonthService,
+    private readonly getCountTypeClientesService: GetCountTypeClientesService,
     private readonly log: CreateLogService,
   ) {}
 
@@ -104,7 +106,16 @@ export class ClienteController {
     }
   }
 
-  async getAll(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+  async getCountTypeClientes(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const count = await this.getCountTypeClientesService.execute();
+      res.status(200).json(count);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getAllFiltered(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
       const { numberPage, limit, nome, email, telefone, dataNascimento, diaMensalidade, status, planoId } =
         req.query;
@@ -119,7 +130,7 @@ export class ClienteController {
       const statusQuery = safeParseString(status) as StatusCliente | undefined;
       const planoIdQuery = safeParseInt(planoId);
 
-      const clientes = await this.getAllClientesService.execute(page, limitNumber, {
+      const clientes = await this.getAllClientesFilteredService.execute(page, limitNumber, {
         nome: nomeQuery,
         email: emailQuery,
         telefone: telefoneQuery,

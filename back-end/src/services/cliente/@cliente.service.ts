@@ -5,6 +5,7 @@ import {
   ClienteFilter,
   ClienteGetAllWithMensalidade,
   ClientResponseGetAllModel,
+  CountTypeClientes,
   CreateCliente,
   UpdateClient,
 } from '../../types/cliente.types';
@@ -44,14 +45,18 @@ export class ClienteService {
     return this.clienteModel.delete(id, transaction);
   }
 
-  async getAllClientes(
+  async getAllClientesFiltered(
     page: number,
     limit: number,
     dates: { dataInicialMensalidade?: Date; dataFinalMensalidade?: Date },
     filter?: ClienteFilter,
     transaction?: Prisma.TransactionClient,
   ): Promise<ClientResponseGetAllModel> {
-    return this.clienteModel.findAll(page, limit, dates, filter, transaction);
+    return this.clienteModel.findAllFiltered(page, limit, dates, filter, transaction);
+  }
+
+  async countTypeClientes(transaction?: Prisma.TransactionClient): Promise<CountTypeClientes> {
+    return this.clienteModel.countTypeClientes(transaction);
   }
 
   async findAllClientesByName(

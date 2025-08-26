@@ -61,4 +61,11 @@ export class MensalidadeService {
   ): Promise<MensalidadeResponseGetAll> {
     return await this.mensalidadeModel.findAll(page, limit, filter, transaction);
   }
+
+  public async findAllPendingMensalidadesByClienteId(
+    clienteId: number,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<MensalidadeResponseGetAll['data']> {
+    return await this.mensalidadeModel.findAllPendingByClienteId(clienteId, transaction);
+  }
 }
