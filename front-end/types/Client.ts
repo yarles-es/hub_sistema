@@ -53,3 +53,11 @@ export type UpdateClient = Partial<CreateClient> & {
   id: number;
   idCatraca?: number | null;
 };
+
+export type CountClients = {
+  ativos: number;
+  vencidos: number;
+  mensalidadesAusentes: number;
+  desativados: number;
+  isentos: number;
+};

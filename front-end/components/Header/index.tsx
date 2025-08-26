@@ -1,5 +1,6 @@
 import DarkModeSwitcher from "../DarkModeSwitcher";
 
+import CountClientType from "./CountClientType";
 import DropdownUser from "./DropdownUser";
 
 const Header = (props: {
@@ -55,6 +56,9 @@ const Header = (props: {
         <div className="hidden sm:block"></div>
 
         <div className="flex items-center gap-3 2xsm:gap-7">
+          <ul className=" hidden sm:flex sm:items-center sm:gap-3 2xsm:gap-7">
+            <CountClientType />
+          </ul>
           <ul className="flex items-center gap-2 2xsm:gap-4">
             {/* <!-- Dark Mode Toggler --> */}
             <DarkModeSwitcher />

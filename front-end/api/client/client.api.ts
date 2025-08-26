@@ -3,6 +3,7 @@ import { genericRequest } from "../@genericRequest";
 import {
   Client,
   ClientResponseGetAll,
+  CountClients,
   CreateClient,
   GetAllClient,
   UpdateClient,
@@ -46,5 +47,12 @@ export const getAllByBirthdayPeopleMonth = async () => {
   return await genericRequest<Client[]>(
     "get",
     `cliente/get-all-by-birthday-people-month`
+  );
+};
+
+export const getCountClients = async () => {
+  return await genericRequest<CountClients>(
+    "get",
+    "cliente/get-count-clientes"
   );
 };
