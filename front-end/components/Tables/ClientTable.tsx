@@ -42,7 +42,12 @@ const ClientTable: React.FC<Props> = ({ clients, onOpenItemSelect }) => {
   };
 
   const titles: Array<Title | null> = [
-    { key: "costOrExpense", label: "Parcelas", type: "string", order: false },
+    {
+      key: "costOrExpense",
+      label: "Mens.",
+      type: "string",
+      order: false,
+    },
     { key: "id", label: "ID", type: "number", order: true },
     { key: "nome", label: "Nome", type: "string", order: true },
     { key: "catracaId", label: "Catraca ID", type: "number", order: true },
