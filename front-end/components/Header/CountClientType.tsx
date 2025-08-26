@@ -9,7 +9,7 @@ const CountClientType = () => {
     queryKey: ["countClientType"],
     queryFn: async () => getCountClients(),
     retry: 0,
-    staleTime: 0,
+    refetchInterval: 300000,
   });
 
   return (
