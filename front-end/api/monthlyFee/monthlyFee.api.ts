@@ -3,6 +3,7 @@ import { genericRequest } from "../@genericRequest";
 import {
   GetAllMonthlyFees,
   getAllMonthlyFeesResponse,
+  MonthlyFeeWithClient,
   PaymentMonthlyFee,
 } from "@/types/MonthlyFee";
 import { createFullUrlFromParamsBackEnd } from "@/utils/generateURLpaginateOrFilter";
@@ -32,4 +33,18 @@ export const payMonthlyFee = async (data: PaymentMonthlyFee) => {
   return await genericRequest<void>("put", `mensalidade/pay/${id}`, {
     body: rest,
   });
+};
+
+export const getAllPendingByClientId = async (clientId: number) => {
+  return await genericRequest<MonthlyFeeWithClient[]>(
+    "get",
+    `mensalidade/get-all-pending/${clientId}`
+  );
+};
+
+export const getMonthlyFeeById = async (id: number) => {
+  return await genericRequest<MonthlyFeeWithClient>(
+    "get",
+    `mensalidade/get-by-id/${id}`
+  );
 };

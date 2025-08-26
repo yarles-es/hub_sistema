@@ -1,24 +1,49 @@
+import { useQuery } from "@tanstack/react-query";
+
 import ButtonActionDelete from "../Buttons/ButtonActionDelete";
 import ButtonActionPayment from "../Buttons/ButtonActionPayment";
 
+import { getAllPendingByClientId } from "@/api/monthlyFee/monthlyFee.api";
 import useOrderTable from "@/hooks/useOrderTable";
 import { ModalMonthlyFeeType } from "@/types/ModalTypes";
-import { getAllMonthlyFeesResponse } from "@/types/MonthlyFee";
+import {
+  getAllMonthlyFeesResponse,
+  MonthlyFeeWithClient,
+} from "@/types/MonthlyFee";
 import { Title } from "@/types/Tables";
 import formatStringDate from "@/utils/formatStringDate";
 import { isNotNull } from "@/utils/tableGuardType";
 
 import DefaultTableContainer from "./DefaultTableContainer";
+import DefaultTableContainerSecundary from "./DefaultTableContainerSecundary";
 
 type Props = {
-  MonthlyFees: getAllMonthlyFeesResponse["data"];
+  clientId?: number;
+  secundary?: boolean;
+  MonthlyFees?: MonthlyFeeWithClient[];
   onOpenItemSelect: (id: number, type: ModalMonthlyFeeType) => void;
 };
 
 const MonthlyFeeTable: React.FC<Props> = ({
   MonthlyFees,
   onOpenItemSelect,
+  clientId,
+  secundary,
 }) => {
+  const fetchMonthlyFeesByIdClient = async () => {
+    if (clientId) {
+      const response = await getAllPendingByClientId(clientId);
+      return response;
+    }
+    return [];
+  };
+
+  const { data: monthlyFeeData } = useQuery({
+    queryKey: ["monthlyFees", clientId],
+    queryFn: fetchMonthlyFeesByIdClient,
+    enabled: !!clientId,
+  });
+
   const titles: Array<Title | null> = [
     { key: "id", label: "ID", type: "number", order: true },
     { key: "cliente.nome", label: "Cliente", type: "string", order: true },
@@ -44,7 +69,7 @@ const MonthlyFeeTable: React.FC<Props> = ({
   const titlesFiltered = titles.filter(isNotNull);
 
   const { dataOrder: monthlyFeesOrder, handleOrder } = useOrderTable({
-    data: MonthlyFees ?? [],
+    data: MonthlyFees ? MonthlyFees : monthlyFeeData || [],
     titles: titlesFiltered,
   });
 
@@ -55,8 +80,12 @@ const MonthlyFeeTable: React.FC<Props> = ({
     return () => handleOrder(title.key);
   };
 
+  const TableContainer = secundary
+    ? DefaultTableContainerSecundary
+    : DefaultTableContainer;
+
   return (
-    <DefaultTableContainer>
+    <TableContainer>
       <table className="w-full table-auto">
         <thead className="bg-gray-50 sticky top-0 z-1">
           <tr className="bg-gray-2 text-left dark:bg-meta-4">
@@ -169,7 +198,7 @@ const MonthlyFeeTable: React.FC<Props> = ({
           ))}
         </tbody>
       </table>
-    </DefaultTableContainer>
+    </TableContainer>
   );
 };
 

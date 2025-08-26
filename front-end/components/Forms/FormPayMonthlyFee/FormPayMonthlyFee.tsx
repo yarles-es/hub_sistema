@@ -1,26 +1,42 @@
-import { useMutation } from "@tanstack/react-query";
+import {
+  QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { Controller, useForm } from "react-hook-form";
 
 import DefaultFormatContainerForm from "../DefaultFormatContainerForm";
 
-import { payMonthlyFee } from "@/api/monthlyFee/monthlyFee.api";
+import {
+  getMonthlyFeeById,
+  payMonthlyFee,
+} from "@/api/monthlyFee/monthlyFee.api";
 import Button from "@/components/Buttons/Button";
 import MoneyInput from "@/components/Inputs/InputMoney";
 import SelectTypePayment from "@/components/Selects/SelectTypePayment";
 import useAlert from "@/hooks/useAlert";
 import { PaymentType } from "@/types/Daily";
-import { MonthlyFeeWithClient, PaymentMonthlyFee } from "@/types/MonthlyFee";
+import { PaymentMonthlyFee } from "@/types/MonthlyFee";
 
 type Props = {
   onClose: () => void;
-  monthlyFee: MonthlyFeeWithClient | undefined;
+  monthlyFeeId: number;
 };
 
-const FormPayMonthlyFee: React.FC<Props> = ({ onClose, monthlyFee }) => {
+const FormPayMonthlyFee: React.FC<Props> = ({ onClose, monthlyFeeId }) => {
+  const queryClient = useQueryClient();
+
+  const { data: monthlyFee } = useQuery({
+    queryKey: ["monthlyFee", monthlyFeeId],
+    queryFn: () => getMonthlyFeeById(monthlyFeeId),
+    enabled: !!monthlyFeeId && monthlyFeeId !== 0,
+  });
+
   const { handleSubmit, formState, control } = useForm<PaymentMonthlyFee>({
     mode: "onBlur",
     defaultValues: {
-      id: monthlyFee?.id || 0,
+      id: monthlyFee?.id || monthlyFeeId,
       valorPago: "",
       formaPagamento: PaymentType.DINHEIRO,
     },
@@ -33,7 +49,12 @@ const FormPayMonthlyFee: React.FC<Props> = ({ onClose, monthlyFee }) => {
   const { mutate } = useMutation({
     mutationFn: payMonthlyFee,
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["monthlyFees"],
+      });
+
       alert("Mensalidade paga com sucesso!", "success");
+
       onClose();
     },
     onError: (error) => {

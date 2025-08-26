@@ -31,7 +31,7 @@ const FormLinkTurnstile: React.FC<Props> = ({ onClose, client }) => {
   const [buttonDisable, setButtonDisable] = useState(false);
   const [refresh, setRefresh] = useState(true);
 
-  const { data: availableId } = useQuery({
+  const { data: availableId, isLoading } = useQuery({
     queryKey: ["getAvailableId", client?.id],
     queryFn: getAvailableId,
     enabled: !!client?.id,
@@ -128,7 +128,7 @@ const FormLinkTurnstile: React.FC<Props> = ({ onClose, client }) => {
             <div className="flex justify-center items-center">
               <Button
                 type="button"
-                disabled={buttonDisable}
+                disabled={buttonDisable || isLoading}
                 className="flex w-full lg:w-50 justify-center rounded p-3"
                 success
                 onClick={() => onClickStartLink(form.getValues())}

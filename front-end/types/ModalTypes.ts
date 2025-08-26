@@ -14,6 +14,8 @@ export type ModalClientType =
   | "disable"
   | "search"
   | "linkTurnstile"
+  | "pay"
+  | "cancel"
   | "";
 
 export type ModalMonthlyFeeType = "cancel" | "search" | "pay" | "";

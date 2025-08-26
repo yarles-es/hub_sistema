@@ -134,9 +134,7 @@ const MonthlyFeePage = () => {
               setItemSelected(0);
               refetch();
             }}
-            monthlyFee={monthlyFees?.data.find(
-              (item) => item.id === itemSelected
-            )}
+            monthlyFeeId={itemSelected}
           />
         )}
 
@@ -149,9 +147,7 @@ const MonthlyFeePage = () => {
               setItemSelected(0);
               refetch();
             }}
-            monthlyFee={monthlyFees?.data.find(
-              (item) => item.id === itemSelected
-            )}
+            monthlyFeeId={itemSelected}
           />
         )}
       </div>

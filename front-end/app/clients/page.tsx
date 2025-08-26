@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 
 import { getAllClients } from "@/api/client/client.api";
+import { getAllPendingByClientId } from "@/api/monthlyFee/monthlyFee.api";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Button from "@/components/Buttons/Button";
 import ModalActiveClient from "@/components/Modals/ClientModals/ModalActiveClient";
@@ -14,6 +15,8 @@ import ModalDisableClient from "@/components/Modals/ClientModals/ModalDisableCli
 import ModalEditClient from "@/components/Modals/ClientModals/ModalEditClient";
 import ModalLinkTurnstile from "@/components/Modals/ClientModals/ModalLinkTurnstile";
 import ModalSearchClient from "@/components/Modals/ClientModals/ModalSearchClient";
+import ModalCancelMonthlyFee from "@/components/Modals/MonthlyFeeModals/ModalCancelMonthlyFee";
+import ModalPayMonthlyFee from "@/components/Modals/MonthlyFeeModals/ModalPayMonthlyFee";
 import PageTransition from "@/components/PageTransition/PageTransition";
 import Pagination from "@/components/Pagination/Pagination";
 import ClientTable from "@/components/Tables/ClientTable";
@@ -71,6 +74,8 @@ const ClientPage = () => {
     search: () => setModals("search"),
     disable: () => setModals("disable"),
     linkTurnstile: () => setModals("linkTurnstile"),
+    pay: () => setModals("pay"),
+    cancel: () => setModals("cancel"),
   };
 
   const onOpenModal = (id: number, type: ModalClientType) => {
@@ -78,6 +83,12 @@ const ClientPage = () => {
 
     setItemSelected(id);
     objectVisualModals[type]();
+  };
+
+  const onCloseModal = (refetchCallback?: boolean) => {
+    setModals("");
+    setItemSelected(0);
+    if (refetchCallback) refetch();
   };
 
   return (
@@ -115,22 +126,16 @@ const ClientPage = () => {
         {modals === "create" && (
           <ModalCreateClient
             isOpen={modals === "create"}
-            onClose={() => setModals("")}
-            onCloseAndGetClient={() => {
-              refetch();
-              setModals("");
-            }}
+            onClose={() => onCloseModal()}
+            onCloseAndGetClient={() => onCloseModal(true)}
           />
         )}
 
         {modals === "edit" && (
           <ModalEditClient
             isOpen={modals === "edit"}
-            onClose={() => setModals("")}
-            onCloseAndGetClient={() => {
-              refetch();
-              setModals("");
-            }}
+            onClose={() => onCloseModal()}
+            onCloseAndGetClient={() => onCloseModal(true)}
             client={clients?.data.find((client) => client.id === itemSelected)}
             refetchClients={refetch}
           />
@@ -139,11 +144,8 @@ const ClientPage = () => {
         {modals === "disable" && (
           <ModalDisableClient
             isOpen={modals === "disable"}
-            onClose={() => setModals("")}
-            onCloseAndGetClient={() => {
-              refetch();
-              setModals("");
-            }}
+            onClose={() => onCloseModal()}
+            onCloseAndGetClient={() => onCloseModal(true)}
             client={clients?.data.find((client) => client.id === itemSelected)}
           />
         )}
@@ -151,11 +153,8 @@ const ClientPage = () => {
         {modals === "active" && (
           <ModalActiveClient
             isOpen={modals === "active"}
-            onClose={() => setModals("")}
-            onCloseAndGetClient={() => {
-              refetch();
-              setModals("");
-            }}
+            onClose={() => onCloseModal()}
+            onCloseAndGetClient={() => onCloseModal(true)}
             client={clients?.data.find((client) => client.id === itemSelected)}
           />
         )}
@@ -163,19 +162,35 @@ const ClientPage = () => {
         {modals === "search" && (
           <ModalSearchClient
             isOpen={modals === "search"}
-            onClose={() => setModals("")}
+            onClose={() => onCloseModal()}
           />
         )}
 
         {modals === "linkTurnstile" && (
           <ModalLinkTurnstile
             isOpen={modals === "linkTurnstile"}
-            onClose={() => setModals("")}
-            onCloseAndGetClient={() => {
-              refetch();
-              setModals("");
-            }}
+            onClose={() => onCloseModal()}
+            onCloseAndGetClient={() => onCloseModal(true)}
             client={clients?.data.find((client) => client.id === itemSelected)}
+          />
+        )}
+
+        {/* Modals para trabalho nas mensalidades internamente na tabela de cliente */}
+        {modals === "pay" && itemSelected > 0 && (
+          <ModalPayMonthlyFee
+            isOpen={modals === "pay"}
+            onClose={() => onCloseModal()}
+            onCloseAndGetMonthlyFee={() => onCloseModal(true)}
+            monthlyFeeId={itemSelected}
+          />
+        )}
+
+        {modals === "cancel" && itemSelected > 0 && (
+          <ModalCancelMonthlyFee
+            isOpen={modals === "cancel"}
+            onClose={() => onCloseModal()}
+            onCloseAndGetMonthlyFee={() => onCloseModal(true)}
+            monthlyFeeId={itemSelected}
           />
         )}
       </div>
