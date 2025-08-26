@@ -11,7 +11,7 @@ export class JwtToken<T> {
   constructor() {
     this.jwtConfig = {
       algorithm: 'HS256',
-      expiresIn: '2h',
+      expiresIn: '6h',
     };
     this.secret = process.env.JWT_SECRET ? process.env.JWT_SECRET : 'ACADEMIA_SECRET';
   }
@@ -25,13 +25,13 @@ export class JwtToken<T> {
     try {
       return jwt.verify(token, this.secret) as PayloadUserJWT<T>;
     } catch (error) {
-      throw new UnauthorizedError('Invalid token');
+      throw new UnauthorizedError('Token inválido ou expirado');
     }
   }
 
   public decodeToken(token: string): PayloadUserJWT<T> {
     const result = jwt.decode(token);
-    if (!result) throw new UnauthorizedError('Invalid token');
+    if (!result) throw new UnauthorizedError('Token inválido ou expirado');
     return result as PayloadUserJWT<T>;
   }
 }
