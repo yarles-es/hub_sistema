@@ -11,7 +11,7 @@ export class JwtToken<T> {
   constructor() {
     this.jwtConfig = {
       algorithm: 'HS256',
-      expiresIn: '6h',
+      expiresIn: '12h',
     };
     this.secret = process.env.JWT_SECRET ? process.env.JWT_SECRET : 'ACADEMIA_SECRET';
   }
