@@ -60,6 +60,11 @@ let MensalidadeService = class MensalidadeService {
             return yield this.mensalidadeModel.findAll(page, limit, filter, transaction);
         });
     }
+    findAllPendingMensalidadesByClienteId(clienteId, transaction) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.mensalidadeModel.findAllPendingByClienteId(clienteId, transaction);
+        });
+    }
 };
 exports.MensalidadeService = MensalidadeService;
 exports.MensalidadeService = MensalidadeService = __decorate([

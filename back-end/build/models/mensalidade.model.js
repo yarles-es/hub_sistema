@@ -38,6 +38,14 @@ let MensalidadeModel = class MensalidadeModel {
             const client = transaction || this.prisma;
             return client.mensalidade.findUnique({
                 where: { id },
+                include: {
+                    cliente: {
+                        select: {
+                            nome: true,
+                            email: true,
+                        },
+                    },
+                },
             });
         });
     }
@@ -123,6 +131,26 @@ let MensalidadeModel = class MensalidadeModel {
                 page,
                 limit,
             };
+        });
+    }
+    findAllPendingByClienteId(clienteId, transaction) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const client = transaction || this.prisma;
+            const data = yield client.mensalidade.findMany({
+                where: { clienteId, status: client_1.StatusMensalidade.PENDENTE },
+                orderBy: {
+                    vencimento: 'desc',
+                },
+                include: {
+                    cliente: {
+                        select: {
+                            nome: true,
+                            email: true,
+                        },
+                    },
+                },
+            });
+            return data;
         });
     }
 };

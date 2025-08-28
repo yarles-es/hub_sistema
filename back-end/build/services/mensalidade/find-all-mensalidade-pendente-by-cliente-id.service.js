@@ -18,24 +18,27 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GetAllMensalidadesService = void 0;
+exports.FindAllMensalidadePendenteByClienteIdService = void 0;
 const typedi_1 = require("typedi");
 const _mensalidade_service_1 = require("./@mensalidade.service");
+const BadRequestError_1 = require("../../errors/BadRequestError");
 const editMensalidadeStatus_1 = require("../../utils/editMensalidadeStatus");
-let GetAllMensalidadesService = class GetAllMensalidadesService {
+let FindAllMensalidadePendenteByClienteIdService = class FindAllMensalidadePendenteByClienteIdService {
     constructor(mensalidadeService) {
         this.mensalidadeService = mensalidadeService;
     }
-    execute(page, limit, filter, transaction) {
+    execute(clienteId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const mensalidades = yield this.mensalidadeService.findAllMensalidades(page, limit, filter, transaction);
-            const mensalidadesEdited = mensalidades.data.map(editMensalidadeStatus_1.editMensalidadeStatus);
-            return Object.assign(Object.assign({}, mensalidades), { data: mensalidadesEdited });
+            if (!clienteId || isNaN(clienteId)) {
+                throw new BadRequestError_1.BadRequestError('ID do cliente inválido fornecido para busca das mensalidades pendentes.');
+            }
+            const result = yield this.mensalidadeService.findAllPendingMensalidadesByClienteId(clienteId);
+            return result.map(editMensalidadeStatus_1.editMensalidadeStatus);
         });
     }
 };
-exports.GetAllMensalidadesService = GetAllMensalidadesService;
-exports.GetAllMensalidadesService = GetAllMensalidadesService = __decorate([
+exports.FindAllMensalidadePendenteByClienteIdService = FindAllMensalidadePendenteByClienteIdService;
+exports.FindAllMensalidadePendenteByClienteIdService = FindAllMensalidadePendenteByClienteIdService = __decorate([
     (0, typedi_1.Service)(),
     __metadata("design:paramtypes", [_mensalidade_service_1.MensalidadeService])
-], GetAllMensalidadesService);
+], FindAllMensalidadePendenteByClienteIdService);

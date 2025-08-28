@@ -81,22 +81,23 @@ let EntradasaidaCatracaService = class EntradasaidaCatracaService {
         });
     }
     transformDate(data) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const strData = data.toString();
-            if (strData.length !== 8) {
-                return;
-            }
-            const dia = strData.slice(0, 2);
-            const mes = strData.slice(2, 4);
-            const ano = strData.slice(4, 8);
-            return `${ano}-${mes}-${dia}`;
-        });
+        const strData = data.toString().padStart(8, '0');
+        if (!/^\d{8}$/.test(strData))
+            return null;
+        const dia = strData.slice(0, 2);
+        const mes = strData.slice(2, 4);
+        const ano = strData.slice(4, 8);
+        const date = new Date(`${ano}-${mes}-${dia}`);
+        if (isNaN(date.getTime()))
+            return null;
+        return `${ano}-${mes}-${dia}`;
     }
     entradaSaidaCatraca(clienteId) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a, _b;
             const registrosAcesso = yield this.registroAcessoService.findAllRegistrosByClienteId(clienteId);
-            if (registrosAcesso.length === 0) {
+            const registrosAcessoFiltrado = registrosAcesso.filter((r) => r.tipoCatraca !== client_1.TipoCatraca.BLOQUEIO);
+            if (registrosAcessoFiltrado.length === 0) {
                 yield this.registroAcessoService.createRegistroAcesso({
                     clienteId,
                     tipoCatraca: client_1.TipoCatraca.ENTRADA,
@@ -105,7 +106,7 @@ let EntradasaidaCatracaService = class EntradasaidaCatracaService {
                 yield (0, liberar_entrada_catraca_1.liberarEntradaCatraca)();
                 return;
             }
-            if (((_a = registrosAcesso[0]) === null || _a === void 0 ? void 0 : _a.tipoCatraca) === client_1.TipoCatraca.SAIDA) {
+            if (((_a = registrosAcessoFiltrado[0]) === null || _a === void 0 ? void 0 : _a.tipoCatraca) === client_1.TipoCatraca.SAIDA) {
                 yield this.registroAcessoService.createRegistroAcesso({
                     clienteId,
                     tipoCatraca: client_1.TipoCatraca.ENTRADA,
@@ -114,7 +115,7 @@ let EntradasaidaCatracaService = class EntradasaidaCatracaService {
                 yield (0, liberar_entrada_catraca_1.liberarEntradaCatraca)();
                 return;
             }
-            if (((_b = registrosAcesso[0]) === null || _b === void 0 ? void 0 : _b.tipoCatraca) === client_1.TipoCatraca.ENTRADA) {
+            if (((_b = registrosAcessoFiltrado[0]) === null || _b === void 0 ? void 0 : _b.tipoCatraca) === client_1.TipoCatraca.ENTRADA) {
                 yield this.registroAcessoService.createRegistroAcesso({
                     clienteId,
                     tipoCatraca: client_1.TipoCatraca.SAIDA,

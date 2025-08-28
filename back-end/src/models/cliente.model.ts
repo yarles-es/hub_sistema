@@ -8,6 +8,7 @@ import {
   CreateCliente,
   UpdateClient,
 } from '../types/cliente.types';
+import { Console } from 'node:console';
 
 @Service()
 export class ClienteModel {
@@ -154,52 +155,81 @@ export class ClienteModel {
   public async findAllFiltered(
     page: number,
     limit: number,
-    dates: { dataInicialMensalidade?: Date; dataFinalMensalidade?: Date },
     filter?: ClienteFilter,
     transaction?: Prisma.TransactionClient,
   ): Promise<ClientResponseGetAllModel> {
     const client = transaction || this.prisma;
 
-    const where: any = {};
+    const where: Prisma.ClienteWhereInput = {};
 
-    if (filter?.nome) {
-      where.nome = { contains: filter.nome, mode: 'insensitive' };
-    }
-    if (filter?.email) {
-      where.email = { contains: filter.email, mode: 'insensitive' };
-    }
-
-    if (filter?.telefone) {
-      where.telefone = { contains: filter.telefone, mode: 'insensitive' };
-    }
+    if (filter?.nome) where.nome = { contains: filter.nome, mode: 'insensitive' };
+    if (filter?.email) where.email = { contains: filter.email, mode: 'insensitive' };
+    if (filter?.telefone) where.telefone = { contains: filter.telefone, mode: 'insensitive' };
+    if (filter?.planoId) where.planoId = filter.planoId;
 
     if (filter?.dataNascimento) {
-      const inputDate = new Date(filter.dataNascimento);
-
-      const start = new Date(inputDate);
+      const d = new Date(filter.dataNascimento);
+      const start = new Date(d);
       start.setUTCHours(0, 0, 0, 0);
-
-      const end = new Date(inputDate);
+      const end = new Date(d);
       end.setUTCHours(23, 59, 59, 999);
+      where.dataNascimento = { gte: start, lte: end };
+    }
 
-      where.dataNascimento = {
-        gte: start,
-        lte: end,
+    const now = new Date();
+    const inicioHojeLocal = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    switch (filter?.status) {
+      case 'ATIVO':
+        where.AND = [
+          { ativo: true },
+          {
+            Mensalidade: {
+              some: { status: StatusMensalidade.PENDENTE, vencimento: { gte: inicioHojeLocal } },
+            },
+          },
+          {
+            Mensalidade: {
+              none: { status: StatusMensalidade.PENDENTE, vencimento: { lt: inicioHojeLocal } },
+            },
+          },
+        ];
+        break;
+
+      case 'DESATIVADO':
+        where.ativo = false;
+        break;
+
+      case 'VENCIDO':
+        where.Mensalidade = {
+          some: { status: StatusMensalidade.PENDENTE, vencimento: { lt: inicioHojeLocal } },
+        };
+        break;
+
+      case 'MENSALIDADE_AUSENTE':
+        where.isento = false;
+        where.ativo = true;
+        where.Mensalidade = { none: { status: StatusMensalidade.PENDENTE } };
+        break;
+
+      case 'ISENTO':
+        where.isento = true;
+        break;
+    }
+
+    let includeMensalidadeWhere: Prisma.MensalidadeWhereInput = {
+      status: StatusMensalidade.PENDENTE,
+    };
+    if (filter?.status === 'ATIVO') {
+      includeMensalidadeWhere = {
+        status: StatusMensalidade.PENDENTE,
+        vencimento: { gte: inicioHojeLocal },
       };
     }
-
-    if (filter?.planoId) {
-      where.planoId = filter.planoId;
-    }
-
-    if (dates.dataInicialMensalidade || dates.dataFinalMensalidade) {
-      where.Mensalidade = {
-        some: {
-          vencimento: {
-            ...(dates.dataInicialMensalidade && { gte: dates.dataInicialMensalidade }),
-            ...(dates.dataFinalMensalidade && { lte: dates.dataFinalMensalidade }),
-          },
-        },
+    if (filter?.status === 'VENCIDO') {
+      includeMensalidadeWhere = {
+        status: StatusMensalidade.PENDENTE,
+        vencimento: { lt: inicioHojeLocal },
       };
     }
 
@@ -211,30 +241,16 @@ export class ClienteModel {
         orderBy: { id: 'desc' },
         include: {
           Mensalidade: {
-            where: {
-              ...(dates.dataInicialMensalidade && { vencimento: { gte: dates.dataInicialMensalidade } }),
-              ...(dates.dataFinalMensalidade && { vencimento: { lte: dates.dataFinalMensalidade } }),
-            },
+            where: includeMensalidadeWhere,
             orderBy: { vencimento: 'asc' },
           },
-          plano: {
-            select: {
-              id: true,
-              nome: true,
-              valor: true,
-            },
-          },
+          plano: { select: { id: true, nome: true, valor: true } },
         },
       }),
       client.cliente.count({ where }),
     ]);
 
-    return {
-      data,
-      total,
-      page,
-      limit,
-    };
+    return { data, total, page, limit };
   }
 
   public async countTypeClientes(transaction?: Prisma.TransactionClient): Promise<CountTypeClientes> {
@@ -247,20 +263,15 @@ export class ClienteModel {
 
     const desativados = resumo.find((r) => r.ativo === false)?._count._all ?? 0;
     const isentos = resumo.find((r) => r.ativo === true && r.isento === true)?._count._all ?? 0;
-    const universoAN = resumo.find((r) => r.ativo === true && r.isento === false)?._count._all ?? 0;
 
-    const today0 = new Date();
-    today0.setHours(0, 0, 0, 0);
+    const now = new Date();
+    const inicioHojeLocal = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
     const vencidos = await client.cliente.count({
       where: {
         ativo: true,
         isento: false,
-        Mensalidade: {
-          some: {
-            status: 'PENDENTE',
-            vencimento: { lt: today0 },
-          },
-        },
+        Mensalidade: { some: { status: StatusMensalidade.PENDENTE, vencimento: { lt: inicioHojeLocal } } },
       },
     });
 
@@ -269,19 +280,19 @@ export class ClienteModel {
         ativo: true,
         isento: false,
         Mensalidade: {
-          some: {
-            status: 'PENDENTE',
-            vencimento: { gte: today0 },
-          },
-          none: {
-            status: 'PENDENTE',
-            vencimento: { lt: today0 },
-          },
+          some: { status: StatusMensalidade.PENDENTE, vencimento: { gte: inicioHojeLocal } },
+          none: { status: StatusMensalidade.PENDENTE, vencimento: { lt: inicioHojeLocal } },
         },
       },
     });
 
-    const mensalidadeInexistente = universoAN - (vencidos + ativos);
+    const mensalidadeInexistente = await client.cliente.count({
+      where: {
+        isento: false,
+        ativo: true,
+        Mensalidade: { none: { status: StatusMensalidade.PENDENTE } },
+      },
+    });
 
     return { ativos, vencidos, desativados, isentos, mensalidadeInexistente };
   }

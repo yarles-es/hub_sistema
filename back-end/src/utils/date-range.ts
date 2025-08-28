@@ -14,10 +14,10 @@ export function buildUtcRange(initialDate?: string, finalDate?: string) {
   if (!initialDate && !finalDate) return { startAtUtc: undefined, endAtUtc: undefined };
 
   if (initialDate && !finalDate) {
-    return { startAtUtc: toUtcDayStart(initialDate), endAtUtc: toUtcDayEnd(initialDate) };
+    return { startAtUtc: toUtcDayStart(initialDate), endAtUtc: toUtcDayEnd('2100-01-01') };
   }
   if (!initialDate && finalDate) {
-    return { startAtUtc: toUtcDayStart(finalDate), endAtUtc: toUtcDayEnd(finalDate) };
+    return { startAtUtc: toUtcDayStart('2000-01-01'), endAtUtc: toUtcDayEnd(finalDate) };
   }
 
   const startAtUtc = toUtcDayStart(initialDate!);

@@ -48,11 +48,10 @@ export class ClienteService {
   async getAllClientesFiltered(
     page: number,
     limit: number,
-    dates: { dataInicialMensalidade?: Date; dataFinalMensalidade?: Date },
     filter?: ClienteFilter,
     transaction?: Prisma.TransactionClient,
   ): Promise<ClientResponseGetAllModel> {
-    return this.clienteModel.findAllFiltered(page, limit, dates, filter, transaction);
+    return this.clienteModel.findAllFiltered(page, limit, filter, transaction);
   }
 
   async countTypeClientes(transaction?: Prisma.TransactionClient): Promise<CountTypeClientes> {

@@ -50,7 +50,7 @@ let JwtToken = class JwtToken {
     constructor() {
         this.jwtConfig = {
             algorithm: 'HS256',
-            expiresIn: '2h',
+            expiresIn: '12h',
         };
         this.secret = process.env.JWT_SECRET ? process.env.JWT_SECRET : 'ACADEMIA_SECRET';
     }
@@ -63,13 +63,13 @@ let JwtToken = class JwtToken {
             return jwt.verify(token, this.secret);
         }
         catch (error) {
-            throw new UnauthorizedError_1.UnauthorizedError('Invalid token');
+            throw new UnauthorizedError_1.UnauthorizedError('Token inválido ou expirado');
         }
     }
     decodeToken(token) {
         const result = jwt.decode(token);
         if (!result)
-            throw new UnauthorizedError_1.UnauthorizedError('Invalid token');
+            throw new UnauthorizedError_1.UnauthorizedError('Token inválido ou expirado');
         return result;
     }
 };

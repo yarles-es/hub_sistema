@@ -18,24 +18,33 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GetAllMensalidadesService = void 0;
+exports.GetAllClientesFilteredService = void 0;
 const typedi_1 = require("typedi");
-const _mensalidade_service_1 = require("./@mensalidade.service");
-const editMensalidadeStatus_1 = require("../../utils/editMensalidadeStatus");
-let GetAllMensalidadesService = class GetAllMensalidadesService {
-    constructor(mensalidadeService) {
-        this.mensalidadeService = mensalidadeService;
+const _cliente_service_1 = require("./@cliente.service");
+const formatador_cliente_1 = require("../../utils/formatador-cliente");
+let GetAllClientesFilteredService = class GetAllClientesFilteredService {
+    constructor(clienteService) {
+        this.clienteService = clienteService;
     }
-    execute(page, limit, filter, transaction) {
+    execute(page, limit, filter) {
         return __awaiter(this, void 0, void 0, function* () {
-            const mensalidades = yield this.mensalidadeService.findAllMensalidades(page, limit, filter, transaction);
-            const mensalidadesEdited = mensalidades.data.map(editMensalidadeStatus_1.editMensalidadeStatus);
-            return Object.assign(Object.assign({}, mensalidades), { data: mensalidadesEdited });
+            const start = new Date();
+            start.setUTCHours(0, 0, 0, 0);
+            const end = new Date();
+            end.setUTCHours(23, 59, 59, 999);
+            const response = yield this.clienteService.getAllClientesFiltered(page, limit, filter);
+            const clientesFormatted = (0, formatador_cliente_1.formatadorCliente)(response.data);
+            return {
+                data: clientesFormatted,
+                total: response.total,
+                page: response.page,
+                limit: response.limit,
+            };
         });
     }
 };
-exports.GetAllMensalidadesService = GetAllMensalidadesService;
-exports.GetAllMensalidadesService = GetAllMensalidadesService = __decorate([
+exports.GetAllClientesFilteredService = GetAllClientesFilteredService;
+exports.GetAllClientesFilteredService = GetAllClientesFilteredService = __decorate([
     (0, typedi_1.Service)(),
-    __metadata("design:paramtypes", [_mensalidade_service_1.MensalidadeService])
-], GetAllMensalidadesService);
+    __metadata("design:paramtypes", [_cliente_service_1.ClienteService])
+], GetAllClientesFilteredService);

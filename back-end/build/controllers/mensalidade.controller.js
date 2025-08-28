@@ -30,8 +30,9 @@ const safeTypes_1 = require("../utils/safeTypes");
 const cancel_mensalidade_service_1 = require("../services/mensalidade/cancel-mensalidade.service");
 const create_log_service_1 = require("../services/log-sistema/create-log.service");
 const date_range_1 = require("../utils/date-range");
+const find_all_mensalidade_pendente_by_cliente_id_service_1 = require("../services/mensalidade/find-all-mensalidade-pendente-by-cliente-id.service");
 let MensalidadeController = class MensalidadeController {
-    constructor(createMensalidadeService, getMensalidadeByIdService, getMensalidadeByClienteIdService, deleteMensalidadeService, payMensalidadeService, getAllMensalidadesService, cancelMensalidadeService, log) {
+    constructor(createMensalidadeService, getMensalidadeByIdService, getMensalidadeByClienteIdService, deleteMensalidadeService, payMensalidadeService, getAllMensalidadesService, cancelMensalidadeService, findAllMensalidadePendenteByClienteIdService, log) {
         this.createMensalidadeService = createMensalidadeService;
         this.getMensalidadeByIdService = getMensalidadeByIdService;
         this.getMensalidadeByClienteIdService = getMensalidadeByClienteIdService;
@@ -39,6 +40,7 @@ let MensalidadeController = class MensalidadeController {
         this.payMensalidadeService = payMensalidadeService;
         this.getAllMensalidadesService = getAllMensalidadesService;
         this.cancelMensalidadeService = cancelMensalidadeService;
+        this.findAllMensalidadePendenteByClienteIdService = findAllMensalidadePendenteByClienteIdService;
         this.log = log;
     }
     create(req, res, next) {
@@ -147,6 +149,7 @@ let MensalidadeController = class MensalidadeController {
                 const statusQuery = (0, safeTypes_1.safeParseStatusMensalidadeArray)(status);
                 const formaPagamentoQuery = (0, safeTypes_1.safeParseFormPagamentoArray)(formaPagamento);
                 const { startAtUtc, endAtUtc } = (0, date_range_1.buildUtcRange)(initialDate, finalDate);
+                console.log(startAtUtc, endAtUtc);
                 const mensalidades = yield this.getAllMensalidadesService.execute(page, limitNumber, {
                     clienteId: clienteIdQuery,
                     initialDate: startAtUtc,
@@ -154,6 +157,18 @@ let MensalidadeController = class MensalidadeController {
                     status: statusQuery,
                     formaPagamento: formaPagamentoQuery,
                 });
+                res.status(200).json(mensalidades);
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+    }
+    getAllPendingByClienteId(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const clienteId = Number(req.params.clienteId);
+                const mensalidades = yield this.findAllMensalidadePendenteByClienteIdService.execute(clienteId);
                 res.status(200).json(mensalidades);
             }
             catch (error) {
@@ -172,5 +187,6 @@ exports.MensalidadeController = MensalidadeController = __decorate([
         pay_mensalidade_service_1.PayMensalidadeService,
         get_all_mensalidades_service_1.GetAllMensalidadesService,
         cancel_mensalidade_service_1.CancelMensalidadeService,
+        find_all_mensalidade_pendente_by_cliente_id_service_1.FindAllMensalidadePendenteByClienteIdService,
         create_log_service_1.CreateLogService])
 ], MensalidadeController);

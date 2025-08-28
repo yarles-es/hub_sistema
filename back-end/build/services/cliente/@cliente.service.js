@@ -51,9 +51,14 @@ let ClienteService = class ClienteService {
             return this.clienteModel.delete(id, transaction);
         });
     }
-    getAllClientes(page, limit, dates, filter, transaction) {
+    getAllClientesFiltered(page, limit, filter, transaction) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.clienteModel.findAll(page, limit, dates, filter, transaction);
+            return this.clienteModel.findAllFiltered(page, limit, filter, transaction);
+        });
+    }
+    countTypeClientes(transaction) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.clienteModel.countTypeClientes(transaction);
         });
     }
     findAllClientesByName(name, transaction) {

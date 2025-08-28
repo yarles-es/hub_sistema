@@ -18,24 +18,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GetAllMensalidadesService = void 0;
+exports.GetCountTypeClientesService = void 0;
 const typedi_1 = require("typedi");
-const _mensalidade_service_1 = require("./@mensalidade.service");
-const editMensalidadeStatus_1 = require("../../utils/editMensalidadeStatus");
-let GetAllMensalidadesService = class GetAllMensalidadesService {
-    constructor(mensalidadeService) {
-        this.mensalidadeService = mensalidadeService;
+const _cliente_service_1 = require("./@cliente.service");
+let GetCountTypeClientesService = class GetCountTypeClientesService {
+    constructor(clienteService) {
+        this.clienteService = clienteService;
     }
-    execute(page, limit, filter, transaction) {
+    execute() {
         return __awaiter(this, void 0, void 0, function* () {
-            const mensalidades = yield this.mensalidadeService.findAllMensalidades(page, limit, filter, transaction);
-            const mensalidadesEdited = mensalidades.data.map(editMensalidadeStatus_1.editMensalidadeStatus);
-            return Object.assign(Object.assign({}, mensalidades), { data: mensalidadesEdited });
+            const response = yield this.clienteService.countTypeClientes();
+            return response;
         });
     }
 };
-exports.GetAllMensalidadesService = GetAllMensalidadesService;
-exports.GetAllMensalidadesService = GetAllMensalidadesService = __decorate([
+exports.GetCountTypeClientesService = GetCountTypeClientesService;
+exports.GetCountTypeClientesService = GetCountTypeClientesService = __decorate([
     (0, typedi_1.Service)(),
-    __metadata("design:paramtypes", [_mensalidade_service_1.MensalidadeService])
-], GetAllMensalidadesService);
+    __metadata("design:paramtypes", [_cliente_service_1.ClienteService])
+], GetCountTypeClientesService);

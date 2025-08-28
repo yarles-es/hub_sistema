@@ -23,7 +23,7 @@ const typedi_1 = require("typedi");
 const active_cliente_service_1 = require("../services/cliente/active-cliente.service");
 const create_cliente_service_1 = require("../services/cliente/create-cliente.service");
 const disable_cliente_service_1 = require("../services/cliente/disable-cliente.service");
-const get_all_clientes_service_1 = require("../services/cliente/get-all-clientes.service");
+const get_all_clientes_filtered_service_1 = require("../services/cliente/get-all-clientes-filtered.service");
 const get_cliente_by_email_service_1 = require("../services/cliente/get-cliente-by-email.service");
 const get_cliente_by_id_service_1 = require("../services/cliente/get-cliente-by-id.service");
 const update_cliente_service_1 = require("../services/cliente/update-cliente.service");
@@ -31,17 +31,19 @@ const safeTypes_1 = require("../utils/safeTypes");
 const get_all_clientes_by_name_service_1 = require("../services/cliente/get-all-clientes-by-name.service");
 const get_all_by_birthday_people_month_service_1 = require("../services/cliente/get-all-by-birthday-people-month.service");
 const create_log_service_1 = require("../services/log-sistema/create-log.service");
+const get_count_type_clientes_service_1 = require("../services/cliente/get-count-type-clientes.service");
 let ClienteController = class ClienteController {
-    constructor(createClienteService, getClienteByIdService, getClienteByEmailService, updateClienteService, getAllClientesService, disableClienteService, activeClienteService, getAllClientesByNameService, getAllByBirthdayPeopleMonthService, log) {
+    constructor(createClienteService, getClienteByIdService, getClienteByEmailService, updateClienteService, getAllClientesFilteredService, disableClienteService, activeClienteService, getAllClientesByNameService, getAllByBirthdayPeopleMonthService, getCountTypeClientesService, log) {
         this.createClienteService = createClienteService;
         this.getClienteByIdService = getClienteByIdService;
         this.getClienteByEmailService = getClienteByEmailService;
         this.updateClienteService = updateClienteService;
-        this.getAllClientesService = getAllClientesService;
+        this.getAllClientesFilteredService = getAllClientesFilteredService;
         this.disableClienteService = disableClienteService;
         this.activeClienteService = activeClienteService;
         this.getAllClientesByNameService = getAllClientesByNameService;
         this.getAllByBirthdayPeopleMonthService = getAllByBirthdayPeopleMonthService;
+        this.getCountTypeClientesService = getCountTypeClientesService;
         this.log = log;
     }
     create(req, res, next) {
@@ -110,7 +112,18 @@ let ClienteController = class ClienteController {
             }
         });
     }
-    getAll(req, res, next) {
+    getCountTypeClientes(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const count = yield this.getCountTypeClientesService.execute();
+                res.status(200).json(count);
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+    }
+    getAllFiltered(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { numberPage, limit, nome, email, telefone, dataNascimento, diaMensalidade, status, planoId } = req.query;
@@ -123,7 +136,7 @@ let ClienteController = class ClienteController {
                 const diaMensalidadeQuery = (0, safeTypes_1.safeParseInt)(diaMensalidade);
                 const statusQuery = (0, safeTypes_1.safeParseString)(status);
                 const planoIdQuery = (0, safeTypes_1.safeParseInt)(planoId);
-                const clientes = yield this.getAllClientesService.execute(page, limitNumber, {
+                const clientes = yield this.getAllClientesFilteredService.execute(page, limitNumber, {
                     nome: nomeQuery,
                     email: emailQuery,
                     telefone: telefoneQuery,
@@ -184,10 +197,11 @@ exports.ClienteController = ClienteController = __decorate([
         get_cliente_by_id_service_1.GetClienteByIdService,
         get_cliente_by_email_service_1.GetClienteByEmailService,
         update_cliente_service_1.UpdateClienteService,
-        get_all_clientes_service_1.GetAllClientesService,
+        get_all_clientes_filtered_service_1.GetAllClientesFilteredService,
         disable_cliente_service_1.DisableClienteService,
         active_cliente_service_1.ActiveClienteService,
         get_all_clientes_by_name_service_1.GetAllClientesByNameService,
         get_all_by_birthday_people_month_service_1.GetAllByBirthdayPeopleMonthService,
+        get_count_type_clientes_service_1.GetCountTypeClientesService,
         create_log_service_1.CreateLogService])
 ], ClienteController);

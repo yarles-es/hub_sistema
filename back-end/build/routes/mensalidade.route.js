@@ -16,5 +16,6 @@ router
     .put('/pay/:id', mensalidadeController.payMensalidade.bind(mensalidadeController))
     .delete('/delete/:id', mensalidadeController.delete.bind(mensalidadeController))
     .get('/get-all', mensalidadeController.getAll.bind(mensalidadeController))
-    .put('/cancel/:id', mensalidadeController.cancel.bind(mensalidadeController));
+    .put('/cancel/:id', mensalidadeController.cancel.bind(mensalidadeController))
+    .get('/get-all-pending/:clienteId', mensalidadeController.getAllPendingByClienteId.bind(mensalidadeController));
 exports.mensalidadeRoute = router;

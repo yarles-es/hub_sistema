@@ -146,38 +146,74 @@ let ClienteModel = class ClienteModel {
             return result[0];
         });
     }
-    findAll(page, limit, dates, filter, transaction) {
+    findAllFiltered(page, limit, filter, transaction) {
         return __awaiter(this, void 0, void 0, function* () {
             const client = transaction || this.prisma;
             const where = {};
-            if (filter === null || filter === void 0 ? void 0 : filter.nome) {
+            if (filter === null || filter === void 0 ? void 0 : filter.nome)
                 where.nome = { contains: filter.nome, mode: 'insensitive' };
-            }
-            if (filter === null || filter === void 0 ? void 0 : filter.email) {
+            if (filter === null || filter === void 0 ? void 0 : filter.email)
                 where.email = { contains: filter.email, mode: 'insensitive' };
-            }
-            if (filter === null || filter === void 0 ? void 0 : filter.telefone) {
+            if (filter === null || filter === void 0 ? void 0 : filter.telefone)
                 where.telefone = { contains: filter.telefone, mode: 'insensitive' };
-            }
+            if (filter === null || filter === void 0 ? void 0 : filter.planoId)
+                where.planoId = filter.planoId;
             if (filter === null || filter === void 0 ? void 0 : filter.dataNascimento) {
-                const inputDate = new Date(filter.dataNascimento);
-                const start = new Date(inputDate);
+                const d = new Date(filter.dataNascimento);
+                const start = new Date(d);
                 start.setUTCHours(0, 0, 0, 0);
-                const end = new Date(inputDate);
+                const end = new Date(d);
                 end.setUTCHours(23, 59, 59, 999);
-                where.dataNascimento = {
-                    gte: start,
-                    lte: end,
+                where.dataNascimento = { gte: start, lte: end };
+            }
+            const now = new Date();
+            const inicioHojeLocal = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            switch (filter === null || filter === void 0 ? void 0 : filter.status) {
+                case 'ATIVO':
+                    where.AND = [
+                        { ativo: true },
+                        {
+                            Mensalidade: {
+                                some: { status: client_1.StatusMensalidade.PENDENTE, vencimento: { gte: inicioHojeLocal } },
+                            },
+                        },
+                        {
+                            Mensalidade: {
+                                none: { status: client_1.StatusMensalidade.PENDENTE, vencimento: { lt: inicioHojeLocal } },
+                            },
+                        },
+                    ];
+                    break;
+                case 'DESATIVADO':
+                    where.ativo = false;
+                    break;
+                case 'VENCIDO':
+                    where.Mensalidade = {
+                        some: { status: client_1.StatusMensalidade.PENDENTE, vencimento: { lt: inicioHojeLocal } },
+                    };
+                    break;
+                case 'MENSALIDADE_AUSENTE':
+                    where.isento = false;
+                    where.ativo = true;
+                    where.Mensalidade = { none: { status: client_1.StatusMensalidade.PENDENTE } };
+                    break;
+                case 'ISENTO':
+                    where.isento = true;
+                    break;
+            }
+            let includeMensalidadeWhere = {
+                status: client_1.StatusMensalidade.PENDENTE,
+            };
+            if ((filter === null || filter === void 0 ? void 0 : filter.status) === 'ATIVO') {
+                includeMensalidadeWhere = {
+                    status: client_1.StatusMensalidade.PENDENTE,
+                    vencimento: { gte: inicioHojeLocal },
                 };
             }
-            if (filter === null || filter === void 0 ? void 0 : filter.planoId) {
-                where.planoId = filter.planoId;
-            }
-            if (dates.dataInicialMensalidade || dates.dataFinalMensalidade) {
-                where.Mensalidade = {
-                    some: {
-                        vencimento: Object.assign(Object.assign({}, (dates.dataInicialMensalidade && { gte: dates.dataInicialMensalidade })), (dates.dataFinalMensalidade && { lte: dates.dataFinalMensalidade })),
-                    },
+            if ((filter === null || filter === void 0 ? void 0 : filter.status) === 'VENCIDO') {
+                includeMensalidadeWhere = {
+                    status: client_1.StatusMensalidade.PENDENTE,
+                    vencimento: { lt: inicioHojeLocal },
                 };
             }
             const [data, total] = yield Promise.all([
@@ -188,26 +224,54 @@ let ClienteModel = class ClienteModel {
                     orderBy: { id: 'desc' },
                     include: {
                         Mensalidade: {
-                            where: Object.assign(Object.assign({}, (dates.dataInicialMensalidade && { vencimento: { gte: dates.dataInicialMensalidade } })), (dates.dataFinalMensalidade && { vencimento: { lte: dates.dataFinalMensalidade } })),
+                            where: includeMensalidadeWhere,
                             orderBy: { vencimento: 'asc' },
                         },
-                        plano: {
-                            select: {
-                                id: true,
-                                nome: true,
-                                valor: true,
-                            },
-                        },
+                        plano: { select: { id: true, nome: true, valor: true } },
                     },
                 }),
                 client.cliente.count({ where }),
             ]);
-            return {
-                data,
-                total,
-                page,
-                limit,
-            };
+            return { data, total, page, limit };
+        });
+    }
+    countTypeClientes(transaction) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var _a, _b, _c, _d;
+            const client = transaction || this.prisma;
+            const resumo = yield client.cliente.groupBy({
+                by: ['ativo', 'isento'],
+                _count: { _all: true },
+            });
+            const desativados = (_b = (_a = resumo.find((r) => r.ativo === false)) === null || _a === void 0 ? void 0 : _a._count._all) !== null && _b !== void 0 ? _b : 0;
+            const isentos = (_d = (_c = resumo.find((r) => r.ativo === true && r.isento === true)) === null || _c === void 0 ? void 0 : _c._count._all) !== null && _d !== void 0 ? _d : 0;
+            const now = new Date();
+            const inicioHojeLocal = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const vencidos = yield client.cliente.count({
+                where: {
+                    ativo: true,
+                    isento: false,
+                    Mensalidade: { some: { status: client_1.StatusMensalidade.PENDENTE, vencimento: { lt: inicioHojeLocal } } },
+                },
+            });
+            const ativos = yield client.cliente.count({
+                where: {
+                    ativo: true,
+                    isento: false,
+                    Mensalidade: {
+                        some: { status: client_1.StatusMensalidade.PENDENTE, vencimento: { gte: inicioHojeLocal } },
+                        none: { status: client_1.StatusMensalidade.PENDENTE, vencimento: { lt: inicioHojeLocal } },
+                    },
+                },
+            });
+            const mensalidadeInexistente = yield client.cliente.count({
+                where: {
+                    isento: false,
+                    ativo: true,
+                    Mensalidade: { none: { status: client_1.StatusMensalidade.PENDENTE } },
+                },
+            });
+            return { ativos, vencidos, desativados, isentos, mensalidadeInexistente };
         });
     }
     getAllWithMensalidadeByPlanId(planoId, transaction) {

@@ -9,14 +9,13 @@ export class GetAllClientesFilteredService {
   constructor(private readonly clienteService: ClienteService) {}
 
   async execute(page: number, limit: number, filter?: ClienteFilter): Promise<ClienteResponseGetAll> {
-    const dates = {
-      dataInicialMensalidade: filter?.status === 'ATIVO' ? new Date() : undefined,
-      dataFinalMensalidade: filter?.status === 'VENCIDO' ? new Date() : undefined,
-    };
+    const start = new Date();
+    start.setUTCHours(0, 0, 0, 0);
 
-    delete filter?.status;
+    const end = new Date();
+    end.setUTCHours(23, 59, 59, 999);
 
-    const response = await this.clienteService.getAllClientesFiltered(page, limit, dates, filter);
+    const response = await this.clienteService.getAllClientesFiltered(page, limit, filter);
 
     const clientesFormatted = formatadorCliente(response.data);
 
