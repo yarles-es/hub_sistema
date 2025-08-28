@@ -2,14 +2,13 @@ import { useQuery } from "@tanstack/react-query";
 
 import ButtonActionDelete from "../Buttons/ButtonActionDelete";
 import ButtonActionPayment from "../Buttons/ButtonActionPayment";
+import ButtonActionUnlink from "../Buttons/ButtonactionUnlink";
 
 import { getAllPendingByClientId } from "@/api/monthlyFee/monthlyFee.api";
 import useOrderTable from "@/hooks/useOrderTable";
+import useViewPermission from "@/hooks/useViewPermission";
 import { ModalMonthlyFeeType } from "@/types/ModalTypes";
-import {
-  getAllMonthlyFeesResponse,
-  MonthlyFeeWithClient,
-} from "@/types/MonthlyFee";
+import { MonthlyFeeWithClient } from "@/types/MonthlyFee";
 import { Title } from "@/types/Tables";
 import formatStringDate from "@/utils/formatStringDate";
 import { isNotNull } from "@/utils/tableGuardType";
@@ -30,6 +29,8 @@ const MonthlyFeeTable: React.FC<Props> = ({
   clientId,
   secundary,
 }) => {
+  const administration = useViewPermission();
+
   const fetchMonthlyFeesByIdClient = async () => {
     if (clientId) {
       const response = await getAllPendingByClientId(clientId);
@@ -64,6 +65,9 @@ const MonthlyFeeTable: React.FC<Props> = ({
     { key: "valorPago", label: "Valor Pago", type: "number", order: true },
     { key: "cancel", label: "Cancelar", type: "actions", order: false },
     { key: "pay", label: "Pagar", type: "actions", order: false },
+    administration && !secundary
+      ? { key: "delete", label: "Deletar", type: "actions", order: false }
+      : null,
   ];
 
   const titlesFiltered = titles.filter(isNotNull);
@@ -175,7 +179,7 @@ const MonthlyFeeTable: React.FC<Props> = ({
                 <div className="flex items-center space-x-3.5">
                   {monthlyFee.status !== "CANCELADO" &&
                     monthlyFee.status !== "PAGO" && (
-                      <ButtonActionDelete
+                      <ButtonActionUnlink
                         onClick={() =>
                           onOpenItemSelect(monthlyFee.id, "cancel")
                         }
@@ -194,6 +198,16 @@ const MonthlyFeeTable: React.FC<Props> = ({
                     )}
                 </div>
               </td>
+
+              {administration && !secundary && (
+                <td className="py-4 px-4 text-black dark:text-white">
+                  <div className="flex items-center space-x-3.5">
+                    <ButtonActionDelete
+                      onClick={() => onOpenItemSelect(monthlyFee.id, "delete")}
+                    />
+                  </div>
+                </td>
+              )}
             </tr>
           ))}
         </tbody>

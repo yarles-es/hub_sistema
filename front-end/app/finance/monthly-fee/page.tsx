@@ -9,6 +9,7 @@ import { getAllMonthlyFees } from "@/api/monthlyFee/monthlyFee.api";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Button from "@/components/Buttons/Button";
 import ModalCancelMonthlyFee from "@/components/Modals/MonthlyFeeModals/ModalCancelMonthlyFee";
+import ModalDeleteMonthlyFee from "@/components/Modals/MonthlyFeeModals/ModalDeleteMonthlyFee";
 import ModalPayMonthlyFee from "@/components/Modals/MonthlyFeeModals/ModalPayMonthlyFee";
 import ModalSearchMonthlyFee from "@/components/Modals/MonthlyFeeModals/ModalSearchMonthlyFee";
 import PageTransition from "@/components/PageTransition/PageTransition";
@@ -24,13 +25,14 @@ import { MonthlyFeeStatus } from "@/types/MonthlyFee";
 const MonthlyFeePage = () => {
   const alert = useAlert();
 
-  const [modals, setModals] = useState("");
+  const [modals, setModals] = useState<ModalMonthlyFeeType>("");
   const [itemSelected, setItemSelected] = useState<number>(0);
 
   const objectVisualModals = {
     cancel: () => setModals("cancel"),
     search: () => setModals("search"),
     pay: () => setModals("pay"),
+    delete: () => setModals("delete"),
   };
 
   const searchParams = useSearchParams();
@@ -141,6 +143,19 @@ const MonthlyFeePage = () => {
         {modals === "pay" && (
           <ModalPayMonthlyFee
             isOpen={modals === "pay"}
+            onClose={() => setModals("")}
+            onCloseAndGetMonthlyFee={() => {
+              setModals("");
+              setItemSelected(0);
+              refetch();
+            }}
+            monthlyFeeId={itemSelected}
+          />
+        )}
+
+        {modals === "delete" && (
+          <ModalDeleteMonthlyFee
+            isOpen={modals === "delete"}
             onClose={() => setModals("")}
             onCloseAndGetMonthlyFee={() => {
               setModals("");

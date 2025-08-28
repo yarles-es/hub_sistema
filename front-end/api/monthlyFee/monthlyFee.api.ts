@@ -48,3 +48,7 @@ export const getMonthlyFeeById = async (id: number) => {
     `mensalidade/get-by-id/${id}`
   );
 };
+
+export const deleteMonthlyFeeById = async (id: number) => {
+  return await genericRequest<void>("delete", `mensalidade/delete/${id}`);
+};
