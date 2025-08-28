@@ -5,6 +5,14 @@ export type StatusClient =
   | "MENSALIDADE_AUSENTE"
   | "ISENTO";
 
+export enum StatusClientEnum {
+  ATIVO = "ATIVO",
+  DESATIVADO = "DESATIVADO",
+  VENCIDO = "VENCIDO",
+  MENSALIDADE_AUSENTE = "MENSALIDADE_AUSENTE",
+  ISENTO = "ISENTO",
+}
+
 export type Client = {
   id: number;
   email: string;
@@ -57,7 +65,7 @@ export type UpdateClient = Partial<CreateClient> & {
 export type CountClients = {
   ativos: number;
   vencidos: number;
-  mensalidadesAusentes: number;
+  mensalidadeInexistente: number;
   desativados: number;
   isentos: number;
 };

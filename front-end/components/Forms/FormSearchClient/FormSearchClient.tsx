@@ -7,7 +7,8 @@ import Button from "@/components/Buttons/Button";
 import Input from "@/components/Inputs/Input";
 import InputPhone from "@/components/Inputs/InputPhone";
 import SelectPlano from "@/components/Selects/SelectPlano";
-import { StatusClient } from "@/types/Client";
+import SelectStatusClient from "@/components/Selects/SelectStatusClient";
+import { StatusClient, StatusClientEnum } from "@/types/Client";
 import { createFullUrlFromParamsBrowser } from "@/utils/generateURLpaginateOrFilter";
 
 type Props = {
@@ -19,7 +20,7 @@ type FormValues = {
   email: string;
   telefone: string;
   dataNascimento: string;
-  status: StatusClient | undefined;
+  status: StatusClientEnum | undefined;
   planoId: number | undefined;
 };
 
@@ -63,7 +64,7 @@ const FormSearchClient: React.FC<Props> = ({ onClose }) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="p-6.5">
           <div className="mb-4.5 flex gap-6 xl:flex-row flex-col">
-            <div className="w-full xl:w-1/2">
+            <div className="w-full xl:w-1/3">
               <Input
                 {...register("nome")}
                 type="text"
@@ -72,13 +73,30 @@ const FormSearchClient: React.FC<Props> = ({ onClose }) => {
                 error={errors.nome?.message}
               />
             </div>
-            <div className="w-full xl:w-1/2">
+            <div className="w-full xl:w-1/3">
               <Input
                 {...register("email")}
                 type="text"
                 label="Email:"
                 placeholder="Digite o email"
                 error={errors.email?.message}
+              />
+            </div>
+            <div className="w-full xl:w-1/3">
+              <Controller
+                control={control}
+                name="status"
+                render={({ field }) => (
+                  <SelectStatusClient
+                    {...field}
+                    value={(field.value ?? "") as StatusClientEnum | ""}
+                    label="Status:"
+                    error={errors.status?.message}
+                    onChange={(e) =>
+                      field.onChange(e.target.value as StatusClient)
+                    }
+                  />
+                )}
               />
             </div>
           </div>

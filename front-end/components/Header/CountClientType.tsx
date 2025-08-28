@@ -1,16 +1,28 @@
+"use client";
+
 import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 import Button from "../Buttons/Button";
 
 import { getCountClients } from "@/api/client/client.api";
+import { StatusClient } from "@/types/Client";
+
+const pillBase =
+  "inline-flex cursor-pointer select-none rounded-full bg-opacity-10 py-1 px-3 text-xs font-medium transition-[transform,opacity] hover:opacity-90 active:scale-95";
 
 const CountClientType = () => {
+  const router = useRouter();
   const { data, refetch } = useQuery({
     queryKey: ["countClientType"],
     queryFn: async () => getCountClients(),
     retry: 0,
     refetchInterval: 300000,
   });
+
+  const go = (status: StatusClient) => {
+    router.push(`/clients?status=${status}`);
+  };
 
   return (
     <div className="flex items-center gap-2 2xsm:gap-4 justify-center">
@@ -45,21 +57,46 @@ const CountClientType = () => {
           </g>
         </svg>
       </Button>
-      <span className="inline-flex rounded-full bg-opacity-10 py-1 px-3 text-xs font-medium bg-success text-success">
-        Ativos: {data?.ativos || 0}
-      </span>
-      <span className="inline-flex rounded-full bg-opacity-10 py-1 px-3 text-xs font-medium bg-warning text-warning">
-        Mensalidades Ausentes: {data?.mensalidadesAusentes || 0}
-      </span>
-      <span className="inline-flex rounded-full bg-opacity-10 py-1 px-3 text-xs font-medium bg-danger text-danger">
-        Vencidos: {data?.vencidos || 0}
-      </span>
-      <span className="inline-flex rounded-full bg-opacity-10 py-1 px-3 text-xs font-medium bg-danger text-danger">
-        Desativados: {data?.desativados || 0}
-      </span>
-      <span className="inline-flex rounded-full bg-opacity-10 py-1 px-3 text-xs font-medium bg-meta-5 text-meta-5">
-        Isentos: {data?.isentos || 0}
-      </span>
+
+      <button
+        onClick={() => go("ATIVO")}
+        className={`${pillBase} bg-success text-success`}
+        title="Ver clientes ativos"
+      >
+        Ativos: {data?.ativos ?? 0}
+      </button>
+
+      <button
+        onClick={() => go("MENSALIDADE_AUSENTE")}
+        className={`${pillBase} bg-warning text-warning`}
+        title="Ver clientes com mensalidades ausentes"
+      >
+        Mensalidades Ausentes: {data?.mensalidadeInexistente ?? 0}
+      </button>
+
+      <button
+        onClick={() => go("VENCIDO")}
+        className={`${pillBase} bg-danger text-danger`}
+        title="Ver clientes vencidos"
+      >
+        Vencidos: {data?.vencidos ?? 0}
+      </button>
+
+      <button
+        onClick={() => go("DESATIVADO")}
+        className={`${pillBase} bg-danger text-danger`}
+        title="Ver clientes desativados"
+      >
+        Desativados: {data?.desativados ?? 0}
+      </button>
+
+      <button
+        onClick={() => go("ISENTO")}
+        className={`${pillBase} bg-meta-5 text-meta-5`}
+        title="Ver clientes isentos"
+      >
+        Isentos: {data?.isentos ?? 0}
+      </button>
     </div>
   );
 };
