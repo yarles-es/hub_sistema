@@ -162,3 +162,34 @@ model CadastroBiometria {
   errorMessage  String? @map("error_message")
   success       Boolean @default(false)
 }
+
+model Produto {
+  id         Int      @id @default(autoincrement())
+  nome       String
+  descricao  String?
+  valorCusto Float    @map("valor_custo")
+  valorVenda Float    @map("valor_venda")
+  estoque    Int      @default(0)
+  ativo      Boolean  @default(true)
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  VendaProduto VendaProduto[]
+
+  @@map("produtos")
+}
+
+model VendaProduto {
+  id         Int      @id @default(autoincrement())
+  produtoId  Int      @map("produto_id")
+  quantidade Int
+  valorCusto Float    @map("valor_custo")
+  valorVenda Float    @map("valor_venda")
+  dataVenda  DateTime @default(now()) @map("data_venda")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  produto Produto @relation(fields: [produtoId], references: [id])
+
+  @@map("vendas_produtos")
+}
