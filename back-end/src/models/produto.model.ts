@@ -9,7 +9,7 @@ import {
 } from '../types/produto.types';
 
 @Service()
-export class ProdutosModel {
+export class ProdutoModel {
   private prisma: PrismaClient;
 
   constructor() {
