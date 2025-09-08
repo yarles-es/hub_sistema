@@ -13,19 +13,19 @@ import {
 export class ProdutoService {
   constructor(private produtoModel: ProdutoModel) {}
 
-  async getAllProdutos(ativo: boolean = true): Promise<GetAllProdutoResponse> {
-    return await this.produtoModel.getAllProdutos(ativo);
+  async getAll(ativo: boolean = true): Promise<GetAllProdutoResponse> {
+    return await this.produtoModel.getAll(ativo);
   }
 
-  async createProduto(data: CreateProduto): Promise<CreateProdutoResponse> {
-    return await this.produtoModel.createProduto(data);
+  async create(data: CreateProduto): Promise<CreateProdutoResponse> {
+    return await this.produtoModel.create(data);
   }
 
-  async getProdutoById(id: number): Promise<GetProdutoByIdResponse> {
-    return await this.produtoModel.getProdutoById(id);
+  async getById(id: number): Promise<GetProdutoByIdResponse> {
+    return await this.produtoModel.getById(id);
   }
 
-  async updateProduto(id: number, data: UpdateProduto): Promise<UpdateProdutoResponse> {
-    return await this.produtoModel.updateProduto(id, data);
+  async update(id: number, data: UpdateProduto): Promise<UpdateProdutoResponse> {
+    return await this.produtoModel.update({ ...data, id });
   }
 }

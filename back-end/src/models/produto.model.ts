@@ -16,7 +16,7 @@ export class ProdutoModel {
     this.prisma = new PrismaClient();
   }
 
-  async getAllProdutos(ativo: boolean = true): Promise<GetAllProdutoResponse> {
+  async getAll(ativo: boolean = true): Promise<GetAllProdutoResponse> {
     const whereClause = ativo ? { ativo: true } : {};
 
     return await this.prisma.produto.findMany({
@@ -25,21 +25,21 @@ export class ProdutoModel {
     });
   }
 
-  async createProduto(data: CreateProduto): Promise<CreateProdutoResponse> {
+  async create(data: CreateProduto): Promise<CreateProdutoResponse> {
     return await this.prisma.produto.create({
       data,
     });
   }
 
-  async getProdutoById(id: number) {
+  async getById(id: number) {
     return await this.prisma.produto.findUnique({
       where: { id },
     });
   }
 
-  async updateProduto(id: number, data: UpdateProduto): Promise<UpdateProdutoResponse> {
+  async update(data: UpdateProduto): Promise<UpdateProdutoResponse> {
     return await this.prisma.produto.update({
-      where: { id },
+      where: { id: data.id },
       data,
     });
   }

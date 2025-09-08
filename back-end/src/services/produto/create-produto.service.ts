@@ -10,7 +10,7 @@ export class CreateProdutoService {
   async execute(data: CreateProduto): Promise<CreateProdutoResponse> {
     this.validate(data);
 
-    return await this.produtoService.createProduto(data);
+    return await this.produtoService.create(data);
   }
 
   private validate(data: CreateProduto) {

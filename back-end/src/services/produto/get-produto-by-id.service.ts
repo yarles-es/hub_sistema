@@ -10,6 +10,6 @@ export class GetProdutoByIdService {
   async execute(id: number): Promise<GetProdutoByIdResponse> {
     if (!id || isNaN(id) || id <= 0) throw new BadRequestError('ID inválido');
 
-    return await this.produtoService.getProdutoById(id);
+    return await this.produtoService.getById(id);
   }
 }

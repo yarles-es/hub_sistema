@@ -12,7 +12,7 @@ export class UpdateProdutoService {
 
     this.validate(data);
 
-    return await this.produtoService.updateProduto(id, data);
+    return await this.produtoService.update(id, data);
   }
 
   private validate(data: UpdateProduto) {
