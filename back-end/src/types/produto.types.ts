@@ -4,11 +4,11 @@ export type CreateProduto = Pick<Produto, 'nome' | 'descricao' | 'valorVenda' | 
   ativo?: boolean;
 };
 
-export type UpdateProduto = { id: number } & Partial<CreateProduto>;
+export type UpdateProduto = Partial<CreateProduto>;
 
 export type GetAllProdutoResponse = Produto[];
 
-export type GetProdutoByIdResponse = Produto | null;
+export type GetProdutoByIdResponse = Produto;
 
 export type DeleteProdutoResponse = Produto;
 

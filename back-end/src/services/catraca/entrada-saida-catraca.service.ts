@@ -19,7 +19,7 @@ export class EntradasaidaCatracaService {
   ) {}
 
   async execute(data: WebhookCommand774) {
-    const cliente = await this.getClienteForCommand(data);
+    const cliente = await this._getClienteForCommand(data);
 
     if (!cliente) {
       await bloquearEntradaCatraca();
@@ -29,19 +29,19 @@ export class EntradasaidaCatracaService {
     const [clienteFormatado] = formatadorCliente([cliente]);
 
     if (!clienteFormatado.ativo) {
-      await this.bloqueioClienteInativo(cliente.id);
+      await this._bloqueioClienteInativo(cliente.id);
       return;
     }
 
     if (this.TRAVAR.includes(clienteFormatado.status)) {
-      await this.bloqueioClienteInativo(cliente.id);
+      await this._bloqueioClienteInativo(cliente.id);
       return;
     }
 
-    await this.entradaSaidaCatraca(cliente.id);
+    await this._entradaSaidaCatraca(cliente.id);
   }
 
-  private async bloqueioClienteInativo(clienteId: number) {
+  private async _bloqueioClienteInativo(clienteId: number) {
     await this.registroAcessoService.createRegistroAcesso({
       clienteId,
       tipoCatraca: TipoCatraca.BLOQUEIO,
@@ -53,7 +53,7 @@ export class EntradasaidaCatracaService {
     return;
   }
 
-  private async getClienteForCommand(body: WebhookCommand774): Promise<ClienteGetAllWithMensalidade | null> {
+  private async _getClienteForCommand(body: WebhookCommand774): Promise<ClienteGetAllWithMensalidade | null> {
     const command = body.command;
     if (command === 774) {
       const id = body.response.identification.id;
@@ -62,7 +62,7 @@ export class EntradasaidaCatracaService {
 
     if (command === 771) {
       const data = body.response.identification.data;
-      const date = await this.transformDate(data);
+      const date = await this._transformDate(data);
       if (date) {
         return await this.clienteService.findByDataNascimento(date);
       }
@@ -70,7 +70,7 @@ export class EntradasaidaCatracaService {
     return null;
   }
 
-  private transformDate(data: number): string | null {
+  private _transformDate(data: number): string | null {
     const strData = data.toString().padStart(8, '0');
     if (!/^\d{8}$/.test(strData)) return null;
 
@@ -84,7 +84,7 @@ export class EntradasaidaCatracaService {
     return `${ano}-${mes}-${dia}`;
   }
 
-  private async entradaSaidaCatraca(clienteId: number) {
+  private async _entradaSaidaCatraca(clienteId: number) {
     const registrosAcesso = await this.registroAcessoService.findAllRegistrosByClienteId(clienteId);
     const registrosAcessoFiltrado = registrosAcesso.filter((r) => r.tipoCatraca !== TipoCatraca.BLOQUEIO);
 

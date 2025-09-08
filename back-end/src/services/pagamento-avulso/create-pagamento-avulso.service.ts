@@ -9,11 +9,11 @@ export class CreatePagamentoAvulsoService {
   constructor(private readonly pagamentoAvulsoService: PagamentoAvulsoService) {}
 
   async execute(data: CreatePagamentoAvulso) {
-    this.validate(data);
+    this._validate(data);
     return this.pagamentoAvulsoService.createPagamentoAvulso(data);
   }
 
-  private validate(data: CreatePagamentoAvulso): void {
+  private _validate(data: CreatePagamentoAvulso): void {
     const { formaPagamento, nomeCliente, observacao, valor } = data;
 
     if (!formaPagamento || FormPagamento[formaPagamento] === undefined) {

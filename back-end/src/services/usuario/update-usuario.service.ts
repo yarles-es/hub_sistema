@@ -12,7 +12,7 @@ export class UpdateUsuarioService {
   async execute(id: number, usuario: UpdateUsuario): Promise<UsuarioResponse> {
     if (!id || isNaN(id) || id <= 0) throw new BadRequestError('ID inválido.');
 
-    await this.validate(usuario);
+    await this._validate(usuario);
 
     const existingUser = await this.usuarioService.findById(id);
 
@@ -21,7 +21,7 @@ export class UpdateUsuarioService {
     return await this.usuarioService.update(id, usuario);
   }
 
-  async validate(usuario: UpdateUsuario): Promise<void> {
+  async _validate(usuario: UpdateUsuario): Promise<void> {
     if (usuario.email?.trim() !== '' && !validateEmail(usuario.email || '')) {
       throw new BadRequestError('Email inválido.');
     }

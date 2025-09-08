@@ -16,7 +16,7 @@ export class UpdatePlanoService {
   ) {}
 
   async execute(id: number, data: UpdatePlano): Promise<Plano> {
-    this.validate(id, data);
+    this._validate(id, data);
 
     const plan = await withTransaction(async (tx) => {
       const existingPlan = await this.planoService.getPlanoById(id, tx);
@@ -28,7 +28,7 @@ export class UpdatePlanoService {
       const plan = await this.planoService.updatePlano(id, data);
 
       if (data.valor && plan.valor !== existingPlan.valor) {
-        await this.modifyValorExistingMonthlyFeePending(id, data.valor, tx);
+        await this._modifyValorExistingMonthlyFeePending(id, data.valor, tx);
       }
       return plan;
     });
@@ -36,7 +36,7 @@ export class UpdatePlanoService {
     return plan;
   }
 
-  private async modifyValorExistingMonthlyFeePending(
+  private async _modifyValorExistingMonthlyFeePending(
     idPlano: number,
     newValor: number,
     transaction?: Prisma.TransactionClient,
@@ -53,7 +53,7 @@ export class UpdatePlanoService {
     );
   }
 
-  private validate(id: number, data: UpdatePlano): void {
+  private _validate(id: number, data: UpdatePlano): void {
     if (!id || id <= 0 || isNaN(id)) {
       throw new BadRequestError('ID inválido');
     }

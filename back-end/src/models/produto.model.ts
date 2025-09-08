@@ -37,9 +37,9 @@ export class ProdutoModel {
     });
   }
 
-  async update(data: UpdateProduto): Promise<UpdateProdutoResponse> {
+  async update(id: number, data: UpdateProduto): Promise<UpdateProdutoResponse> {
     return await this.prisma.produto.update({
-      where: { id: data.id },
+      where: { id },
       data,
     });
   }

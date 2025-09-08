@@ -16,7 +16,7 @@ export class CreateClienteService {
   ) {}
 
   async execute(data: CreateClienteRequest): Promise<Cliente> {
-    const transformedData: CreateCliente = this.transformData(data);
+    const transformedData: CreateCliente = this._transformData(data);
     await this.validate(transformedData);
     const result = await this.clienteService.createCliente(transformedData);
     await this.createMensalidadeService.execute({ clienteId: result.id });
@@ -56,7 +56,7 @@ export class CreateClienteService {
     }
   }
 
-  private transformData(data: CreateClienteRequest): CreateCliente {
+  private _transformData(data: CreateClienteRequest): CreateCliente {
     if (!data.dataNascimento) {
       throw new BadRequestError('Data de nascimento é obrigatória.');
     }

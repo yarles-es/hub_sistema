@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import multer from 'multer';
 import path from 'node:path';
-import { stat, unlink } from 'node:fs/promises'; // << adiciona stat
+import { stat, unlink } from 'node:fs/promises';
 import { pipeline } from 'node:stream/promises';
 import {
   backupPostgres,

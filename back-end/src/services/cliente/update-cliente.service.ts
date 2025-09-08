@@ -26,7 +26,7 @@ export class UpdateClienteService {
       await this.editMonthlyFeeIfPlanIdIsChanged(id, data.planoId);
     }
 
-    const transformedData: UpdateClient = this.transformData(data);
+    const transformedData: UpdateClient = this._transformData(data);
 
     if (transformedData.isento) {
       await this.cancelMonthlyFeeIfCustomerIsExempt(id);
@@ -46,7 +46,7 @@ export class UpdateClienteService {
     return this.clienteService.updateCliente(id, updatedData);
   }
 
-  private transformData(data: UpdateClientRequest): UpdateClient {
+  private _transformData(data: UpdateClientRequest): UpdateClient {
     if (!data.dataNascimento) {
       throw new BadRequestError('Data de nascimento é obrigatória.');
     }

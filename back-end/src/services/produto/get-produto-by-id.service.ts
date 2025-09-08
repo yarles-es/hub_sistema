@@ -7,7 +7,7 @@ import { GetProdutoByIdResponse } from '../../types/produto.types';
 export class GetProdutoByIdService {
   constructor(private produtoService: ProdutoService) {}
 
-  async execute(id: number): Promise<GetProdutoByIdResponse> {
+  async execute(id: number): Promise<GetProdutoByIdResponse | null> {
     if (!id || isNaN(id) || id <= 0) throw new BadRequestError('ID inválido');
 
     return await this.produtoService.getById(id);

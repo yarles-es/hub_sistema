@@ -14,11 +14,11 @@ export class CreateRegistroAcessoService {
   ) {}
 
   public async execute(registro: CreateRegistroAcesso): Promise<RegistroAcesso> {
-    await this.validate(registro);
+    await this._validate(registro);
     return await this.registroAcessoService.createRegistroAcesso(registro);
   }
 
-  private async validate(registro: CreateRegistroAcesso): Promise<void> {
+  private async _validate(registro: CreateRegistroAcesso): Promise<void> {
     if (!registro.clienteId) {
       throw new BadRequestError('Cliente ID é obrigatório');
     }

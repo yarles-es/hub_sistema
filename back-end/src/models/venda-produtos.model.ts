@@ -11,7 +11,7 @@ import {
 } from '../types/venda-produto.types';
 
 @Service()
-export class VendaProdutosModel {
+export class VendaProdutoModel {
   private prisma: PrismaClient;
 
   constructor() {

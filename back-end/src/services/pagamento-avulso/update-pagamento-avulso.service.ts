@@ -9,11 +9,11 @@ export class UpdatePagamentoAvulsoService {
   constructor(private readonly pagamentoAvulsoService: PagamentoAvulsoService) {}
 
   async execute(id: number, data: UpdatePagamentoAvulso) {
-    this.validate(id, data);
+    this._validate(id, data);
     return this.pagamentoAvulsoService.updatePagamentoAvulso(id, data);
   }
 
-  private validate(id: number, data: UpdatePagamentoAvulso): void {
+  private _validate(id: number, data: UpdatePagamentoAvulso): void {
     if (!id || isNaN(id) || id <= 0) {
       throw new BadRequestError('ID inválido');
     }

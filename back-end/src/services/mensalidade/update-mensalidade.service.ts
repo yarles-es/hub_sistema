@@ -16,7 +16,7 @@ export class UpdateMensalidadeService {
       throw new BadRequestError('ID inválido.');
     }
 
-    await this.validate(
+    await this._validate(
       id,
       data.formaPagamento === null ? undefined : data.formaPagamento,
       data.status === null ? undefined : data.status,
@@ -29,7 +29,11 @@ export class UpdateMensalidadeService {
     return await this.mensalidadeService.updateMensalidade(id, data, transaction);
   }
 
-  async validate(id: number, formaPagamento?: FormPagamento, status?: StatusMensalidade): Promise<void> {
+  private async _validate(
+    id: number,
+    formaPagamento?: FormPagamento,
+    status?: StatusMensalidade,
+  ): Promise<void> {
     if (!id || isNaN(id) || id <= 0) {
       throw new BadRequestError('ID inválido');
     }

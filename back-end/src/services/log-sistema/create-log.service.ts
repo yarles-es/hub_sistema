@@ -10,12 +10,12 @@ export class CreateLogService {
   ) {}
 
   public async execute(usuarioId: number, acao: string, clienteId?: number) {
-    await this.validate(usuarioId, acao, clienteId);
+    await this._validate(usuarioId, acao, clienteId);
     const result = await this.logSistemaService.createLog(usuarioId, acao, clienteId);
     return result;
   }
 
-  private async validate(usuarioId: number, acao: string, clienteId?: number): Promise<void> {
+  private async _validate(usuarioId: number, acao: string, clienteId?: number): Promise<void> {
     if (clienteId && !(await this.clienteService.getClienteById(clienteId))) {
       console.error('erro ao registrar log, cliente não encontrado');
       return;

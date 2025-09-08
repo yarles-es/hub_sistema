@@ -21,11 +21,11 @@ export class ProdutoService {
     return await this.produtoModel.create(data);
   }
 
-  async getById(id: number): Promise<GetProdutoByIdResponse> {
+  async getById(id: number): Promise<GetProdutoByIdResponse | null> {
     return await this.produtoModel.getById(id);
   }
 
   async update(id: number, data: UpdateProduto): Promise<UpdateProdutoResponse> {
-    return await this.produtoModel.update({ ...data, id });
+    return await this.produtoModel.update(id, data);
   }
 }

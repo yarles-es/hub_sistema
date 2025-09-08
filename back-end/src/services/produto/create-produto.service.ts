@@ -8,12 +8,12 @@ export class CreateProdutoService {
   constructor(private produtoService: ProdutoService) {}
 
   async execute(data: CreateProduto): Promise<CreateProdutoResponse> {
-    this.validate(data);
+    this._validate(data);
 
     return await this.produtoService.create(data);
   }
 
-  private validate(data: CreateProduto) {
+  private _validate(data: CreateProduto) {
     const required = {
       nome: 'Nome é obrigatório',
       valorVenda: 'Valor de venda é obrigatório',

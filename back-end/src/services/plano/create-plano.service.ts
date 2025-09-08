@@ -9,11 +9,11 @@ export class CreatePlanoService {
   constructor(private readonly planoService: PlanoService) {}
 
   async execute(data: CreatePlano): Promise<Plano> {
-    await this.validate(data);
+    await this._validate(data);
     return this.planoService.createPlano(data);
   }
 
-  async validate(data: CreatePlano): Promise<void> {
+  private async _validate(data: CreatePlano): Promise<void> {
     if (!data.nome || data.nome.trim() === '') {
       throw new BadRequestError('Nome do plano é obrigatório');
     }

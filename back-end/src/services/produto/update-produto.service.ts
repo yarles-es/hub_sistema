@@ -10,12 +10,12 @@ export class UpdateProdutoService {
   async execute(id: number, data: UpdateProduto): Promise<UpdateProdutoResponse> {
     if (!id || isNaN(id) || id <= 0) throw new BadRequestError('ID inválido');
 
-    this.validate(data);
+    this._validate(data);
 
     return await this.produtoService.update(id, data);
   }
 
-  private validate(data: UpdateProduto) {
+  private _validate(data: UpdateProduto) {
     if (data.nome !== undefined && typeof data.nome !== 'string') {
       throw new BadRequestError('Nome deve ser string');
     }

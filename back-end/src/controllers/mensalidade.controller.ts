@@ -152,8 +152,6 @@ export class MensalidadeController {
         finalDate as string | undefined,
       );
 
-      console.log(startAtUtc, endAtUtc);
-
       const mensalidades = await this.getAllMensalidadesService.execute(page, limitNumber, {
         clienteId: clienteIdQuery,
         initialDate: startAtUtc,

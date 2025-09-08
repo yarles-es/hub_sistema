@@ -9,12 +9,12 @@ export class CreateUsuarioService {
   constructor(private readonly usuarioService: UsuarioService) {}
 
   public async execute(usuario: CreateUsuario): Promise<UsuarioResponse> {
-    await this.validate(usuario);
+    await this._validate(usuario);
 
     return await this.usuarioService.create(usuario);
   }
 
-  async validate(usuario: CreateUsuario): Promise<void> {
+  async _validate(usuario: CreateUsuario): Promise<void> {
     if (usuario.email.length < 5 || !validateEmail(usuario.email)) {
       throw new BadRequestError('Email inválido');
     }
