@@ -94,6 +94,17 @@ const SideBarLinkFinance: React.FC<SideBarLinkFinanceProps> = ({
               Mensalidades
             </Link>
           </li>
+          <li>
+            <Link
+              onClick={(e) => setSidebarOpen(!sidebarOpen)}
+              href="/finance/sales-report"
+              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${
+                pathname === "/finance/sales-report" && "text-white"
+              } `}
+            >
+              R. Vendas
+            </Link>
+          </li>
         </ul>
       </div>
     </React.Fragment>

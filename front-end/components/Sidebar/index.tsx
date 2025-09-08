@@ -8,6 +8,7 @@ import SideBarLinkClients from "./SideBarLinkClients";
 import SideBarLinkFinance from "./SideBarLinkFinance";
 import SidebarLinkGroup from "./SidebarLinkGroup";
 import SideBarLinkPlans from "./SideBarLinkPlans";
+import SideBarLinkProducts from "./SidebarLinkProducts";
 import SideBarLinkSettings from "./SideBarLinkSettings";
 import SideBarLinkTurnstile from "./SideBarLinkTurnstile";
 
@@ -135,6 +136,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               <SideBarLinkClients />
 
               <SideBarLinkPlans />
+              <SideBarLinkProducts />
 
               <SideBarLinkTurnstile />
 
