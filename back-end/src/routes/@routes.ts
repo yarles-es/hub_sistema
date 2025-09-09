@@ -13,6 +13,7 @@ import { registroAcessoRoute } from './registro-acesso.route';
 import { usuarioRoute } from './usuario.route';
 import { backupRoute } from './admin-backup.route';
 import { produtoRoute } from './produto.route';
+import { vendaProdutoRoute } from './venda-produto.route';
 
 const router = Router();
 
@@ -33,5 +34,6 @@ router.use('/usuario', usuarioRoute);
 router.use('/plano', planoRoute);
 router.use('/pagamento-avulso', pagamentoAvulsoRoute);
 router.use('/produto', produtoRoute);
+router.use('/venda-produto', vendaProdutoRoute);
 
 export const routes = router;
