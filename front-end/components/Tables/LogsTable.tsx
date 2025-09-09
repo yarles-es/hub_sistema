@@ -1,12 +1,11 @@
 import useOrderTable from "@/hooks/useOrderTable";
+import { Log } from "@/types/Log";
 import { ModalLogType } from "@/types/ModalTypes";
 import { Title } from "@/types/Tables";
 import { formatDateWithHours } from "@/utils/formatStringDate";
 import { isNotNull } from "@/utils/tableGuardType";
 
 import DefaultTableContainer from "./DefaultTableContainer";
-
-import { Log } from "@/types/Log";
 
 type Props = {
   logs: Log[];

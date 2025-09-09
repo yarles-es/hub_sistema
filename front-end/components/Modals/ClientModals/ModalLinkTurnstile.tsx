@@ -1,7 +1,7 @@
 import Modal from "../Modal";
 
 import { cancelTurnstileOperation } from "@/api/turnstile/turnstile.api";
-import FormLinkTurnstile from "@/components/Forms/FormLinkTurnstile/FormLinkTurnstile";
+import FormLinkTurnstile from "@/components/Forms/Turnstile/FormLinkTurnstile/FormLinkTurnstile";
 import { Client } from "@/types/Client";
 
 type Props = {

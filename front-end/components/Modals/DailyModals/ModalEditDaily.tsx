@@ -1,6 +1,6 @@
 import Modal from "../Modal";
 
-import FormEditDaily from "@/components/Forms/FormEditDaily/FormEditDaily";
+import FormEditDaily from "@/components/Forms/Finance/Daily/FormEditDaily/FormEditDaily";
 import { Daily } from "@/types/Daily";
 
 type Props = {

@@ -1,6 +1,6 @@
 import Modal from "../Modal";
 
-import { FormDeleteDaily } from "@/components/Forms/FormDeleteDaily/FormDeleteDaily";
+import { FormDeleteDaily } from "@/components/Forms/Finance/Daily/FormDeleteDaily/FormDeleteDaily";
 
 type Props = {
   isOpen: boolean;

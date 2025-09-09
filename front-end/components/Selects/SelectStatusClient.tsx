@@ -1,8 +1,8 @@
 import { ChangeEvent, forwardRef } from "react";
 
-import Select from "./Select";
-
 import { StatusClientEnum } from "@/types/Client";
+
+import Select from "./Select";
 
 type Props = {
   value: StatusClientEnum | "";

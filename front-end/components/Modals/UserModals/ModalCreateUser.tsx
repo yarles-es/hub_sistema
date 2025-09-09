@@ -1,6 +1,6 @@
 import Modal from "../Modal";
 
-import FormNewUser from "@/components/Forms/FormNewUser/FormNewUser";
+import FormNewUser from "@/components/Forms/Settings/User/FormNewUser/FormNewUser";
 
 type Props = {
   isOpen: boolean;

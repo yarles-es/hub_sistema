@@ -1,6 +1,6 @@
 import Modal from "../Modal";
 
-import FormCancelMonthlyFee from "@/components/Forms/FormCancelMonthlyFee/FormCancelMonthlyFee";
+import FormCancelMonthlyFee from "@/components/Forms/Finance/MonthlyFee/FormCancelMonthlyFee/FormCancelMonthlyFee";
 
 type Props = {
   isOpen: boolean;

@@ -1,6 +1,6 @@
 import Modal from "../Modal";
 
-import FormEditPlan from "@/components/Forms/FormEditPlan/FormEditPlan";
+import FormEditPlan from "@/components/Forms/Plans/FormEditPlan/FormEditPlan";
 import { Plano } from "@/types/Plano";
 
 type Props = {

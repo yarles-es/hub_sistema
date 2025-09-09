@@ -73,6 +73,7 @@ const ClientPage = () => {
     active: () => setModals("active"),
     search: () => setModals("search"),
     disable: () => setModals("disable"),
+    delete: () => setModals("delete"),
     linkTurnstile: () => setModals("linkTurnstile"),
     pay: () => setModals("pay"),
     cancel: () => setModals("cancel"),

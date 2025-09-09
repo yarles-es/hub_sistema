@@ -1,6 +1,6 @@
 import Modal from "../Modal";
 
-import FormEditStatusUser from "@/components/Forms/FormEditStatusUser/FormEditStatusUser";
+import FormEditStatusUser from "@/components/Forms/Settings/User/FormEditStatusUser/FormEditStatusUser";
 import { ModalTypeItemUser } from "@/types/ModalTypes";
 import { User } from "@/types/User";
 

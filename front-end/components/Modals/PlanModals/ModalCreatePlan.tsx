@@ -1,6 +1,6 @@
 import Modal from "../Modal";
 
-import FormNewPlan from "@/components/Forms/FormNewPlan/FormNewPlan";
+import FormNewPlan from "@/components/Forms/Plans/FormNewPlan/FormNewPlan";
 
 type Props = {
   isOpen: boolean;

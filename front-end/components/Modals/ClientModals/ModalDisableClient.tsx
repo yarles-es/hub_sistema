@@ -1,8 +1,7 @@
 import Modal from "../Modal";
 
+import FormDisableClient from "@/components/Forms/Clients/FormDisableClient/FormDisableClient";
 import { Client } from "@/types/Client";
-
-import FormDisableClient from "@/components/Forms/FormDisableClient/FormDisableClient";
 
 type Props = {
   isOpen: boolean;

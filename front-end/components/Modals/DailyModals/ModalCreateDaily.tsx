@@ -1,6 +1,6 @@
 import Modal from "../Modal";
 
-import FormNewDaily from "@/components/Forms/FormNewDaily/FormNewDaily";
+import FormNewDaily from "@/components/Forms/Finance/Daily/FormNewDaily/FormNewDaily";
 
 type Props = {
   isOpen: boolean;

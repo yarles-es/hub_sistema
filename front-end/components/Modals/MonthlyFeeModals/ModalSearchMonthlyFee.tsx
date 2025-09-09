@@ -1,7 +1,6 @@
 import Modal from "../Modal";
 
-import FormSearchClient from "@/components/Forms/FormSearchClient/FormSearchClient";
-import FormSearchMonthlyFee from "@/components/Forms/FormSearchMonthlyFee/FormSearchMonthlyFee";
+import FormSearchMonthlyFee from "@/components/Forms/Finance/MonthlyFee/FormSearchMonthlyFee/FormSearchMonthlyFee";
 
 type Props = {
   isOpen: boolean;

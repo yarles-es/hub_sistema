@@ -1,6 +1,6 @@
 import Modal from "../Modal";
 
-import FormSearchLog from "@/components/Forms/FormSearchLog/FormSearchLog";
+import FormSearchLog from "@/components/Forms/Settings/Log/FormSearchLog/FormSearchLog";
 
 type Props = {
   isOpen: boolean;

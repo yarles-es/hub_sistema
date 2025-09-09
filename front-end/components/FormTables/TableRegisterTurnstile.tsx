@@ -1,9 +1,9 @@
-import DefaultFormTableContainer from "./DefaultFormTableContainer";
-
 import useOrderTable from "@/hooks/useOrderTable";
 import { Title } from "@/types/Tables";
 import { RegisterTurnstile } from "@/types/Turnstile";
 import { isNotNull } from "@/utils/tableGuardType";
+
+import DefaultFormTableContainer from "./DefaultFormTableContainer";
 
 type Props = {
   turnstileRegister: RegisterTurnstile;

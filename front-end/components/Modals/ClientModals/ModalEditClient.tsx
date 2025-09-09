@@ -1,6 +1,6 @@
 import Modal from "../Modal";
 
-import FormEditClient from "@/components/Forms/FormEditClient/FormEditClient";
+import FormEditClient from "@/components/Forms/Clients/FormEditClient/FormEditClient";
 import { Client } from "@/types/Client";
 
 type Props = {
