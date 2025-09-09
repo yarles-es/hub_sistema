@@ -3,4 +3,6 @@ export const monthlyFeeKeys = {
   list: (params?: unknown) =>
     [...monthlyFeeKeys.all, "list", params ?? {}] as const,
   detail: (id: number) => [...monthlyFeeKeys.all, "detail", id] as const,
+  byClientId: (clientId: number) =>
+    [...monthlyFeeKeys.all, "byClientId", clientId] as const,
 };

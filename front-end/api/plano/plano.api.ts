@@ -2,7 +2,7 @@ import { genericRequest } from "../@genericRequest";
 
 import { CreatePlano, Plano, UpdatePlano } from "@/types/Plano";
 
-export const getAllPlanos = async () => {
+export const getAllPlans = async () => {
   return await genericRequest<Plano[]>("get", "plano/get-all");
 };
 

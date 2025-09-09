@@ -6,6 +6,7 @@ import ButtonActionUnlink from "../Buttons/ButtonactionUnlink";
 
 import { getAllPendingByClientId } from "@/api/monthlyFee/monthlyFee.api";
 import useOrderTable from "@/hooks/useOrderTable";
+import { useMonthlyFeesByClientId } from "@/hooks/useQuery/monthlyFees/useMonthlyFeesByClientId";
 import useViewPermission from "@/hooks/useViewPermission";
 import { ModalMonthlyFeeType } from "@/types/ModalTypes";
 import { MonthlyFeeWithClient } from "@/types/MonthlyFee";
@@ -31,19 +32,7 @@ const MonthlyFeeTable: React.FC<Props> = ({
 }) => {
   const administration = useViewPermission();
 
-  const fetchMonthlyFeesByIdClient = async () => {
-    if (clientId) {
-      const response = await getAllPendingByClientId(clientId);
-      return response;
-    }
-    return [];
-  };
-
-  const { data: monthlyFeeData } = useQuery({
-    queryKey: ["monthlyFees", clientId],
-    queryFn: fetchMonthlyFeesByIdClient,
-    enabled: !!clientId,
-  });
+  const { data: monthlyFeeData } = useMonthlyFeesByClientId(clientId);
 
   const titles: Array<Title | null> = [
     { key: "id", label: "ID", type: "number", order: true },

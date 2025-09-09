@@ -1,11 +1,10 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 import Button from "../Buttons/Button";
 
-import { getCountClients } from "@/api/client/client.api";
+import { useCountClientType } from "@/hooks/useQuery/clients/useCountClientType";
 import { StatusClient } from "@/types/Client";
 
 const pillBase =
@@ -13,12 +12,7 @@ const pillBase =
 
 const CountClientType = () => {
   const router = useRouter();
-  const { data, refetch } = useQuery({
-    queryKey: ["countClientType"],
-    queryFn: async () => getCountClients(),
-    retry: 0,
-    refetchInterval: 300000,
-  });
+  const { data, refetch } = useCountClientType();
 
   const go = (status: StatusClient) => {
     router.push(`/clients?status=${status}`);

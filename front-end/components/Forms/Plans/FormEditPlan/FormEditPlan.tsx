@@ -1,14 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
 import { Controller, useForm } from "react-hook-form";
 
 import DefaultFormatContainerForm from "../../DefaultFormatContainerForm";
 
-import { updatePlan } from "@/api/plano/plano.api";
 import Button from "@/components/Buttons/Button";
 import Input from "@/components/Inputs/Input";
 import MoneyInput from "@/components/Inputs/InputMoney";
 import useAlert from "@/hooks/useAlert";
+import { useUpdatePlan } from "@/hooks/useQuery/plans/useUpdatePlan";
 import { updatePlanSchema } from "@/schemas/planSchemas";
 import { Plano, UpdatePlano } from "@/types/Plano";
 
@@ -37,8 +36,7 @@ const FormEditPlan: React.FC<Props> = ({ onClose, plan }) => {
 
   const { errors, isSubmitting } = formState;
 
-  const { mutate } = useMutation({
-    mutationFn: updatePlan,
+  const { mutate } = useUpdatePlan({
     onSuccess: () => {
       alert("Plano atualizado com sucesso!", "success");
       onClose();
@@ -47,7 +45,6 @@ const FormEditPlan: React.FC<Props> = ({ onClose, plan }) => {
       alert(error.message, "error");
       console.error(error);
     },
-    retry: 0,
   });
 
   const handleSubmitData = (data: any) => {

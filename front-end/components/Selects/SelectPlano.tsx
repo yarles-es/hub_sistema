@@ -2,7 +2,7 @@ import { ChangeEvent, forwardRef } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 
-import { getAllPlanos } from "@/api/plano/plano.api";
+import { getAllPlans } from "@/api/plano/plano.api";
 
 import Select from "./Select";
 
@@ -18,7 +18,7 @@ const SelectPlano = forwardRef<HTMLSelectElement, Props>(
   ({ value, onChange, label, error, firstOption = true }, ref) => {
     const { data: options } = useQuery({
       queryKey: ["planos"],
-      queryFn: async () => await getAllPlanos(),
+      queryFn: async () => await getAllPlans(),
       select: (data) =>
         data.map((plano) => ({
           value: plano.id.toString(),

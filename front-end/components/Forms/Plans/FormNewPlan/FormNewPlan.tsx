@@ -1,16 +1,15 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
 import { Controller, useForm } from "react-hook-form";
 
 import DefaultFormatContainerForm from "../../DefaultFormatContainerForm";
 
-import { createPlan } from "@/api/plano/plano.api";
 import Button from "@/components/Buttons/Button";
 import Input from "@/components/Inputs/Input";
 import MoneyInput from "@/components/Inputs/InputMoney";
 import useAlert from "@/hooks/useAlert";
+import { useCreatePlan } from "@/hooks/useQuery/plans/useCreatePlan";
 import { createPlanSchema } from "@/schemas/planSchemas";
 import { CreatePlano } from "@/types/Plano";
 
@@ -33,8 +32,7 @@ const FormNewPlan: React.FC<FormNewUserProps> = ({ onClose }) => {
 
   const alert = useAlert();
 
-  const { mutate } = useMutation({
-    mutationFn: createPlan,
+  const { mutate } = useCreatePlan({
     onSuccess: () => {
       alert("Plano criado com sucesso!", "success");
       onClose();
@@ -43,7 +41,6 @@ const FormNewPlan: React.FC<FormNewUserProps> = ({ onClose }) => {
       alert(error.message, "error");
       console.error(error);
     },
-    retry: 0,
   });
 
   const handleSubmitData = (data: CreatePlano) => {

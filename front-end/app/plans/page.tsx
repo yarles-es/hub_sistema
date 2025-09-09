@@ -9,8 +9,8 @@ import ModalEditPlan from "@/components/Modals/PlanModals/ModalEditPlan";
 import PageTransition from "@/components/PageTransition/PageTransition";
 import HeaderTable from "@/components/Tables/HeaderTable/HeaderTable";
 import PlanTable from "@/components/Tables/PlanTable";
-import usePlan from "@/hooks/useQuery/usePlan";
 import useAlert from "@/hooks/useAlert";
+import { useGetAllPlans } from "@/hooks/useQuery/plans/useGetAllPlans";
 import { ModalPlanType } from "@/types/ModalTypes";
 
 const PlanPage = () => {
@@ -19,7 +19,7 @@ const PlanPage = () => {
   const [modals, setModals] = useState("");
   const [itemSelected, setItemSelected] = useState<number>(0);
 
-  const { data: plans, refetch, error } = usePlan();
+  const { data: plans, refetch, error } = useGetAllPlans();
 
   useEffect(() => {
     if (error) alert(error.message, "error");

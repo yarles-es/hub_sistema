@@ -9,8 +9,8 @@ import ModalEditUser from "@/components/Modals/UserModals/ModalEditUser";
 import PageTransition from "@/components/PageTransition/PageTransition";
 import HeaderTable from "@/components/Tables/HeaderTable/HeaderTable";
 import UserSettingsTable from "@/components/Tables/UserSettingsTable";
-import useUser from "@/hooks/useQuery/useUser";
 import useAlert from "@/hooks/useAlert";
+import { useGetAllUsers } from "@/hooks/useQuery/users/useGetAllUsers";
 import useViewPermission from "@/hooks/useViewPermission";
 import { ModalTypeItemUser } from "@/types/ModalTypes";
 import { EditedUserData } from "@/types/User";
@@ -31,7 +31,7 @@ const UsersPage = () => {
     status: setModalStatus,
   };
 
-  const { data: users, error, refetch } = useUser();
+  const { data: users, error, refetch } = useGetAllUsers();
 
   useEffect(() => {
     if (error) {

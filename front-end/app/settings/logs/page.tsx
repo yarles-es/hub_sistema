@@ -11,8 +11,8 @@ import PageTransition from "@/components/PageTransition/PageTransition";
 import Pagination from "@/components/Pagination/Pagination";
 import HeaderTable from "@/components/Tables/HeaderTable/HeaderTable";
 import LogsTable from "@/components/Tables/LogsTable";
-import useLog from "@/hooks/useQuery/useLog";
 import useAlert from "@/hooks/useAlert";
+import { useGetAllLogs } from "@/hooks/useQuery/logs/useGetAllLogs";
 import { LIMIT_WITH_PAGE, NUMBER_PAGE } from "@/schemas/paginationSchemas";
 import { ModalLogType } from "@/types/ModalTypes";
 
@@ -42,7 +42,7 @@ const LogsPage = () => {
     [searchParams, initialDate]
   );
 
-  const { data: logs, error } = useLog(queryParams);
+  const { data: logs, error } = useGetAllLogs(queryParams);
 
   useEffect(() => {
     if (error) alert(error.message, "error");

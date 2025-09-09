@@ -1,24 +1,20 @@
 import { useEffect, useState } from "react";
 
-import { useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 
 import DefaultFormatContainerForm from "../../DefaultFormatContainerForm";
 
 import {
   cancelTurnstileOperation,
-  getAvailableId,
-  getFirstRegisterTurnstile,
   startLinkWithTurnstile,
 } from "@/api/turnstile/turnstile.api";
 import Button from "@/components/Buttons/Button";
 import TableRegisterTurnstile from "@/components/FormTables/TableRegisterTurnstile";
 import useAlert from "@/hooks/useAlert";
+import { useGetAvailableIdTurnstile } from "@/hooks/useQuery/turnstile/useAvailableIdTurnstile";
+import { useGetFirstRegisterTurnstileStatus } from "@/hooks/useQuery/turnstile/useGetFirstRegisterTurnstileStatus";
 import { Client } from "@/types/Client";
-import {
-  RegisterTurnstile,
-  startLinkWithTurnstileInput,
-} from "@/types/Turnstile";
+import { startLinkWithTurnstileInput } from "@/types/Turnstile";
 
 type Props = {
   onClose: () => void;
@@ -31,27 +27,14 @@ const FormLinkTurnstile: React.FC<Props> = ({ onClose, client }) => {
   const [buttonDisable, setButtonDisable] = useState(false);
   const [refresh, setRefresh] = useState(true);
 
-  const { data: availableId, isLoading } = useQuery({
-    queryKey: ["getAvailableId", client?.id],
-    queryFn: getAvailableId,
-    enabled: !!client?.id,
-    gcTime: 0,
-    retry: 0,
-    refetchOnWindowFocus: false,
-  });
+  const { data: availableId, isLoading } = useGetAvailableIdTurnstile(
+    client?.id
+  );
 
-  const { data: registerTurnstileStatus, refetch } =
-    useQuery<RegisterTurnstile>({
-      queryKey: ["registerTurnstileStatus"],
-      queryFn: getFirstRegisterTurnstile,
-      enabled: buttonDisable,
-      retry: 0,
-      staleTime: 0,
-      gcTime: 0,
-      refetchInterval: refresh ? 4000 : false,
-      refetchOnMount: true,
-      refetchOnWindowFocus: false,
-    });
+  const { data: registerTurnstileStatus } = useGetFirstRegisterTurnstileStatus({
+    enabled: buttonDisable,
+    refetchInterval: refresh ? 4000 : false,
+  });
 
   const form = useForm<startLinkWithTurnstileInput>({
     mode: "onBlur",

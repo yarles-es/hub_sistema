@@ -1,6 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
-
-import { getAllByBirthdayPeopleMonth } from "@/api/client/client.api";
+import { useGetAllbyBirthdayMonth } from "@/hooks/useQuery/clients/useGetAllbyBirthdayMonth";
 import { Client } from "@/types/Client";
 import { Title } from "@/types/Tables";
 import formatStringDate from "@/utils/formatStringDate";
@@ -24,11 +22,7 @@ const BirthdayPeopleTable: React.FC = () => {
 
   const titlesFiltered = titles.filter(isNotNull);
 
-  const { data } = useQuery({
-    queryKey: ["birthdayPeople"],
-    queryFn: async () => getAllByBirthdayPeopleMonth(),
-    retry: 0,
-  });
+  const { data } = useGetAllbyBirthdayMonth();
 
   const validateBirthdayNow = (client: Client) => {
     const today = new Date();
