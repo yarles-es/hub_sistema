@@ -9,8 +9,8 @@ import ModalEditPlan from "@/components/Modals/PlanModals/ModalEditPlan";
 import PageTransition from "@/components/PageTransition/PageTransition";
 import HeaderTable from "@/components/Tables/HeaderTable/HeaderTable";
 import PlanTable from "@/components/Tables/PlanTable";
+import { useGetAllPlans } from "@/hooks/queries/plans/useGetAllPlans";
 import useAlert from "@/hooks/useAlert";
-import { useGetAllPlans } from "@/hooks/useQuery/plans/useGetAllPlans";
 import { ModalPlanType } from "@/types/ModalTypes";
 
 const PlanPage = () => {

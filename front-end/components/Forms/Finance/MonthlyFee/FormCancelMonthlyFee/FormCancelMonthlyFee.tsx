@@ -1,9 +1,9 @@
 import DefaultFormatContainerForm from "../../../DefaultFormatContainerForm";
 
 import Button from "@/components/Buttons/Button";
+import { useCancelMonthlyFee } from "@/hooks/queries/monthlyFees/useCancelMonthlyFee";
+import { useMonthlyFeeById } from "@/hooks/queries/monthlyFees/useMonthlyFeeById";
 import useAlert from "@/hooks/useAlert";
-import { useCancelMonthlyFee } from "@/hooks/useQuery/monthlyFees/useCancelMonthlyFee";
-import { useMonthlyFeeById } from "@/hooks/useQuery/monthlyFees/useMonthlyFeeById";
 
 type Props = {
   onClose: () => void;

@@ -6,8 +6,8 @@ import DefaultFormatContainerForm from "../../DefaultFormatContainerForm";
 import Button from "@/components/Buttons/Button";
 import Input from "@/components/Inputs/Input";
 import MoneyInput from "@/components/Inputs/InputMoney";
+import { useUpdatePlan } from "@/hooks/queries/plans/useUpdatePlan";
 import useAlert from "@/hooks/useAlert";
-import { useUpdatePlan } from "@/hooks/useQuery/plans/useUpdatePlan";
 import { updatePlanSchema } from "@/schemas/planSchemas";
 import { Plano, UpdatePlano } from "@/types/Plano";
 

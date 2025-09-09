@@ -8,8 +8,8 @@ import DefaultFormatContainerForm from "../../DefaultFormatContainerForm";
 import Button from "@/components/Buttons/Button";
 import Input from "@/components/Inputs/Input";
 import MoneyInput from "@/components/Inputs/InputMoney";
+import { useCreatePlan } from "@/hooks/queries/plans/useCreatePlan";
 import useAlert from "@/hooks/useAlert";
-import { useCreatePlan } from "@/hooks/useQuery/plans/useCreatePlan";
 import { createPlanSchema } from "@/schemas/planSchemas";
 import { CreatePlano } from "@/types/Plano";
 

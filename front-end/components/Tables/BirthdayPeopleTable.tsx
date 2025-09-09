@@ -1,4 +1,4 @@
-import { useGetAllbyBirthdayMonth } from "@/hooks/useQuery/clients/useGetAllbyBirthdayMonth";
+import { useGetAllbyBirthdayMonth } from "@/hooks/queries/clients/useGetAllbyBirthdayMonth";
 import { Client } from "@/types/Client";
 import { Title } from "@/types/Tables";
 import formatStringDate from "@/utils/formatStringDate";

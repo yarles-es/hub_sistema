@@ -5,9 +5,9 @@ import DefaultFormatContainerForm from "../../../DefaultFormatContainerForm";
 import Button from "@/components/Buttons/Button";
 import MoneyInput from "@/components/Inputs/InputMoney";
 import SelectTypePayment from "@/components/Selects/SelectTypePayment";
+import { useMonthlyFeeById } from "@/hooks/queries/monthlyFees/useMonthlyFeeById";
+import { usePayMonthlyFee } from "@/hooks/queries/monthlyFees/usePayMonthlyFee";
 import useAlert from "@/hooks/useAlert";
-import { useMonthlyFeeById } from "@/hooks/useQuery/monthlyFees/useMonthlyFeeById";
-import { usePayMonthlyFee } from "@/hooks/useQuery/monthlyFees/usePayMonthlyFee";
 import { PaymentType } from "@/types/Daily";
 import { PaymentMonthlyFee } from "@/types/MonthlyFee";
 

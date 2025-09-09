@@ -4,9 +4,8 @@ import ButtonActionDelete from "../Buttons/ButtonActionDelete";
 import ButtonActionPayment from "../Buttons/ButtonActionPayment";
 import ButtonActionUnlink from "../Buttons/ButtonactionUnlink";
 
-import { getAllPendingByClientId } from "@/api/monthlyFee/monthlyFee.api";
+import { useMonthlyFeesByClientId } from "@/hooks/queries/monthlyFees/useMonthlyFeesByClientId";
 import useOrderTable from "@/hooks/useOrderTable";
-import { useMonthlyFeesByClientId } from "@/hooks/useQuery/monthlyFees/useMonthlyFeesByClientId";
 import useViewPermission from "@/hooks/useViewPermission";
 import { ModalMonthlyFeeType } from "@/types/ModalTypes";
 import { MonthlyFeeWithClient } from "@/types/MonthlyFee";

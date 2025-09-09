@@ -11,8 +11,8 @@ import PageTransition from "@/components/PageTransition/PageTransition";
 import Pagination from "@/components/Pagination/Pagination";
 import HeaderTable from "@/components/Tables/HeaderTable/HeaderTable";
 import LogsTable from "@/components/Tables/LogsTable";
+import { useGetAllLogs } from "@/hooks/queries/logs/useGetAllLogs";
 import useAlert from "@/hooks/useAlert";
-import { useGetAllLogs } from "@/hooks/useQuery/logs/useGetAllLogs";
 import { LIMIT_WITH_PAGE, NUMBER_PAGE } from "@/schemas/paginationSchemas";
 import { ModalLogType } from "@/types/ModalTypes";
 

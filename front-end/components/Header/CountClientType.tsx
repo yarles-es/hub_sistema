@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 
 import Button from "../Buttons/Button";
 
-import { useCountClientType } from "@/hooks/useQuery/clients/useCountClientType";
+import { useCountClientType } from "@/hooks/queries/clients/useCountClientType";
 import { StatusClient } from "@/types/Client";
 
 const pillBase =

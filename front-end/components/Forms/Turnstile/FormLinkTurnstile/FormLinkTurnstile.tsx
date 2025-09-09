@@ -10,9 +10,9 @@ import {
 } from "@/api/turnstile/turnstile.api";
 import Button from "@/components/Buttons/Button";
 import TableRegisterTurnstile from "@/components/FormTables/TableRegisterTurnstile";
+import { useGetAvailableIdTurnstile } from "@/hooks/queries/turnstile/useAvailableIdTurnstile";
+import { useGetFirstRegisterTurnstileStatus } from "@/hooks/queries/turnstile/useGetFirstRegisterTurnstileStatus";
 import useAlert from "@/hooks/useAlert";
-import { useGetAvailableIdTurnstile } from "@/hooks/useQuery/turnstile/useAvailableIdTurnstile";
-import { useGetFirstRegisterTurnstileStatus } from "@/hooks/useQuery/turnstile/useGetFirstRegisterTurnstileStatus";
 import { Client } from "@/types/Client";
 import { startLinkWithTurnstileInput } from "@/types/Turnstile";
 

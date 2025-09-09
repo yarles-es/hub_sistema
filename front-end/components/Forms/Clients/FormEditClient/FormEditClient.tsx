@@ -8,8 +8,8 @@ import CheckBox from "@/components/CheckBox/CheckBox";
 import Input from "@/components/Inputs/Input";
 import InputPhone from "@/components/Inputs/InputPhone";
 import SelectPlano from "@/components/Selects/SelectPlano";
+import { useUpdateClient } from "@/hooks/queries/clients/useUpdateClient";
 import useAlert from "@/hooks/useAlert";
-import { useUpdateClient } from "@/hooks/useQuery/clients/useUpdateClient";
 import { Client, UpdateClient } from "@/types/Client";
 
 type Props = {

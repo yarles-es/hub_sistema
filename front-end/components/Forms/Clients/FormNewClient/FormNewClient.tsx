@@ -8,8 +8,8 @@ import CheckBox from "@/components/CheckBox/CheckBox";
 import Input from "@/components/Inputs/Input";
 import InputPhone from "@/components/Inputs/InputPhone";
 import SelectPlano from "@/components/Selects/SelectPlano";
+import { useCreateClient } from "@/hooks/queries/clients/useCreateClient";
 import useAlert from "@/hooks/useAlert";
-import { useCreateClient } from "@/hooks/useQuery/clients/useCreateClient";
 import { createClientSchema } from "@/schemas/clientSchemas";
 import { CreateClient } from "@/types/Client";
 
