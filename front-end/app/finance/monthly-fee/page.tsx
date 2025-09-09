@@ -2,10 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 
-import { getAllMonthlyFees } from "@/api/monthlyFee/monthlyFee.api";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Button from "@/components/Buttons/Button";
 import ModalCancelMonthlyFee from "@/components/Modals/MonthlyFeeModals/ModalCancelMonthlyFee";
@@ -16,11 +14,12 @@ import PageTransition from "@/components/PageTransition/PageTransition";
 import Pagination from "@/components/Pagination/Pagination";
 import HeaderTable from "@/components/Tables/HeaderTable/HeaderTable";
 import MonthlyFeeTable from "@/components/Tables/MonthlyFeeTable";
+import { useMonthlyFees } from "@/hooks/queries/monthlyFees/useMonthlyFees";
 import useAlert from "@/hooks/useAlert";
 import { LIMIT_WITH_PAGE, NUMBER_PAGE } from "@/schemas/paginationSchemas";
 import { PaymentType } from "@/types/Daily";
 import { ModalMonthlyFeeType } from "@/types/ModalTypes";
-import { MonthlyFeeStatus } from "@/types/MonthlyFee";
+import { GetAllMonthlyFees, MonthlyFeeStatus } from "@/types/MonthlyFee";
 
 const MonthlyFeePage = () => {
   const alert = useAlert();
@@ -36,7 +35,7 @@ const MonthlyFeePage = () => {
   };
 
   const searchParams = useSearchParams();
-  const queryParams = useMemo(
+  const queryParams: GetAllMonthlyFees = useMemo(
     () => ({
       numberPage: Number(searchParams.get("page")) || NUMBER_PAGE,
       limit: Number(searchParams.get("limit")) || LIMIT_WITH_PAGE,
@@ -64,16 +63,7 @@ const MonthlyFeePage = () => {
     [searchParams]
   );
 
-  const {
-    data: monthlyFees,
-    error,
-    refetch,
-  } = useQuery({
-    queryKey: ["monthlyFees", queryParams],
-    queryFn: () => getAllMonthlyFees(queryParams),
-    retry: 0,
-    staleTime: 0,
-  });
+  const { data: monthlyFees, error, refetch } = useMonthlyFees(queryParams);
 
   useEffect(() => {
     if (error) alert(error.message, "error");

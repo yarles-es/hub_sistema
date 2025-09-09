@@ -1,12 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-
 import DefaultFormatContainerForm from "../../../DefaultFormatContainerForm";
 
-import {
-  cancelMonthlyFee,
-  getMonthlyFeeById,
-} from "@/api/monthlyFee/monthlyFee.api";
 import Button from "@/components/Buttons/Button";
+import { useCancelMonthlyFee } from "@/hooks/queries/monthlyFees/useCancelMonthlyFee";
+import { useMonthlyFeeById } from "@/hooks/queries/monthlyFees/useMonthlyFeeById";
 import useAlert from "@/hooks/useAlert";
 
 type Props = {
@@ -15,23 +11,12 @@ type Props = {
 };
 
 const FormCancelMonthlyFee: React.FC<Props> = ({ onClose, monthlyFeeId }) => {
-  const queryClient = useQueryClient();
   const alert = useAlert();
 
-  const { data: monthlyFee } = useQuery({
-    queryKey: ["monthlyFee", monthlyFeeId],
-    queryFn: () => getMonthlyFeeById(monthlyFeeId),
-    enabled: !!monthlyFeeId && monthlyFeeId !== 0,
-  });
+  const { data: monthlyFee } = useMonthlyFeeById(monthlyFeeId);
 
-  const { mutate } = useMutation({
-    mutationFn: async () => {
-      if (monthlyFee) return cancelMonthlyFee(monthlyFee.id);
-    },
+  const { mutate: cancelFee } = useCancelMonthlyFee({
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["monthlyFees"],
-      });
       alert("Mensalidade cancelada com sucesso!", "success");
       onClose();
     },
@@ -39,11 +24,10 @@ const FormCancelMonthlyFee: React.FC<Props> = ({ onClose, monthlyFeeId }) => {
       alert(error.message, "error");
       console.error(error);
     },
-    retry: 0,
   });
 
   const handleCancel = () => {
-    mutate();
+    if (monthlyFee) cancelFee(monthlyFee.id);
   };
 
   return (

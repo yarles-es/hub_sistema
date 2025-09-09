@@ -10,6 +10,7 @@ import CheckBox from "@/components/CheckBox/CheckBox";
 import Input from "@/components/Inputs/Input";
 import InputPhone from "@/components/Inputs/InputPhone";
 import SelectPlano from "@/components/Selects/SelectPlano";
+import { useCreateClient } from "@/hooks/queries/clients/useCreateClient";
 import useAlert from "@/hooks/useAlert";
 import { createClientSchema } from "@/schemas/clientSchemas";
 import { CreateClient } from "@/types/Client";
@@ -38,9 +39,7 @@ const FormNewClient: React.FC<Props> = ({ onClose }) => {
 
   const alert = useAlert();
 
-  const { mutate } = useMutation({
-    mutationFn: createClient,
-
+  const { mutate } = useCreateClient({
     onSuccess: () => {
       alert("Cliente cadastrado com sucesso!", "success");
       onClose();
@@ -49,7 +48,6 @@ const FormNewClient: React.FC<Props> = ({ onClose }) => {
       alert(error.message, "error");
       console.error(error);
     },
-    retry: 0,
   });
 
   const handleSubmitData = (data: CreateClient) => {

@@ -2,9 +2,6 @@
 
 import { useEffect, useState } from "react";
 
-import { useQuery } from "@tanstack/react-query";
-
-import { getAllPlanos } from "@/api/plano/plano.api";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Button from "@/components/Buttons/Button";
 import ModalCreatePlan from "@/components/Modals/PlanModals/ModalCreatePlan";
@@ -12,6 +9,7 @@ import ModalEditPlan from "@/components/Modals/PlanModals/ModalEditPlan";
 import PageTransition from "@/components/PageTransition/PageTransition";
 import HeaderTable from "@/components/Tables/HeaderTable/HeaderTable";
 import PlanTable from "@/components/Tables/PlanTable";
+import usePlan from "@/hooks/queries/usePlan";
 import useAlert from "@/hooks/useAlert";
 import { ModalPlanType } from "@/types/ModalTypes";
 
@@ -21,16 +19,7 @@ const PlanPage = () => {
   const [modals, setModals] = useState("");
   const [itemSelected, setItemSelected] = useState<number>(0);
 
-  const {
-    data: plans,
-    refetch,
-    error,
-  } = useQuery({
-    queryKey: ["getAllPlans"],
-    queryFn: () => getAllPlanos(),
-    retry: 0,
-    staleTime: 0,
-  });
+  const { data: plans, refetch, error } = usePlan();
 
   useEffect(() => {
     if (error) alert(error.message, "error");

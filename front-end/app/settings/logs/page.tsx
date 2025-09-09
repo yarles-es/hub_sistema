@@ -2,10 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 
-import { getLogs } from "@/api/logs/logs.api";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Button from "@/components/Buttons/Button";
 import ModalSearchLog from "@/components/Modals/LogModals/ModalSearchLog";
@@ -13,6 +11,7 @@ import PageTransition from "@/components/PageTransition/PageTransition";
 import Pagination from "@/components/Pagination/Pagination";
 import HeaderTable from "@/components/Tables/HeaderTable/HeaderTable";
 import LogsTable from "@/components/Tables/LogsTable";
+import useLog from "@/hooks/queries/useLog";
 import useAlert from "@/hooks/useAlert";
 import { LIMIT_WITH_PAGE, NUMBER_PAGE } from "@/schemas/paginationSchemas";
 import { ModalLogType } from "@/types/ModalTypes";
@@ -43,12 +42,7 @@ const LogsPage = () => {
     [searchParams, initialDate]
   );
 
-  const { data: logs, error } = useQuery({
-    queryKey: ["logs", queryParams],
-    queryFn: () => getLogs(queryParams),
-    retry: 0,
-    staleTime: 0,
-  });
+  const { data: logs, error } = useLog(queryParams);
 
   useEffect(() => {
     if (error) alert(error.message, "error");

@@ -1,20 +1,12 @@
-import {
-  QueryClient,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
 import { Controller, useForm } from "react-hook-form";
 
 import DefaultFormatContainerForm from "../../../DefaultFormatContainerForm";
 
-import {
-  getMonthlyFeeById,
-  payMonthlyFee,
-} from "@/api/monthlyFee/monthlyFee.api";
 import Button from "@/components/Buttons/Button";
 import MoneyInput from "@/components/Inputs/InputMoney";
 import SelectTypePayment from "@/components/Selects/SelectTypePayment";
+import { useMonthlyFeeById } from "@/hooks/queries/monthlyFees/useMonthlyFeeById";
+import { usePayMonthlyFee } from "@/hooks/queries/monthlyFees/usePayMonthlyFee";
 import useAlert from "@/hooks/useAlert";
 import { PaymentType } from "@/types/Daily";
 import { PaymentMonthlyFee } from "@/types/MonthlyFee";
@@ -25,13 +17,8 @@ type Props = {
 };
 
 const FormPayMonthlyFee: React.FC<Props> = ({ onClose, monthlyFeeId }) => {
-  const queryClient = useQueryClient();
-
-  const { data: monthlyFee } = useQuery({
-    queryKey: ["monthlyFee", monthlyFeeId],
-    queryFn: () => getMonthlyFeeById(monthlyFeeId),
-    enabled: !!monthlyFeeId && monthlyFeeId !== 0,
-  });
+  const alert = useAlert();
+  const { data: monthlyFee } = useMonthlyFeeById(monthlyFeeId);
 
   const { handleSubmit, formState, control } = useForm<PaymentMonthlyFee>({
     mode: "onBlur",
@@ -44,28 +31,19 @@ const FormPayMonthlyFee: React.FC<Props> = ({ onClose, monthlyFeeId }) => {
 
   const { errors, isSubmitting } = formState;
 
-  const alert = useAlert();
-
-  const { mutate } = useMutation({
-    mutationFn: payMonthlyFee,
+  const { mutate: payMonthlyFee } = usePayMonthlyFee({
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["monthlyFees"],
-      });
-
       alert("Mensalidade paga com sucesso!", "success");
-
       onClose();
     },
     onError: (error) => {
       alert(error.message, "error");
       console.error(error);
     },
-    retry: 0,
   });
 
   const handleSubmitData = (data: PaymentMonthlyFee) => {
-    mutate(data);
+    payMonthlyFee(data);
   };
 
   return (

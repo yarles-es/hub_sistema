@@ -1,9 +1,7 @@
-import { useMutation } from "@tanstack/react-query";
-
 import DefaultFormatContainerForm from "../../DefaultFormatContainerForm";
 
-import { activeClient } from "@/api/client/client.api";
 import Button from "@/components/Buttons/Button";
+import { useActiveClient } from "@/hooks/queries/clients/useActiveClient";
 import useAlert from "@/hooks/useAlert";
 import { Client } from "@/types/Client";
 
@@ -15,8 +13,7 @@ type Props = {
 const FormActiveClient = ({ client, onClose }: Props) => {
   const alert = useAlert();
 
-  const { mutate } = useMutation({
-    mutationFn: activeClient,
+  const { mutate } = useActiveClient({
     onSuccess: () => {
       alert(`Cliente ativado com sucesso`, "success");
       onClose();
@@ -25,7 +22,6 @@ const FormActiveClient = ({ client, onClose }: Props) => {
       alert(error.message, "error");
       console.error(error);
     },
-    retry: 0,
   });
 
   if (!client) {

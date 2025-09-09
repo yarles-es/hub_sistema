@@ -1,9 +1,7 @@
-import { useMutation } from "@tanstack/react-query";
-
 import DefaultFormatContainerForm from "../../DefaultFormatContainerForm";
 
-import { disableClient } from "@/api/client/client.api";
 import Button from "@/components/Buttons/Button";
+import { useDisableClient } from "@/hooks/queries/clients/useDisableClient";
 import useAlert from "@/hooks/useAlert";
 import { Client } from "@/types/Client";
 
@@ -15,8 +13,7 @@ type Props = {
 const FormDisableClient = ({ client, onClose }: Props) => {
   const alert = useAlert();
 
-  const { mutate } = useMutation({
-    mutationFn: disableClient,
+  const { mutate } = useDisableClient({
     onSuccess: () => {
       alert(`Cliente desativado com sucesso`, "success");
       onClose();
@@ -25,7 +22,6 @@ const FormDisableClient = ({ client, onClose }: Props) => {
       alert(error.message, "error");
       console.error(error);
     },
-    retry: 0,
   });
 
   if (!client) {

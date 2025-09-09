@@ -2,10 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 
-import { getAllDaily } from "@/api/finance/daily.api";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Button from "@/components/Buttons/Button";
 import ModalCreateDaily from "@/components/Modals/DailyModals/ModalCreateDaily";
@@ -16,6 +14,7 @@ import PageTransition from "@/components/PageTransition/PageTransition";
 import Pagination from "@/components/Pagination/Pagination";
 import DailyFinanceTable from "@/components/Tables/DailyFinanceTable";
 import HeaderTable from "@/components/Tables/HeaderTable/HeaderTable";
+import { useDaily } from "@/hooks/queries/useDaily";
 import useAlert from "@/hooks/useAlert";
 import { LIMIT_WITH_PAGE, NUMBER_PAGE } from "@/schemas/paginationSchemas";
 import { GetAllDaily, PaymentType } from "@/types/Daily";
@@ -57,16 +56,7 @@ const DailyPage = () => {
     [searchParams]
   );
 
-  const {
-    data: dailyData,
-    error,
-    refetch,
-  } = useQuery({
-    queryKey: ["daily", queryParams],
-    queryFn: () => getAllDaily(queryParams),
-    retry: 0,
-    staleTime: 0,
-  });
+  const { data: dailyData, error, refetch } = useDaily(queryParams);
 
   useEffect(() => {
     if (error) alert(error.message, "error");

@@ -1,9 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 
-import { useQuery } from "@tanstack/react-query";
-
-import { findAllUsers } from "@/api/users/user.api";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Button from "@/components/Buttons/Button";
 import ModalCreateUser from "@/components/Modals/UserModals/ModalCreateUser";
@@ -12,6 +9,7 @@ import ModalEditUser from "@/components/Modals/UserModals/ModalEditUser";
 import PageTransition from "@/components/PageTransition/PageTransition";
 import HeaderTable from "@/components/Tables/HeaderTable/HeaderTable";
 import UserSettingsTable from "@/components/Tables/UserSettingsTable";
+import useUser from "@/hooks/queries/useUser";
 import useAlert from "@/hooks/useAlert";
 import useViewPermission from "@/hooks/useViewPermission";
 import { ModalTypeItemUser } from "@/types/ModalTypes";
@@ -33,15 +31,7 @@ const UsersPage = () => {
     status: setModalStatus,
   };
 
-  const {
-    data: users,
-    error,
-    refetch,
-  } = useQuery({
-    queryKey: ["users"],
-    queryFn: findAllUsers,
-    retry: 0,
-  });
+  const { data: users, error, refetch } = useUser();
 
   useEffect(() => {
     if (error) {
