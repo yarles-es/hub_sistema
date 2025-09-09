@@ -23,23 +23,23 @@ const SideBarLinkProducts: React.FC = () => {
           xmlns="http://www.w3.org/2000/svg"
           stroke="#ffffff"
         >
-          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+          <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
           <g
             id="SVGRepo_tracerCarrier"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeLinecap="round"
+            strokeLinejoin="round"
             stroke="#CCCCCC"
-            stroke-width="0.384"
+            strokeWidth="0.384"
           ></g>
           <g id="SVGRepo_iconCarrier">
             {" "}
             <title></title>{" "}
             <g
               fill="none"
-              fill-rule="evenodd"
+              fillRule="evenodd"
               id="页面-1"
               stroke="none"
-              stroke-width="1"
+              strokeWidth="1"
             >
               {" "}
               <g id="导航图标" transform="translate(-325.000000, -80.000000)">
@@ -48,8 +48,8 @@ const SideBarLinkProducts: React.FC = () => {
                   {" "}
                   <polygon
                     fill="#FFFFFF"
-                    fill-opacity="0.01"
-                    fill-rule="nonzero"
+                    fillOpacity="0.01"
+                    fillRule="nonzero"
                     id="路径"
                     points="24 0 0 0 0 24 24 24"
                   ></polygon>{" "}
@@ -57,15 +57,15 @@ const SideBarLinkProducts: React.FC = () => {
                     id="路径"
                     points="22 7 12 2 2 7 2 17 12 22 22 17"
                     stroke="#ffffff"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
+                    strokeLinejoin="round"
+                    strokeWidth="1.5"
                   ></polygon>{" "}
                   <line
                     id="路径"
                     stroke="#ffffff"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="1.5"
                     x1="2"
                     x2="12"
                     y1="7"
@@ -74,9 +74,9 @@ const SideBarLinkProducts: React.FC = () => {
                   <line
                     id="路径"
                     stroke="#ffffff"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="1.5"
                     x1="12"
                     x2="12"
                     y1="22"
@@ -85,9 +85,9 @@ const SideBarLinkProducts: React.FC = () => {
                   <line
                     id="路径"
                     stroke="#ffffff"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="1.5"
                     x1="22"
                     x2="12"
                     y1="7"
@@ -96,9 +96,9 @@ const SideBarLinkProducts: React.FC = () => {
                   <line
                     id="路径"
                     stroke="#ffffff"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="1.5"
                     x1="17"
                     x2="7"
                     y1="4.5"
