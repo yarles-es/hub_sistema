@@ -1,15 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
 import { Controller, useForm } from "react-hook-form";
 
-import { updateDaily } from "@/api/finance/daily.api";
 import Button from "@/components/Buttons/Button";
 import DefaultFormatContainerForm from "@/components/Forms/DefaultFormatContainerForm";
 import Input from "@/components/Inputs/Input";
 import MoneyInput from "@/components/Inputs/InputMoney";
 import SelectTypePayment from "@/components/Selects/SelectTypePayment";
-import { useUpdateDaily } from "@/hooks/queries/dailys/useUpdateDaily";
 import useAlert from "@/hooks/useAlert";
+import { useUpdateDaily } from "@/hooks/useQuery/dailys/useUpdateDaily";
 import { updateDailySchema } from "@/schemas/dailySchemas";
 import { Daily, PaymentType, UpdateDaily } from "@/types/Daily";
 

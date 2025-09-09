@@ -1,8 +1,8 @@
 import DefaultFormatContainerForm from "../../DefaultFormatContainerForm";
 
 import Button from "@/components/Buttons/Button";
-import { useActiveClient } from "@/hooks/queries/clients/useActiveClient";
 import useAlert from "@/hooks/useAlert";
+import { useActiveClient } from "@/hooks/useQuery/clients/useActiveClient";
 import { Client } from "@/types/Client";
 
 type Props = {

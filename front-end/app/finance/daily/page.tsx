@@ -14,8 +14,8 @@ import PageTransition from "@/components/PageTransition/PageTransition";
 import Pagination from "@/components/Pagination/Pagination";
 import DailyFinanceTable from "@/components/Tables/DailyFinanceTable";
 import HeaderTable from "@/components/Tables/HeaderTable/HeaderTable";
-import { useDaily } from "@/hooks/queries/useDaily";
 import useAlert from "@/hooks/useAlert";
+import { useGetAllDaily } from "@/hooks/useQuery/dailys/useGetAllDailys";
 import { LIMIT_WITH_PAGE, NUMBER_PAGE } from "@/schemas/paginationSchemas";
 import { GetAllDaily, PaymentType } from "@/types/Daily";
 import { ModalDailyType } from "@/types/ModalTypes";
@@ -56,7 +56,7 @@ const DailyPage = () => {
     [searchParams]
   );
 
-  const { data: dailyData, error, refetch } = useDaily(queryParams);
+  const { data: dailyData, error } = useGetAllDaily(queryParams);
 
   useEffect(() => {
     if (error) alert(error.message, "error");
@@ -111,7 +111,6 @@ const DailyPage = () => {
             onClose={() => setModals("")}
             onCloseAndGetDaily={() => {
               setModals("");
-              refetch();
             }}
           />
         )}
@@ -133,7 +132,6 @@ const DailyPage = () => {
             onCloseAndGetDaily={() => {
               setModals("");
               setItemSelected(0);
-              refetch();
             }}
             itemSelected={itemSelected}
           />
@@ -149,7 +147,6 @@ const DailyPage = () => {
             onCloseAndGetDaily={() => {
               setModals("");
               setItemSelected(0);
-              refetch();
             }}
             daily={dailyData?.data.find((item) => item.id === itemSelected)}
           />

@@ -1,17 +1,15 @@
-import { useMutation } from "@tanstack/react-query";
 import { Controller, useForm } from "react-hook-form";
 
 import DefaultFormatContainerForm from "../../DefaultFormatContainerForm";
 
-import { updateClient } from "@/api/client/client.api";
 import { cleanTemplateById } from "@/api/turnstile/turnstile.api";
 import Button from "@/components/Buttons/Button";
 import CheckBox from "@/components/CheckBox/CheckBox";
 import Input from "@/components/Inputs/Input";
 import InputPhone from "@/components/Inputs/InputPhone";
 import SelectPlano from "@/components/Selects/SelectPlano";
-import { useUpdateClient } from "@/hooks/queries/clients/useUpdateClient";
 import useAlert from "@/hooks/useAlert";
+import { useUpdateClient } from "@/hooks/useQuery/clients/useUpdateClient";
 import { Client, UpdateClient } from "@/types/Client";
 
 type Props = {

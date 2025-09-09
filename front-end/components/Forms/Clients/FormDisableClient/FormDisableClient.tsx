@@ -1,8 +1,8 @@
 import DefaultFormatContainerForm from "../../DefaultFormatContainerForm";
 
 import Button from "@/components/Buttons/Button";
-import { useDisableClient } from "@/hooks/queries/clients/useDisableClient";
 import useAlert from "@/hooks/useAlert";
+import { useDisableClient } from "@/hooks/useQuery/clients/useDisableClient";
 import { Client } from "@/types/Client";
 
 type Props = {

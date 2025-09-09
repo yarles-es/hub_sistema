@@ -9,7 +9,7 @@ import ModalEditPlan from "@/components/Modals/PlanModals/ModalEditPlan";
 import PageTransition from "@/components/PageTransition/PageTransition";
 import HeaderTable from "@/components/Tables/HeaderTable/HeaderTable";
 import PlanTable from "@/components/Tables/PlanTable";
-import usePlan from "@/hooks/queries/usePlan";
+import usePlan from "@/hooks/useQuery/usePlan";
 import useAlert from "@/hooks/useAlert";
 import { ModalPlanType } from "@/types/ModalTypes";
 

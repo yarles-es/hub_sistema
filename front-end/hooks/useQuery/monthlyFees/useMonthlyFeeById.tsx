@@ -3,7 +3,7 @@
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 
 import { getMonthlyFeeById } from "@/api/monthlyFee/monthlyFee.api";
-import { monthlyFeeKeys } from "@/hooks/queryKeys/monthlyFee.keys";
+import { monthlyFeeKeys } from "@/hooks/useQuery/@queryKeys/monthlyFee.keys";
 import { MonthlyFeeWithClient } from "@/types/MonthlyFee";
 
 export function useMonthlyFeeById(

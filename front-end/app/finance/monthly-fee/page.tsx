@@ -14,8 +14,8 @@ import PageTransition from "@/components/PageTransition/PageTransition";
 import Pagination from "@/components/Pagination/Pagination";
 import HeaderTable from "@/components/Tables/HeaderTable/HeaderTable";
 import MonthlyFeeTable from "@/components/Tables/MonthlyFeeTable";
-import { useMonthlyFees } from "@/hooks/queries/monthlyFees/useMonthlyFees";
 import useAlert from "@/hooks/useAlert";
+import { useGetAllMonthlyFees } from "@/hooks/useQuery/monthlyFees/useGetAllMonthlyFees";
 import { LIMIT_WITH_PAGE, NUMBER_PAGE } from "@/schemas/paginationSchemas";
 import { PaymentType } from "@/types/Daily";
 import { ModalMonthlyFeeType } from "@/types/ModalTypes";
@@ -63,7 +63,7 @@ const MonthlyFeePage = () => {
     [searchParams]
   );
 
-  const { data: monthlyFees, error, refetch } = useMonthlyFees(queryParams);
+  const { data: monthlyFees, error } = useGetAllMonthlyFees(queryParams);
 
   useEffect(() => {
     if (error) alert(error.message, "error");
@@ -124,7 +124,6 @@ const MonthlyFeePage = () => {
             onCloseAndGetMonthlyFee={() => {
               setModals("");
               setItemSelected(0);
-              refetch();
             }}
             monthlyFeeId={itemSelected}
           />
@@ -137,7 +136,6 @@ const MonthlyFeePage = () => {
             onCloseAndGetMonthlyFee={() => {
               setModals("");
               setItemSelected(0);
-              refetch();
             }}
             monthlyFeeId={itemSelected}
           />
@@ -150,7 +148,6 @@ const MonthlyFeePage = () => {
             onCloseAndGetMonthlyFee={() => {
               setModals("");
               setItemSelected(0);
-              refetch();
             }}
             monthlyFeeId={itemSelected}
           />

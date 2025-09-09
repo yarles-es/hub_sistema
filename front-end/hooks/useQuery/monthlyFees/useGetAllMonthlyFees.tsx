@@ -3,13 +3,13 @@
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 
 import { getAllMonthlyFees } from "@/api/monthlyFee/monthlyFee.api";
-import { monthlyFeeKeys } from "@/hooks/queryKeys/monthlyFee.keys";
+import { monthlyFeeKeys } from "@/hooks/useQuery/@queryKeys/monthlyFee.keys";
 import {
   GetAllMonthlyFees,
   getAllMonthlyFeesResponse,
 } from "@/types/MonthlyFee";
 
-export function useMonthlyFees(
+export function useGetAllMonthlyFees(
   queryParams: GetAllMonthlyFees,
   options?: Omit<
     UseQueryOptions<

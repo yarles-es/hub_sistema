@@ -2,11 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 
-import { getAllClients } from "@/api/client/client.api";
-import { getAllPendingByClientId } from "@/api/monthlyFee/monthlyFee.api";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Button from "@/components/Buttons/Button";
 import ModalActiveClient from "@/components/Modals/ClientModals/ModalActiveClient";
@@ -22,6 +19,7 @@ import Pagination from "@/components/Pagination/Pagination";
 import ClientTable from "@/components/Tables/ClientTable";
 import HeaderTable from "@/components/Tables/HeaderTable/HeaderTable";
 import useAlert from "@/hooks/useAlert";
+import { useGetAllClients } from "@/hooks/useQuery/clients/useGetAllClients";
 import { LIMIT_WITH_PAGE, NUMBER_PAGE } from "@/schemas/paginationSchemas";
 import { GetAllClient, StatusClient } from "@/types/Client";
 import { ModalClientType } from "@/types/ModalTypes";
@@ -50,16 +48,7 @@ const ClientPage = () => {
     [searchParams]
   );
 
-  const {
-    data: clients,
-    refetch,
-    error,
-  } = useQuery({
-    queryKey: ["getAllClients", queryParams],
-    queryFn: () => getAllClients(queryParams),
-    retry: 0,
-    staleTime: 0,
-  });
+  const { data: clients, refetch, error } = useGetAllClients(queryParams);
 
   useEffect(() => {
     if (error) alert(error.message, "error");
@@ -128,7 +117,7 @@ const ClientPage = () => {
           <ModalCreateClient
             isOpen={modals === "create"}
             onClose={() => onCloseModal()}
-            onCloseAndGetClient={() => onCloseModal(true)}
+            onCloseAndGetClient={() => onCloseModal()}
           />
         )}
 
@@ -136,7 +125,7 @@ const ClientPage = () => {
           <ModalEditClient
             isOpen={modals === "edit"}
             onClose={() => onCloseModal()}
-            onCloseAndGetClient={() => onCloseModal(true)}
+            onCloseAndGetClient={() => onCloseModal()}
             client={clients?.data.find((client) => client.id === itemSelected)}
             refetchClients={refetch}
           />
@@ -146,7 +135,7 @@ const ClientPage = () => {
           <ModalDisableClient
             isOpen={modals === "disable"}
             onClose={() => onCloseModal()}
-            onCloseAndGetClient={() => onCloseModal(true)}
+            onCloseAndGetClient={() => onCloseModal()}
             client={clients?.data.find((client) => client.id === itemSelected)}
           />
         )}
@@ -155,7 +144,7 @@ const ClientPage = () => {
           <ModalActiveClient
             isOpen={modals === "active"}
             onClose={() => onCloseModal()}
-            onCloseAndGetClient={() => onCloseModal(true)}
+            onCloseAndGetClient={() => onCloseModal()}
             client={clients?.data.find((client) => client.id === itemSelected)}
           />
         )}

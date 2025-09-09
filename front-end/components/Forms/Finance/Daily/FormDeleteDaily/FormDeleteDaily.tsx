@@ -1,13 +1,10 @@
 import React from "react";
 
-import { useMutation } from "@tanstack/react-query";
-
 import DefaultFormatContainerForm from "../../../DefaultFormatContainerForm";
 
-import { deleteDaily } from "@/api/finance/daily.api";
 import Button from "@/components/Buttons/Button";
-import { useDeleteDaily } from "@/hooks/queries/dailys/useDeleteDaily";
 import useAlert from "@/hooks/useAlert";
+import { useDeleteDaily } from "@/hooks/useQuery/dailys/useDeleteDaily";
 
 type Props = {
   onClose: () => void;
