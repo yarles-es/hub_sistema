@@ -6,6 +6,7 @@ import DefaultFormatContainerForm from "../../../DefaultFormatContainerForm";
 
 import { deleteDaily } from "@/api/finance/daily.api";
 import Button from "@/components/Buttons/Button";
+import { useDeleteDaily } from "@/hooks/queries/dailys/useDeleteDaily";
 import useAlert from "@/hooks/useAlert";
 
 type Props = {
@@ -16,8 +17,7 @@ type Props = {
 export const FormDeleteDaily: React.FC<Props> = ({ onClose, itemSelected }) => {
   const alert = useAlert();
 
-  const { mutate } = useMutation({
-    mutationFn: async () => deleteDaily(itemSelected),
+  const { mutate } = useDeleteDaily({
     onSuccess: () => {
       alert("Diária deletada com sucesso!", "success");
       onClose();
@@ -26,11 +26,10 @@ export const FormDeleteDaily: React.FC<Props> = ({ onClose, itemSelected }) => {
       alert(error.message, "error");
       console.error(error);
     },
-    retry: 0,
   });
 
   const handleDelete = () => {
-    mutate();
+    mutate(itemSelected);
   };
 
   return (

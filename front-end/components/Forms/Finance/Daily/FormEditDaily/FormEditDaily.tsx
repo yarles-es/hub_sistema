@@ -8,6 +8,7 @@ import DefaultFormatContainerForm from "@/components/Forms/DefaultFormatContaine
 import Input from "@/components/Inputs/Input";
 import MoneyInput from "@/components/Inputs/InputMoney";
 import SelectTypePayment from "@/components/Selects/SelectTypePayment";
+import { useUpdateDaily } from "@/hooks/queries/dailys/useUpdateDaily";
 import useAlert from "@/hooks/useAlert";
 import { updateDailySchema } from "@/schemas/dailySchemas";
 import { Daily, PaymentType, UpdateDaily } from "@/types/Daily";
@@ -20,7 +21,7 @@ type Props = {
 const FormEditDaily: React.FC<Props> = ({ onClose, daily }) => {
   const alert = useAlert();
 
-  const { register, handleSubmit, formState, control } = useForm<UpdateDaily>({
+  const { handleSubmit, formState, control } = useForm<UpdateDaily>({
     mode: "onBlur",
     resolver: zodResolver(updateDailySchema),
     defaultValues: daily
@@ -38,9 +39,7 @@ const FormEditDaily: React.FC<Props> = ({ onClose, daily }) => {
 
   const { errors, isSubmitting } = formState;
 
-  const { mutate } = useMutation({
-    mutationFn: updateDaily,
-
+  const { mutate } = useUpdateDaily({
     onSuccess: () => {
       alert("Diária editada com sucesso!", "success");
       onClose();
@@ -49,7 +48,6 @@ const FormEditDaily: React.FC<Props> = ({ onClose, daily }) => {
       alert(error.message, "error");
       console.error(error);
     },
-    retry: 0,
   });
 
   const handleSubmitData = (data: UpdateDaily) => {

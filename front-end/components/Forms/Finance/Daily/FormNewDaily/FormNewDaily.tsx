@@ -11,6 +11,7 @@ import Button from "@/components/Buttons/Button";
 import Input from "@/components/Inputs/Input";
 import MoneyInput from "@/components/Inputs/InputMoney";
 import SelectTypePayment from "@/components/Selects/SelectTypePayment";
+import { useCreateDaily } from "@/hooks/queries/dailys/useCreateDaily";
 import useAlert from "@/hooks/useAlert";
 import { createDailySchema } from "@/schemas/dailySchemas";
 import { CreateDaily, PaymentType } from "@/types/Daily";
@@ -36,9 +37,7 @@ const FormNewDaily: React.FC<Props> = ({ onClose }) => {
 
   const alert = useAlert();
 
-  const { mutate } = useMutation({
-    mutationFn: createDaily,
-
+  const { mutate } = useCreateDaily({
     onSuccess: () => {
       alert("Diária cadastrada com sucesso!", "success");
       onClose();
@@ -47,7 +46,6 @@ const FormNewDaily: React.FC<Props> = ({ onClose }) => {
       alert(error.message, "error");
       console.error(error);
     },
-    retry: 0,
   });
 
   const handleSubmitData = (data: CreateDaily) => {
