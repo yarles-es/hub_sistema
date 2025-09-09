@@ -4,7 +4,7 @@ import DefaultFormatContainerForm from "../../../DefaultFormatContainerForm";
 
 import Button from "@/components/Buttons/Button";
 import useAlert from "@/hooks/useAlert";
-import { useDeleteDaily } from "@/hooks/useQuery/dailys/useDeleteDaily";
+import { useDeleteDaily } from "@/hooks/useQuery/dailies/useDeleteDaily";
 
 type Props = {
   onClose: () => void;

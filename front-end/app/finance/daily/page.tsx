@@ -15,7 +15,7 @@ import Pagination from "@/components/Pagination/Pagination";
 import DailyFinanceTable from "@/components/Tables/DailyFinanceTable";
 import HeaderTable from "@/components/Tables/HeaderTable/HeaderTable";
 import useAlert from "@/hooks/useAlert";
-import { useGetAllDaily } from "@/hooks/useQuery/dailys/useGetAllDailys";
+import { useGetAllDaily } from "@/hooks/useQuery/dailies/useGetAllDailys";
 import { LIMIT_WITH_PAGE, NUMBER_PAGE } from "@/schemas/paginationSchemas";
 import { GetAllDaily, PaymentType } from "@/types/Daily";
 import { ModalDailyType } from "@/types/ModalTypes";

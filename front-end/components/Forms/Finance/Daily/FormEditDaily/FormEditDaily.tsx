@@ -7,7 +7,7 @@ import Input from "@/components/Inputs/Input";
 import MoneyInput from "@/components/Inputs/InputMoney";
 import SelectTypePayment from "@/components/Selects/SelectTypePayment";
 import useAlert from "@/hooks/useAlert";
-import { useUpdateDaily } from "@/hooks/useQuery/dailys/useUpdateDaily";
+import { useUpdateDaily } from "@/hooks/useQuery/dailies/useUpdateDaily";
 import { updateDailySchema } from "@/schemas/dailySchemas";
 import { Daily, PaymentType, UpdateDaily } from "@/types/Daily";
 
