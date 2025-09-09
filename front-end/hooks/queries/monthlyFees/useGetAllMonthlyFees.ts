@@ -2,8 +2,9 @@
 
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 
+import { monthlyFeeKeys } from "../@queryKeys/monthlyFee.keys";
+
 import { getAllMonthlyFees } from "@/api/monthlyFee/monthlyFee.api";
-import { monthlyFeeKeys } from "@/hooks/useQuery/@queryKeys/monthlyFee.keys";
 import {
   GetAllMonthlyFees,
   getAllMonthlyFeesResponse,

@@ -2,8 +2,9 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { dailyKeys } from "../@queryKeys/daily.keys";
+
 import { updateDaily } from "@/api/finance/daily.api";
-import { dailyKeys } from "@/hooks/useQuery/@queryKeys/daily.keys";
 import {
   DataMutation,
   ErrMutation,

@@ -2,8 +2,9 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { clientKeys } from "../@queryKeys/clients.keys";
+
 import { disableClient } from "@/api/client/client.api";
-import { clientKeys } from "@/hooks/useQuery/@queryKeys/clients.keys";
 import {
   DataMutation,
   ErrMutation,
