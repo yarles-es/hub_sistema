@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
 import { Controller, useForm } from "react-hook-form";
 
 import DefaultFormatContainerForm from "../../../DefaultFormatContainerForm";
 
-import { updateUser } from "@/api/users/user.api";
 import Button from "@/components/Buttons/Button";
 import CheckBox from "@/components/CheckBox/CheckBox";
 import Input from "@/components/Inputs/Input";
+import { useUpdateUser } from "@/hooks/queries/users/useUpdateUser";
 import useAlert from "@/hooks/useAlert";
 import { updateUserSchema } from "@/schemas/userSchemas";
 import { ModalTypeItemUser } from "@/types/ModalTypes";
@@ -63,9 +62,7 @@ const FormEditUser: React.FC<Props> = ({ user, onClose }) => {
     setIsModified(hasModification);
   }, [watchAllFields, user]);
 
-  const { mutate } = useMutation({
-    mutationFn: (data: EditedUserData) => updateUser(data.id, data),
-
+  const { mutate } = useUpdateUser({
     onSuccess: () => {
       alert("Usuário editado com sucesso", "success");
       onClose("edit");
@@ -74,7 +71,6 @@ const FormEditUser: React.FC<Props> = ({ user, onClose }) => {
       alert(error.message, "error");
       console.error(error);
     },
-    retry: 0,
   });
 
   const handleSubmitData = (data: EditedUserData) => {

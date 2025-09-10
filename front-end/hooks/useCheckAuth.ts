@@ -3,10 +3,10 @@ import { useCallback, useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
-import useAlert from "./useAlert";
-
 import { loginApp } from "@/api/login/login.api";
 import { useAuthStore } from "@/store/auth";
+
+import useAlert from "./useAlert";
 
 // Função que valida se o token expirou
 function isTokenExpired(token: string): boolean {

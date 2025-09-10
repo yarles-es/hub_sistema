@@ -1,9 +1,7 @@
-import { useMutation } from "@tanstack/react-query";
-
 import DefaultFormatContainerForm from "../../../DefaultFormatContainerForm";
 
-import { updateUserStatus } from "@/api/users/user.api";
 import Button from "@/components/Buttons/Button";
+import { useUpdateStatusUser } from "@/hooks/queries/users/useUpdateStatusUser";
 import useAlert from "@/hooks/useAlert";
 import { ModalTypeItemUser } from "@/types/ModalTypes";
 import { User } from "@/types/User";
@@ -16,8 +14,7 @@ type Props = {
 const FormEditStatusUser = ({ user, onClose }: Props) => {
   const alert = useAlert();
 
-  const { mutate } = useMutation({
-    mutationFn: updateUserStatus,
+  const { mutate } = useUpdateStatusUser({
     onSuccess: () => {
       alert(
         `Usuário ${user!.ativo ? "desativado" : "ativado"} com sucesso`,
@@ -29,7 +26,6 @@ const FormEditStatusUser = ({ user, onClose }: Props) => {
       alert(error.message, "error");
       console.error(error);
     },
-    retry: 0,
   });
 
   if (!user) {

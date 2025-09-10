@@ -1,15 +1,14 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
 import { Controller, useForm } from "react-hook-form";
 
 import DefaultFormatContainerForm from "../../../DefaultFormatContainerForm";
 
-import { createUser } from "@/api/users/user.api";
 import Button from "@/components/Buttons/Button";
 import CheckBox from "@/components/CheckBox/CheckBox";
 import Input from "@/components/Inputs/Input";
+import { useCreateUser } from "@/hooks/queries/users/useCreateUser";
 import useAlert from "@/hooks/useAlert";
 import { createUserSchema } from "@/schemas/userSchemas";
 import { CreateUser } from "@/types/User";
@@ -34,9 +33,7 @@ const FormNewUser: React.FC<FormNewUserProps> = ({ onClose }) => {
 
   const alert = useAlert();
 
-  const { mutate } = useMutation({
-    mutationFn: createUser,
-
+  const { mutate } = useCreateUser({
     onSuccess: () => {
       alert("Usuário criado com sucesso", "success");
       onClose();
@@ -45,7 +42,6 @@ const FormNewUser: React.FC<FormNewUserProps> = ({ onClose }) => {
       alert(error.message, "error");
       console.error(error);
     },
-    retry: 0,
   });
 
   const handleSubmitData = (data: CreateUser) => {

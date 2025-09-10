@@ -1,14 +1,12 @@
 import React, { useState } from "react";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-
 import ButtonActionAdd from "../Buttons/ButtonActionAdd";
 import ButtonActionEdit from "../Buttons/ButtonActionEdit";
 import ButtonActionNew from "../Buttons/ButtonActionNew";
 import ButtonActionUnlink from "../Buttons/ButtonactionUnlink";
 import PageTransition from "../PageTransition/PageTransition";
 
-import { createMonthlyFee } from "@/api/monthlyFee/monthlyFee.api";
+import { useCreateMonthlyFee } from "@/hooks/queries/monthlyFees/useCreateMonthlyFee";
 import useAlert from "@/hooks/useAlert";
 import useOrderTable from "@/hooks/useOrderTable";
 import { Client } from "@/types/Client";
@@ -30,7 +28,6 @@ type Props = {
 
 const ClientTable: React.FC<Props> = ({ clients, onOpenItemSelect }) => {
   const alert = useAlert();
-  const queryClient = useQueryClient();
 
   const [expandedRows, setExpandedRows] = useState<ExpandedRows>({});
 
@@ -97,10 +94,8 @@ const ClientTable: React.FC<Props> = ({ clients, onOpenItemSelect }) => {
     return () => handleOrder(title.key);
   };
 
-  const { mutate } = useMutation({
-    mutationFn: async (clientId: number) => await createMonthlyFee(clientId),
+  const { mutate } = useCreateMonthlyFee({
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["getAllClients"] });
       alert("Mensalidade criada com sucesso!", "success");
     },
     onError: (error: Error) => {

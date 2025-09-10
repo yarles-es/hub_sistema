@@ -2,7 +2,7 @@ import { genericRequest } from "../@genericRequest";
 
 import { CreateUser, UpdateUsuario, User } from "@/types/User";
 
-type EditUserStatus = {
+export type EditUserStatus = {
   status: boolean;
   userId: number;
 };
