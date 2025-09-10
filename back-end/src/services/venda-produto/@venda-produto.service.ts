@@ -2,6 +2,7 @@ import { Service } from 'typedi';
 import { VendaProdutoModel } from '../../models/venda-produtos.model';
 import {
   CreateVendaProduto,
+  CreateVendaProdutoModel,
   CreateVendaProdutoResponse,
   DeleteVendaProdutoResponse,
   GetAllVendaProdutoResponse,
@@ -14,7 +15,7 @@ import {
 export class VendaProdutoService {
   constructor(private readonly vendaProdutoModel: VendaProdutoModel) {}
 
-  async create(data: CreateVendaProduto): Promise<CreateVendaProdutoResponse> {
+  async create(data: CreateVendaProdutoModel): Promise<CreateVendaProdutoResponse> {
     return await this.vendaProdutoModel.create(data);
   }
 

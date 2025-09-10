@@ -3,6 +3,12 @@ import { Prisma, VendaProduto } from '@prisma/client';
 export type CreateVendaProduto = Pick<VendaProduto, 'produtoId' | 'valorVenda' | 'quantidade'> & {
   valorCusto?: number;
 };
+
+export type CreateVendaProdutoModel = Pick<
+  VendaProduto,
+  'produtoId' | 'valorVenda' | 'quantidade' | 'valorCusto'
+>;
+
 export type UpdateVendaProduto = { id: number } & Partial<CreateVendaProduto>;
 
 export type GetVendaProduto = Prisma.VendaProdutoGetPayload<{

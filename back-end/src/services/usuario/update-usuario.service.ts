@@ -22,16 +22,16 @@ export class UpdateUsuarioService {
   }
 
   async _validate(usuario: UpdateUsuario): Promise<void> {
+    if ((usuario.senha || '').trim() === '') {
+      usuario.senha = undefined;
+    }
+
     if (usuario.email?.trim() !== '' && !validateEmail(usuario.email || '')) {
       throw new BadRequestError('Email inválido.');
     }
 
     if (usuario.nome?.trim() === '') {
       throw new BadRequestError('Nome não pode ser vazio.');
-    }
-
-    if (usuario.senha === '' || usuario.senha?.trim() === '') {
-      throw new BadRequestError('Senha não pode ser vazia.');
     }
 
     if (usuario.senha !== undefined && usuario.senha.length < 6)

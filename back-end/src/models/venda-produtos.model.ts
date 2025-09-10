@@ -2,6 +2,7 @@ import { Service } from 'typedi';
 import { PrismaClient } from '@prisma/client';
 import {
   CreateVendaProduto,
+  CreateVendaProdutoModel,
   CreateVendaProdutoResponse,
   DeleteVendaProdutoResponse,
   GetAllVendaProdutoResponse,
@@ -18,7 +19,7 @@ export class VendaProdutoModel {
     this.prisma = new PrismaClient();
   }
 
-  async create(data: CreateVendaProduto): Promise<CreateVendaProdutoResponse> {
+  async create(data: CreateVendaProdutoModel): Promise<CreateVendaProdutoResponse> {
     return await this.prisma.vendaProduto.create({ data });
   }
 
