@@ -6,16 +6,16 @@ import ButtonActionEdit from "../Buttons/ButtonActionEdit";
 import ButtonActionPayment from "../Buttons/ButtonActionPayment";
 import ButtonActionUnlink from "../Buttons/ButtonactionUnlink";
 import CheckBox from "../CheckBox/CheckBox";
-import ItemTransition from "../ItemTransition/ItemTransition";
 
-import DefaultTableContainer from "./DefaultTableContainer";
-
+import { useUpdateStatusProduct } from "@/hooks/queries/products/useUpdateStatusProduct";
 import useAlert from "@/hooks/useAlert";
 import useOrderTable from "@/hooks/useOrderTable";
 import { ModalProdutType } from "@/types/ModalTypes";
 import { Product } from "@/types/product";
 import { Title } from "@/types/Tables";
 import { isNotNull } from "@/utils/tableGuardType";
+
+import DefaultTableContainer from "./DefaultTableContainer";
 
 type Props = {
   products: Product[];
@@ -66,6 +66,20 @@ const ProductTable: React.FC<Props> = ({ products, onOpenItemSelect }) => {
   const productFiltered = productOrders.filter((product) =>
     viewDisableProduts ? product : product.ativo
   );
+
+  const { mutate: mutateStatus } = useUpdateStatusProduct({
+    onSuccess: (_data, variables) => {
+      alert(
+        variables.ativo
+          ? "Produto ativado com sucesso!"
+          : "Produto desabilitado com sucesso!",
+        "success"
+      );
+    },
+    onError: () => {
+      alert("Erro ao atualizar status do produto, tente novamente!", "error");
+    },
+  });
 
   return (
     <DefaultTableContainer>
@@ -176,7 +190,9 @@ const ProductTable: React.FC<Props> = ({ products, onOpenItemSelect }) => {
                 <div className="flex space-x-3">
                   {product.ativo && (
                     <ButtonActionUnlink
-                    //   onClick={() => handleDisablePlan(product.id)}
+                      onClick={() =>
+                        mutateStatus({ id: product.id, ativo: false })
+                      }
                     />
                   )}
                 </div>
@@ -186,7 +202,9 @@ const ProductTable: React.FC<Props> = ({ products, onOpenItemSelect }) => {
                 <div className="flex space-x-3">
                   {!product.ativo && (
                     <ButtonActionAdd
-                    //   onClick={() => handleActivatePlan(plan.id)}
+                      onClick={() =>
+                        mutateStatus({ id: product.id, ativo: true })
+                      }
                     />
                   )}
                 </div>

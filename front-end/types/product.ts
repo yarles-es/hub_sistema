@@ -28,4 +28,21 @@ export type CreateProductInput = {
   ativo?: boolean;
 };
 
-export type UpdateProduct = Partial<CreateProduct>;
+export type UpdateProductInput = {
+  id: number;
+  nome?: string;
+  descricao?: string;
+  valorVenda?: string;
+  valorCusto?: string;
+  estoque?: string;
+};
+
+export type UpdateProduct = {
+  id: number;
+  nome?: string;
+  descricao?: string;
+  valorVenda?: number;
+  valorCusto?: number;
+  estoque?: number;
+  ativo?: boolean;
+};

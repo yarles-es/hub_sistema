@@ -1,6 +1,11 @@
 import { genericRequest } from "../@genericRequest";
 
-import { CreateProduct, Product, UpdateProduct } from "@/types/product";
+import {
+  CreateProduct,
+  Product,
+  UpdateProduct,
+  UpdateProductInput,
+} from "@/types/product";
 
 export const createProduct = async (
   product: CreateProduct
@@ -15,19 +20,12 @@ export const getAllProducts = async (): Promise<Product[]> => {
 };
 
 export const updateProduct = async (
-  idProduct: number,
   product: UpdateProduct
 ): Promise<Product> => {
-  const editedProduct: UpdateProduct = {
-    nome: product.nome ?? undefined,
-    descricao: product.descricao ?? undefined,
-    valorVenda: product.valorVenda ?? undefined,
-    valorCusto: product.valorCusto ?? undefined,
-    estoque: product.estoque ?? undefined,
-    ativo: product.ativo ?? undefined,
-  };
-  return await genericRequest<Product>("put", `produto/update/${idProduct}`, {
-    body: editedProduct,
+  const { id, ...rest } = product;
+
+  return await genericRequest<Product>("put", `produto/update/${id}`, {
+    body: rest,
   });
 };
 
