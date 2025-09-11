@@ -16,7 +16,7 @@ export class ProdutoModel {
     this.prisma = new PrismaClient();
   }
 
-  async getAll(ativo: boolean = true): Promise<GetAllProdutoResponse> {
+  async getAll(ativo?: boolean): Promise<GetAllProdutoResponse> {
     const whereClause = ativo ? { ativo: true } : {};
 
     return await this.prisma.produto.findMany({

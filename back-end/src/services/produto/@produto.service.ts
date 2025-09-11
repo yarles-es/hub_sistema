@@ -13,7 +13,7 @@ import {
 export class ProdutoService {
   constructor(private produtoModel: ProdutoModel) {}
 
-  async getAll(ativo: boolean = true): Promise<GetAllProdutoResponse> {
+  async getAll(ativo?: boolean): Promise<GetAllProdutoResponse> {
     return await this.produtoModel.getAll(ativo);
   }
 

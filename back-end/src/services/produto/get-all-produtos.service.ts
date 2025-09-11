@@ -5,7 +5,7 @@ import { ProdutoService } from './@produto.service';
 export class GetAllProdutosService {
   constructor(private produtoService: ProdutoService) {}
 
-  async execute(ativo: boolean = true) {
+  async execute(ativo?: boolean) {
     return await this.produtoService.getAll(ativo);
   }
 }

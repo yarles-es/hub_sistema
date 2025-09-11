@@ -32,8 +32,7 @@ export class ProdutoController {
 
   async getAll(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
-      const ativo = req.query.ativo === 'false' ? false : true;
-      const produtos = await this.getAllProdutosService.execute(ativo);
+      const produtos = await this.getAllProdutosService.execute();
       res.status(200).json(produtos);
     } catch (error) {
       next(error);
