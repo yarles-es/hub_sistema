@@ -24,3 +24,11 @@ export type ModalMonthlyFeeType = "cancel" | "search" | "pay" | "" | "delete";
 export type ModalPlanType = "create" | "edit" | "";
 
 export type ModalLogType = "search" | "";
+
+export type ModalProdutType =
+  | "create"
+  | "edit"
+  | "disable"
+  | "sell"
+  | ""
+  | "delete";

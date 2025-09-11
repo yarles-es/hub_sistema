@@ -12,10 +12,19 @@ export type Product = {
 
 export type CreateProduct = {
   nome: string;
-  descricao: string;
+  descricao?: string;
   valorVenda: number;
   valorCusto: number;
   estoque: number;
+  ativo?: boolean;
+};
+
+export type CreateProductInput = {
+  nome: string;
+  descricao?: string;
+  valorVenda: string;
+  valorCusto: string;
+  estoque: string;
   ativo?: boolean;
 };
 

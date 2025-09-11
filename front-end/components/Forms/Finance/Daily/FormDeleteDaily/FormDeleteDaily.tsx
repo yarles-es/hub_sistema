@@ -3,8 +3,8 @@ import React from "react";
 import DefaultFormatContainerForm from "../../../DefaultFormatContainerForm";
 
 import Button from "@/components/Buttons/Button";
+import { useDeleteDaily } from "@/hooks/queries/dailies/useDeleteDaily";
 import useAlert from "@/hooks/useAlert";
-import { useDeleteDaily } from "@/hooks/useQuery/dailies/useDeleteDaily";
 
 type Props = {
   onClose: () => void;

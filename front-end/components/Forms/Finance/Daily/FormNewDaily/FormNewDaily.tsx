@@ -9,8 +9,8 @@ import Button from "@/components/Buttons/Button";
 import Input from "@/components/Inputs/Input";
 import MoneyInput from "@/components/Inputs/InputMoney";
 import SelectTypePayment from "@/components/Selects/SelectTypePayment";
+import { useCreateDaily } from "@/hooks/queries/dailies/useCreateDaily";
 import useAlert from "@/hooks/useAlert";
-import { useCreateDaily } from "@/hooks/useQuery/dailies/useCreateDaily";
 import { createDailySchema } from "@/schemas/dailySchemas";
 import { CreateDaily, PaymentType } from "@/types/Daily";
 

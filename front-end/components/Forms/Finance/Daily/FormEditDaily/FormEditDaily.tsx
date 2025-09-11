@@ -6,8 +6,8 @@ import DefaultFormatContainerForm from "@/components/Forms/DefaultFormatContaine
 import Input from "@/components/Inputs/Input";
 import MoneyInput from "@/components/Inputs/InputMoney";
 import SelectTypePayment from "@/components/Selects/SelectTypePayment";
+import { useUpdateDaily } from "@/hooks/queries/dailies/useUpdateDaily";
 import useAlert from "@/hooks/useAlert";
-import { useUpdateDaily } from "@/hooks/useQuery/dailies/useUpdateDaily";
 import { updateDailySchema } from "@/schemas/dailySchemas";
 import { Daily, PaymentType, UpdateDaily } from "@/types/Daily";
 
