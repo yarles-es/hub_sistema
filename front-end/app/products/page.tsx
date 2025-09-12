@@ -5,6 +5,8 @@ import { useState } from "react";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Button from "@/components/Buttons/Button";
 import ModalCreateProduct from "@/components/Modals/ProductModals/ModalCreateProduct";
+import ModalDeleteProduct from "@/components/Modals/ProductModals/ModalDeleteProduct";
+import ModalSellProduct from "@/components/Modals/ProductModals/ModalSellProduct";
 import ModalUpdateProduct from "@/components/Modals/ProductModals/ModalUpdateProduct";
 import PageTransition from "@/components/PageTransition/PageTransition";
 import HeaderTable from "@/components/Tables/HeaderTable/HeaderTable";
@@ -80,6 +82,22 @@ const ProductPage = () => {
       {modals === "edit" && itemSelected !== 0 && (
         <ModalUpdateProduct
           isOpen={modals === "edit"}
+          onClose={onCloseModal}
+          product={products?.find((item) => item.id === itemSelected)}
+        />
+      )}
+
+      {modals === "delete" && itemSelected !== 0 && (
+        <ModalDeleteProduct
+          isOpen={modals === "delete"}
+          onClose={onCloseModal}
+          productId={itemSelected}
+        />
+      )}
+
+      {modals === "sell" && itemSelected !== 0 && (
+        <ModalSellProduct
+          isOpen={modals === "sell"}
           onClose={onCloseModal}
           product={products?.find((item) => item.id === itemSelected)}
         />

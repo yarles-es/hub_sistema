@@ -1,11 +1,6 @@
 import { genericRequest } from "../@genericRequest";
 
-import {
-  CreateProduct,
-  Product,
-  UpdateProduct,
-  UpdateProductInput,
-} from "@/types/product";
+import { CreateProduct, Product, UpdateProduct } from "@/types/product";
 
 export const createProduct = async (
   product: CreateProduct
@@ -31,4 +26,8 @@ export const updateProduct = async (
 
 export const getProductById = async (idProduct: number): Promise<Product> => {
   return await genericRequest<Product>("get", `produto/get-by-id/${idProduct}`);
+};
+
+export const deleteProductById = async (idProduct: number): Promise<void> => {
+  return await genericRequest<void>("delete", `produto/delete/${idProduct}`);
 };

@@ -14,7 +14,17 @@ type InputProps = {
 
 const MoneyInput = forwardRef<HTMLInputElement, InputProps>(
   (
-    { label, error, id, name, type, onChange, externalValue, ...props },
+    {
+      label,
+      error,
+      id,
+      name,
+      type,
+      onChange,
+      externalValue,
+      className,
+      ...props
+    },
     ref
   ) => {
     const [value, setValue] = useState("R$ 0,00");
@@ -89,7 +99,7 @@ const MoneyInput = forwardRef<HTMLInputElement, InputProps>(
             type="tel"
             value={value}
             onChange={handleChange}
-            className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+            className={`w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary ${className}`}
           />
         </div>
 
