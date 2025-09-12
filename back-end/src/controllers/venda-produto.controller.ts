@@ -6,6 +6,7 @@ import { DeleteVendaProdutoByIdService } from '../services/venda-produto/delete-
 import { GetAllVendaProdutoService } from '../services/venda-produto/get-all-venda-produto.service';
 import { GetByIdVendaProdutoService } from '../services/venda-produto/get-by-id-venda-produto.service';
 import { CreateLogService } from '../services/log-sistema/create-log.service';
+import { GetVendaProdutosByProdutoIdService } from '../services/venda-produto/get-venda-produtos-by-produto-id.service';
 
 @Service()
 export class VendaProdutoController {
@@ -14,6 +15,7 @@ export class VendaProdutoController {
     private readonly deleteVendaProdutoService: DeleteVendaProdutoByIdService,
     private readonly getAllVendaProdutoService: GetAllVendaProdutoService,
     private readonly getByIdVendaProdutoService: GetByIdVendaProdutoService,
+    private readonly getVendaProdutosByProdutoIdService: GetVendaProdutosByProdutoIdService,
     private readonly log: CreateLogService,
   ) {}
 
@@ -54,6 +56,16 @@ export class VendaProdutoController {
       const { id } = req.params;
       const vendaProduto = await this.getByIdVendaProdutoService.execute(Number(id));
       res.status(200).json(vendaProduto);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getByProdutoId(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { produtoId } = req.params;
+      const vendaProdutos = await this.getVendaProdutosByProdutoIdService.execute(Number(produtoId));
+      res.status(200).json(vendaProdutos);
     } catch (error) {
       next(error);
     }

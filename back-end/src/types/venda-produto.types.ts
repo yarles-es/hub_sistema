@@ -1,9 +1,6 @@
 import { Prisma, VendaProduto } from '@prisma/client';
 
-export type CreateVendaProduto = Pick<VendaProduto, 'produtoId' | 'valorVenda' | 'quantidade'> & {
-  valorCusto?: number;
-};
-
+export type CreateVendaProduto = Pick<VendaProduto, 'produtoId' | 'valorVenda' | 'quantidade'>;
 export type CreateVendaProdutoModel = Pick<
   VendaProduto,
   'produtoId' | 'valorVenda' | 'quantidade' | 'valorCusto'

@@ -1,5 +1,5 @@
 import { Service } from 'typedi';
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import {
   CreateProduto,
   CreateProdutoResponse,
@@ -16,31 +16,50 @@ export class ProdutoModel {
     this.prisma = new PrismaClient();
   }
 
-  async getAll(ativo?: boolean): Promise<GetAllProdutoResponse> {
+  async getAll(ativo?: boolean, transaction?: Prisma.TransactionClient): Promise<GetAllProdutoResponse> {
     const whereClause = ativo ? { ativo: true } : {};
+    const prisma = transaction || this.prisma;
 
-    return await this.prisma.produto.findMany({
+    return await prisma.produto.findMany({
       where: whereClause,
       orderBy: { nome: 'asc' },
     });
   }
 
-  async create(data: CreateProduto): Promise<CreateProdutoResponse> {
-    return await this.prisma.produto.create({
+  async create(data: CreateProduto, transaction?: Prisma.TransactionClient): Promise<CreateProdutoResponse> {
+    const prisma = transaction || this.prisma;
+
+    return await prisma.produto.create({
       data,
     });
   }
 
-  async getById(id: number) {
-    return await this.prisma.produto.findUnique({
+  async getById(id: number, transaction?: Prisma.TransactionClient): Promise<CreateProdutoResponse | null> {
+    const prisma = transaction || this.prisma;
+
+    return await prisma.produto.findUnique({
       where: { id },
     });
   }
 
-  async update(id: number, data: UpdateProduto): Promise<UpdateProdutoResponse> {
-    return await this.prisma.produto.update({
+  async update(
+    id: number,
+    data: UpdateProduto,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<UpdateProdutoResponse> {
+    const prisma = transaction || this.prisma;
+
+    return await prisma.produto.update({
       where: { id },
       data,
+    });
+  }
+
+  async delete(id: number, transaction?: Prisma.TransactionClient): Promise<UpdateProdutoResponse> {
+    const prisma = transaction || this.prisma;
+
+    return await prisma.produto.delete({
+      where: { id },
     });
   }
 }

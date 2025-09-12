@@ -20,7 +20,7 @@ export class CreateVendaProdutoService {
     const { produto, valorCusto } = await this._validate(data);
     const { estoque } = produto;
 
-    const newData: CreateVendaProdutoModel = { ...data, valorCusto: valorCusto };
+    const newData: CreateVendaProdutoModel = { ...data, valorCusto: valorCusto * data.quantidade };
 
     const novoEstoque = estoque - data.quantidade;
 

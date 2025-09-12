@@ -1,5 +1,5 @@
 import { Service } from 'typedi';
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import {
   CreateVendaProduto,
   CreateVendaProdutoModel,
@@ -19,12 +19,18 @@ export class VendaProdutoModel {
     this.prisma = new PrismaClient();
   }
 
-  async create(data: CreateVendaProdutoModel): Promise<CreateVendaProdutoResponse> {
-    return await this.prisma.vendaProduto.create({ data });
+  async create(
+    data: CreateVendaProdutoModel,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<CreateVendaProdutoResponse> {
+    return await (transaction || this.prisma).vendaProduto.create({ data });
   }
 
-  async getById(id: number): Promise<GetVendaProdutoByIdResponse | null> {
-    return await this.prisma.vendaProduto.findUnique({
+  async getById(
+    id: number,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<GetVendaProdutoByIdResponse | null> {
+    return await (transaction || this.prisma).vendaProduto.findUnique({
       where: { id },
       include: {
         produto: {
@@ -34,8 +40,8 @@ export class VendaProdutoModel {
     });
   }
 
-  async getAll(): Promise<GetAllVendaProdutoResponse> {
-    return await this.prisma.vendaProduto.findMany({
+  async getAll(transaction?: Prisma.TransactionClient): Promise<GetAllVendaProdutoResponse> {
+    return await (transaction || this.prisma).vendaProduto.findMany({
       orderBy: { id: 'asc' },
       include: {
         produto: {
@@ -45,12 +51,36 @@ export class VendaProdutoModel {
     });
   }
 
-  async update(data: UpdateVendaProduto): Promise<UpdateVendaProdutoResponse> {
-    return await this.prisma.vendaProduto.update({ where: { id: data.id }, data });
+  async update(
+    data: UpdateVendaProduto,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<UpdateVendaProdutoResponse> {
+    return await (transaction || this.prisma).vendaProduto.update({ where: { id: data.id }, data });
   }
 
-  async deleteById(id: number): Promise<DeleteVendaProdutoResponse> {
-    const result = await this.prisma.vendaProduto.delete({ where: { id } });
+  async deleteById(id: number, transaction?: Prisma.TransactionClient): Promise<DeleteVendaProdutoResponse> {
+    const result = await (transaction || this.prisma).vendaProduto.delete({ where: { id } });
     return result;
+  }
+
+  async getByProductId(
+    productId: number,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<GetVendaProdutoByIdResponse[]> {
+    return await (transaction || this.prisma).vendaProduto.findMany({
+      where: { produtoId: productId },
+      include: {
+        produto: {
+          select: { nome: true },
+        },
+      },
+    });
+  }
+
+  async deleteByProductId(productId: number, transaction?: Prisma.TransactionClient): Promise<number> {
+    const result = await (transaction || this.prisma).vendaProduto.deleteMany({
+      where: { produtoId: productId },
+    });
+    return result.count;
   }
 }

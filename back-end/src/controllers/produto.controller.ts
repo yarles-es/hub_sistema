@@ -7,6 +7,7 @@ import { GetProdutoByIdService } from '../services/produto/get-produto-by-id.ser
 import { UpdateProdutoService } from '../services/produto/update-produto.service';
 import { CreateLogService } from '../services/log-sistema/create-log.service';
 import { AuthenticatedRequest } from '../types/Request.types';
+import { DeleteProdutoService } from '../services/produto/delete-product.service';
 
 @Service()
 export class ProdutoController {
@@ -15,6 +16,7 @@ export class ProdutoController {
     private getAllProdutosService: GetAllProdutosService,
     private getProdutoByIdService: GetProdutoByIdService,
     private updateProdutoService: UpdateProdutoService,
+    private deleteProdutoService: DeleteProdutoService,
     private readonly log: CreateLogService,
   ) {}
 
@@ -56,6 +58,18 @@ export class ProdutoController {
       const data: UpdateProduto = req.body;
       const produto = await this.updateProdutoService.execute(id, data);
       await this.log.execute(user.id, `Atualizou produto ${produto.nome}`);
+      res.status(200).json(produto);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async delete(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    try {
+      const user = req.user!;
+      const id = parseInt(req.params.id, 10);
+      const produto = await this.deleteProdutoService.execute(id);
+      await this.log.execute(user.id, `Deletou produto ${produto.nome}`);
       res.status(200).json(produto);
     } catch (error) {
       next(error);
