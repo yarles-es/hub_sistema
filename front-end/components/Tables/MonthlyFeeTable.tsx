@@ -39,18 +39,18 @@ const MonthlyFeeTable: React.FC<Props> = ({
     { key: "valor", label: "Valor", type: "number", order: true },
     {
       key: "dataVencimento",
-      label: "Data Vencimento",
+      label: "Data vencimento",
       type: "date",
       order: true,
     },
     { key: "status", label: "Status", type: "string", order: true },
     {
       key: "formaPagamento",
-      label: "Forma de Pagamento",
+      label: "Forma de pagamento",
       type: "string",
       order: true,
     },
-    { key: "valorPago", label: "Valor Pago", type: "number", order: true },
+    { key: "valorPago", label: "Valor pago", type: "number", order: true },
     { key: "cancel", label: "Cancelar", type: "actions", order: false },
     { key: "pay", label: "Pagar", type: "actions", order: false },
     administration && !secundary

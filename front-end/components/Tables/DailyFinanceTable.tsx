@@ -26,7 +26,7 @@ const DailyFinanceTable: React.FC<Props> = ({ dailys, onOpenItemSelect }) => {
     { key: "data", label: "Data", type: "date", order: true },
     {
       key: "formaPagamento",
-      label: "Forma de Pagamento",
+      label: "Forma de pagamento",
       type: "string",
       order: true,
     },

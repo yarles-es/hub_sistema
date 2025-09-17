@@ -50,7 +50,7 @@ const InputGetClientByName: React.FC<Props> = ({
     { key: "telefone", label: "Telefone", type: "string", order: false },
     {
       key: "dataNascimento",
-      label: "Data Nascimento",
+      label: "Data nascimento",
       type: "date",
       order: false,
     },

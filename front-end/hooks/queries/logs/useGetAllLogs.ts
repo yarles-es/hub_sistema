@@ -2,7 +2,7 @@
 
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 
-import { dailyKeys } from "../@queryKeys/daily.keys";
+import { logKeys } from "../@queryKeys/log.keys";
 
 import { getLogs } from "@/api/logs/logs.api";
 import { GetLog, GetLogResponseWithPagination } from "@/types/Log";
@@ -14,13 +14,13 @@ export function useGetAllLogs(
       GetLogResponseWithPagination,
       Error,
       GetLogResponseWithPagination,
-      ReturnType<typeof dailyKeys.list>
+      ReturnType<typeof logKeys.list>
     >,
     "queryKey" | "queryFn"
   >
 ) {
   return useQuery({
-    queryKey: dailyKeys.list(queryParams),
+    queryKey: logKeys.list(queryParams),
     queryFn: () => getLogs(queryParams),
     retry: 0,
     staleTime: 0,

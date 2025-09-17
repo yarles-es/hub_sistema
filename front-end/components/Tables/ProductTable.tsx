@@ -39,7 +39,7 @@ const ProductTable: React.FC<Props> = ({ products, onOpenItemSelect }) => {
           order: true,
         }
       : null,
-    { key: "priceSale", label: "Preço de Venda", type: "number", order: true },
+    { key: "priceSale", label: "Preço de venda", type: "number", order: true },
     { key: "stock", label: "Estoque", type: "number", order: true },
     { key: "status", label: "Status", type: "boolean", order: true },
     { key: "edit", label: "Editar", type: "actions", order: false },

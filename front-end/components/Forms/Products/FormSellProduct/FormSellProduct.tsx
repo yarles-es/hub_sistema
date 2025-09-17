@@ -1,6 +1,5 @@
 import React from "react";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 
 import DefaultFormatContainerForm from "../../DefaultFormatContainerForm";
@@ -8,10 +7,13 @@ import DefaultFormatContainerForm from "../../DefaultFormatContainerForm";
 import Button from "@/components/Buttons/Button";
 import Input from "@/components/Inputs/Input";
 import MoneyInput from "@/components/Inputs/InputMoney";
-import { useCreateSellProduct } from "@/hooks/queries/sellProducts/useCreateSellProduct";
+import { useCreateProductSales } from "@/hooks/queries/productSales/useCreateProductSales";
 import useAlert from "@/hooks/useAlert";
 import { Product } from "@/types/product";
-import { CreateSellProduct, CreateSellProductInput } from "@/types/SellProduct";
+import {
+  CreateProductSales,
+  CreateProductSalesInput,
+} from "@/types/ProductSales";
 
 type Props = {
   onClose: () => void;
@@ -19,20 +21,22 @@ type Props = {
 };
 
 const FormSellProduct: React.FC<Props> = ({ onClose, product }) => {
-  const { handleSubmit, formState, control } = useForm<CreateSellProductInput>({
-    mode: "onBlur",
-    defaultValues: {
-      produtoId: product?.id,
-      quantidade: "",
-      valorVenda: "",
-    },
-  });
+  const { handleSubmit, formState, control } = useForm<CreateProductSalesInput>(
+    {
+      mode: "onBlur",
+      defaultValues: {
+        produtoId: product?.id,
+        quantidade: "",
+        valorVenda: "",
+      },
+    }
+  );
 
   const { errors, isSubmitting } = formState;
 
   const alert = useAlert();
 
-  const { mutate } = useCreateSellProduct({
+  const { mutate } = useCreateProductSales({
     onSuccess: () => {
       alert("Venda realizada com sucesso!", "success");
       onClose();
@@ -43,8 +47,8 @@ const FormSellProduct: React.FC<Props> = ({ onClose, product }) => {
   });
 
   const transformProductData = (
-    data: CreateSellProductInput
-  ): CreateSellProduct => {
+    data: CreateProductSalesInput
+  ): CreateProductSales => {
     return {
       produtoId: data.produtoId!,
       quantidade: Number(data.quantidade),
@@ -52,7 +56,7 @@ const FormSellProduct: React.FC<Props> = ({ onClose, product }) => {
     };
   };
 
-  const handleSubmitData = (data: CreateSellProductInput) => {
+  const handleSubmitData = (data: CreateProductSalesInput) => {
     mutate(transformProductData(data));
   };
 

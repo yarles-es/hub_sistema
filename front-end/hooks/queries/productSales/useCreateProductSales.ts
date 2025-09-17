@@ -3,28 +3,28 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { productKeys } from "../@queryKeys/product.keys";
-import { sellProductKeys } from "../@queryKeys/sellProduct.keys";
+import { ProductSalesKeys } from "../@queryKeys/ProductSales.keys";
 
-import { createSellProduct } from "@/api/sellProduct/sellProduct.api";
+import { createProductSales } from "@/api/productSales/productSales.api";
 import {
   DataMutation,
   ErrMutation,
   OptionsTypeUseMutation,
 } from "@/types/ClientQuery";
-import { CreateSellProduct } from "@/types/SellProduct";
+import { CreateProductSales } from "@/types/ProductSales";
 
-type Variables = CreateSellProduct;
+type Variables = CreateProductSales;
 
-export function useCreateSellProduct(
+export function useCreateProductSales(
   options?: OptionsTypeUseMutation<Variables>
 ) {
   const qc = useQueryClient();
 
   return useMutation<DataMutation, ErrMutation, Variables>({
-    mutationFn: (payload) => createSellProduct(payload),
+    mutationFn: (payload) => createProductSales(payload),
 
     onSuccess: (data, variables, context) => {
-      qc.invalidateQueries({ queryKey: sellProductKeys.all, exact: false });
+      qc.invalidateQueries({ queryKey: ProductSalesKeys.all, exact: false });
       qc.invalidateQueries({ queryKey: productKeys.all, exact: false });
       options?.onSuccess?.(data, variables, context);
     },

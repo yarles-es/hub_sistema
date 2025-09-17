@@ -78,7 +78,7 @@ const FormCreateProduct: React.FC<Props> = ({ onClose }) => {
                       field.onChange(e.target.value.toUpperCase())
                     }
                     type="text"
-                    label="Nome do Produto:"
+                    label="Nome do produto:"
                     placeholder="Digite o nome do produto"
                     error={errors.nome?.message}
                   />
@@ -103,7 +103,7 @@ const FormCreateProduct: React.FC<Props> = ({ onClose }) => {
                 render={({ field }) => (
                   <MoneyInput
                     {...field}
-                    label="Valor de Custo unitário:"
+                    label="Valor de custo unitário:"
                     externalValue={field.value}
                     placeholder="Digite o valor de custo"
                     error={errors.valorCusto?.message}
@@ -118,7 +118,7 @@ const FormCreateProduct: React.FC<Props> = ({ onClose }) => {
                 render={({ field }) => (
                   <MoneyInput
                     {...field}
-                    label="Valor de Venda unitário:"
+                    label="Valor de venda unitário:"
                     externalValue={field.value}
                     placeholder="Digite o valor de venda"
                     error={errors.valorVenda?.message}

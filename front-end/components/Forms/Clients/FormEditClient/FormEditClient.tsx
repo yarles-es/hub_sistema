@@ -122,7 +122,7 @@ const FormEditClient: React.FC<Props> = ({ onClose, client, refetch }) => {
                   <Input
                     {...field}
                     type="number"
-                    label="Dia da Mensalidade:"
+                    label="Dia da mensalidade:"
                     placeholder="Digite o dia"
                     error={errors.diaMensalidade?.message}
                     min={1}
@@ -184,7 +184,7 @@ const FormEditClient: React.FC<Props> = ({ onClose, client, refetch }) => {
                   <Input
                     {...field}
                     type="date"
-                    label="Data de Nascimento:"
+                    label="Data de nascimento:"
                     error={errors.dataNascimento?.message}
                   />
                 )}

@@ -83,7 +83,7 @@ const FormNewClient: React.FC<Props> = ({ onClose }) => {
                   <Input
                     {...field}
                     type="number"
-                    label="Dia da Mensalidade:"
+                    label="Dia da mensalidade:"
                     placeholder="Digite o dia"
                     error={errors.diaMensalidade?.message}
                     min={1}
@@ -141,7 +141,7 @@ const FormNewClient: React.FC<Props> = ({ onClose }) => {
               <Input
                 {...register("dataNascimento")}
                 type="date"
-                label="Data de Nascimento:"
+                label="Data de nascimento:"
                 placeholder="Digite a data de nascimento"
                 error={errors.dataNascimento?.message}
               />

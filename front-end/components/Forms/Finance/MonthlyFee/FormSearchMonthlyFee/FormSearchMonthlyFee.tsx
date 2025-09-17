@@ -87,7 +87,7 @@ const FormSearchMonthlyFee = ({ onClose }: Props) => {
               <Input
                 {...register("finalDate")}
                 type="date"
-                label="Data vencimento Final:"
+                label="Data vencimento final:"
                 placeholder="Digite a data de vencimento final"
                 error={errors.finalDate?.message}
               />

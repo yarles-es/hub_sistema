@@ -63,7 +63,7 @@ const FormNewPlan: React.FC<FormNewUserProps> = ({ onClose }) => {
                       field.onChange(e.target.value.toUpperCase())
                     }
                     type="text"
-                    label="Nome do Plano:"
+                    label="Nome do plano:"
                     placeholder="Digite o nome do plano"
                     error={errors.nome?.message}
                   />

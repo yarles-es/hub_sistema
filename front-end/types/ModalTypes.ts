@@ -32,3 +32,5 @@ export type ModalProdutType =
   | "sell"
   | ""
   | "delete";
+
+export type ModalSalesReportType = "delete" | "" | "search";

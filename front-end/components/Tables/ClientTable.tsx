@@ -52,7 +52,7 @@ const ClientTable: React.FC<Props> = ({ clients, onOpenItemSelect }) => {
     { key: "telefone", label: "Telefone", type: "string", order: true },
     {
       key: "dataNascimento",
-      label: "Data Nascimento",
+      label: "Data nascimento",
       type: "date",
       order: true,
     },
@@ -60,7 +60,7 @@ const ClientTable: React.FC<Props> = ({ clients, onOpenItemSelect }) => {
     { key: "status", label: "Status", type: "boolean", order: true },
     {
       key: "monthlyFee",
-      label: "Nova Mensalidade",
+      label: "Nova mensalidade",
       type: "actions",
       order: false,
     },

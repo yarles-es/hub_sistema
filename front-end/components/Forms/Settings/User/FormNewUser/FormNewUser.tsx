@@ -49,7 +49,7 @@ const FormNewUser: React.FC<FormNewUserProps> = ({ onClose }) => {
   };
 
   return (
-    <DefaultFormatContainerForm title="Novo usuário">
+    <DefaultFormatContainerForm title="Novo Usuário">
       <form onSubmit={handleSubmit(handleSubmitData)}>
         <div className="p-6.5">
           <div className="mb-4.5 flex gap-6 xl:flex-row flex-col">
@@ -57,7 +57,7 @@ const FormNewUser: React.FC<FormNewUserProps> = ({ onClose }) => {
               <Input
                 {...register("nome")}
                 type="text"
-                label="Nome Completo"
+                label="Nome completo:"
                 placeholder="Digite o nome completo"
                 error={errors.nome?.message}
               />
@@ -66,7 +66,7 @@ const FormNewUser: React.FC<FormNewUserProps> = ({ onClose }) => {
               <Input
                 {...register("email")}
                 type="text"
-                label="E-mail"
+                label="E-mail:"
                 placeholder="Digite o e-mail"
                 error={errors.email?.message}
               />
@@ -76,7 +76,7 @@ const FormNewUser: React.FC<FormNewUserProps> = ({ onClose }) => {
             <div className="w-full xl:w-1/2">
               <Input
                 {...register("senha")}
-                label="Senha"
+                label="Senha:"
                 type="password"
                 placeholder="Digite a senha do usuário"
                 error={errors.senha?.message}
