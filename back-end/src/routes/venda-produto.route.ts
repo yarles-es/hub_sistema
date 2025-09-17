@@ -7,7 +7,7 @@ const controller = Container.get(VendaProdutoController);
 
 router.post('/create', controller.create.bind(controller));
 router.delete('/delete/:id', controller.delete.bind(controller));
-router.get('/all', controller.getAll.bind(controller));
+router.get('/get-all', controller.getAll.bind(controller));
 router.get('/get-by-id/:id', controller.getById.bind(controller));
 router.get('/get-by-produto-id/:produtoId', controller.getByProdutoId.bind(controller));
 
