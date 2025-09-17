@@ -1,11 +1,11 @@
 import { Service } from 'typedi';
 import { VendaProdutoModel } from '../../models/venda-produtos.model';
 import {
-  CreateVendaProduto,
   CreateVendaProdutoModel,
   CreateVendaProdutoResponse,
   DeleteVendaProdutoResponse,
   GetAllVendaProdutoResponse,
+  GetAllVendasProductInput,
   GetVendaProdutoByIdResponse,
   UpdateVendaProduto,
   UpdateVendaProdutoResponse,
@@ -30,8 +30,13 @@ export class VendaProdutoService {
     return await this.vendaProdutoModel.getById(id, transaction);
   }
 
-  async getAll(transaction?: Prisma.TransactionClient): Promise<GetAllVendaProdutoResponse> {
-    return await this.vendaProdutoModel.getAll(transaction);
+  async getAll(
+    page: number,
+    limit: number,
+    filters: GetAllVendasProductInput,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<GetAllVendaProdutoResponse> {
+    return await this.vendaProdutoModel.getAll(page, limit, filters, transaction);
   }
 
   async deleteById(id: number, transaction?: Prisma.TransactionClient): Promise<DeleteVendaProdutoResponse> {

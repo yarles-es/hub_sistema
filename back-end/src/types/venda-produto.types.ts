@@ -12,8 +12,6 @@ export type GetVendaProduto = Prisma.VendaProdutoGetPayload<{
   include: { produto: { select: { nome: true } } };
 }>;
 
-export type GetAllVendaProdutoResponse = GetVendaProduto[];
-
 export type GetVendaProdutoByIdResponse = GetVendaProduto | null;
 
 export type DeleteVendaProdutoResponse = VendaProduto;
@@ -21,3 +19,16 @@ export type DeleteVendaProdutoResponse = VendaProduto;
 export type CreateVendaProdutoResponse = VendaProduto;
 
 export type UpdateVendaProdutoResponse = VendaProduto;
+
+export type GetAllVendaProdutoResponse = {
+  data: GetVendaProduto[];
+  total: number;
+  page: number;
+  limit: number;
+};
+
+export type GetAllVendasProductInput = {
+  productId?: number;
+  initialDate?: Date;
+  finalDate?: Date;
+};

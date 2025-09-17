@@ -6,6 +6,7 @@ import {
   CreateVendaProdutoResponse,
   DeleteVendaProdutoResponse,
   GetAllVendaProdutoResponse,
+  GetAllVendasProductInput,
   GetVendaProdutoByIdResponse,
   UpdateVendaProduto,
   UpdateVendaProdutoResponse,
@@ -40,15 +41,51 @@ export class VendaProdutoModel {
     });
   }
 
-  async getAll(transaction?: Prisma.TransactionClient): Promise<GetAllVendaProdutoResponse> {
-    return await (transaction || this.prisma).vendaProduto.findMany({
-      orderBy: { id: 'asc' },
-      include: {
-        produto: {
-          select: { nome: true },
+  async getAll(
+    page: number,
+    limit: number,
+    filters: GetAllVendasProductInput,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<GetAllVendaProdutoResponse> {
+    const client = transaction || this.prisma;
+    const where: Prisma.VendaProdutoWhereInput = {};
+
+    const dataHora: Prisma.DateTimeFilter = {};
+
+    if (filters?.initialDate) dataHora.gte = filters.initialDate;
+    if (filters?.finalDate) dataHora.lte = filters.finalDate;
+
+    if (filters?.productId) {
+      where.produtoId = filters.productId;
+    }
+
+    if (Object.keys(dataHora).length > 0) {
+      where.dataVenda = dataHora;
+    }
+
+    const [data, total] = await Promise.all([
+      client.vendaProduto.findMany({
+        where,
+        include: {
+          produto: {
+            select: { nome: true },
+          },
         },
-      },
-    });
+        skip: (page - 1) * limit,
+        take: limit,
+        orderBy: {
+          dataVenda: 'desc',
+        },
+      }),
+      client.vendaProduto.count({ where }),
+    ]);
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+    };
   }
 
   async update(

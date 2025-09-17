@@ -7,6 +7,8 @@ import { GetAllVendaProdutoService } from '../services/venda-produto/get-all-ven
 import { GetByIdVendaProdutoService } from '../services/venda-produto/get-by-id-venda-produto.service';
 import { CreateLogService } from '../services/log-sistema/create-log.service';
 import { GetVendaProdutosByProdutoIdService } from '../services/venda-produto/get-venda-produtos-by-produto-id.service';
+import { safeParseInt } from '../utils/safeTypes';
+import { buildUtcRange } from '../utils/date-range';
 
 @Service()
 export class VendaProdutoController {
@@ -44,7 +46,23 @@ export class VendaProdutoController {
 
   async getAll(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const vendaProdutos = await this.getAllVendaProdutoService.execute();
+      const { numberPage, limit, initialDate, finalDate, productId } = req.query;
+
+      const pageNumber = safeParseInt(numberPage) || 1;
+      const limitNumber = safeParseInt(limit) || 30;
+      const productIdNumber = safeParseInt(productId);
+
+      const { startAtUtc, endAtUtc } = buildUtcRange(
+        initialDate as string | undefined,
+        finalDate as string | undefined,
+      );
+
+      const vendaProdutos = await this.getAllVendaProdutoService.execute(pageNumber, limitNumber, {
+        productId: productIdNumber,
+        initialDate: startAtUtc,
+        finalDate: endAtUtc,
+      });
+
       res.status(200).json(vendaProdutos);
     } catch (error) {
       next(error);
