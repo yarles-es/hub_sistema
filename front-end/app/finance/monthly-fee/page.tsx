@@ -94,21 +94,21 @@ const MonthlyFeePage = () => {
       </div>
 
       <div className="flex flex-col gap-4">
-        {monthlyFees?.data && monthlyFees.data.length > 0 ? (
-          <div className="mt-1.5 xl:mt-3">
-            <PageTransition>
-              <MonthlyFeeTable
-                MonthlyFees={monthlyFees.data}
-                onOpenItemSelect={onOpenModal}
-              />
+        <div className="mt-1.5 xl:mt-3">
+          <PageTransition>
+            <MonthlyFeeTable
+              MonthlyFees={monthlyFees?.data}
+              onOpenItemSelect={onOpenModal}
+            />
+            {monthlyFees && monthlyFees?.data.length > 0 && (
               <Pagination
                 limit={monthlyFees.limit}
                 page={monthlyFees.page}
                 total={monthlyFees.total}
               />
-            </PageTransition>
-          </div>
-        ) : null}
+            )}
+          </PageTransition>
+        </div>
 
         {modals === "search" && (
           <ModalSearchMonthlyFee

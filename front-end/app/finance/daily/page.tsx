@@ -89,21 +89,21 @@ const DailyPage = () => {
         </HeaderTable>
       </div>
       <div className="flex flex-col gap-4">
-        {dailyData?.data && dailyData.data.length > 0 ? (
-          <div className="mt-1.5 xl:mt-3">
-            <PageTransition>
-              <DailyFinanceTable
-                dailys={dailyData.data}
-                onOpenItemSelect={onOpenModal}
-              />
-            </PageTransition>
+        <div className="mt-1.5 xl:mt-3">
+          <PageTransition>
+            <DailyFinanceTable
+              dailys={dailyData?.data}
+              onOpenItemSelect={onOpenModal}
+            />
+          </PageTransition>
+          {dailyData?.data && dailyData.data.length === 0 && (
             <Pagination
               limit={dailyData.limit}
               page={dailyData.page}
               total={dailyData.total}
             />
-          </div>
-        ) : null}
+          )}
+        </div>
 
         {modals === "create" && (
           <ModalCreateDaily

@@ -97,21 +97,21 @@ const ClientPage = () => {
         </HeaderTable>
       </div>
       <div className="flex flex-col gap-4">
-        {clients?.data && clients.data.length > 0 ? (
-          <div className="mt-1.5 xl:mt-3">
-            <PageTransition>
-              <ClientTable
-                clients={clients.data}
-                onOpenItemSelect={onOpenModal}
-              />
-            </PageTransition>
+        <div className="mt-1.5 xl:mt-3">
+          <PageTransition>
+            <ClientTable
+              clients={clients?.data}
+              onOpenItemSelect={onOpenModal}
+            />
+          </PageTransition>
+          {clients?.data && clients.data.length > 0 && (
             <Pagination
               limit={clients.limit}
               page={clients.page}
               total={clients.total}
             />
-          </div>
-        ) : null}
+          )}
+        </div>
 
         {modals === "create" && (
           <ModalCreateClient

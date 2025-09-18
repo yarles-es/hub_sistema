@@ -54,13 +54,11 @@ const PlanPage = () => {
         </HeaderTable>
       </div>
       <div className="flex flex-col gap-4">
-        {plans && plans.length > 0 ? (
-          <div className="mt-1.5 xl:mt-3">
-            <PageTransition>
-              <PlanTable plans={plans} onOpenItemSelect={onOpenModal} />
-            </PageTransition>
-          </div>
-        ) : null}
+        <div className="mt-1.5 xl:mt-3">
+          <PageTransition>
+            <PlanTable plans={plans} onOpenItemSelect={onOpenModal} />
+          </PageTransition>
+        </div>
 
         {modals === "create" && (
           <ModalCreatePlan

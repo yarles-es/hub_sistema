@@ -18,7 +18,7 @@ import { isNotNull } from "@/utils/tableGuardType";
 import DefaultTableContainer from "./DefaultTableContainer";
 
 type Props = {
-  products: Product[];
+  products?: Product[];
   onOpenItemSelect: (id: number, type: ModalProdutType) => void;
 };
 
@@ -83,152 +83,162 @@ const ProductTable: React.FC<Props> = ({ products, onOpenItemSelect }) => {
 
   return (
     <DefaultTableContainer>
-      <div className="flex justify-center items-center mb-4">
-        <CheckBox
-          classLabel="m-2 text-xs text-white"
-          id="preco-custo"
-          checked={viewPriceCost}
-          onChange={(e) => setViewPriceCost(e.target.checked)}
-        >
-          <span className="text-white">Ver preço de custo</span>
-        </CheckBox>
-        <CheckBox
-          classLabel="m-2 text-xs text-white"
-          id="desativados"
-          checked={viewDisableProduts}
-          onChange={(e) => setViewDisableProduts(e.target.checked)}
-        >
-          <span className="text-white">Ver produtos desativados</span>
-        </CheckBox>
-      </div>
-      <table className="w-full table-auto">
-        <thead className="bg-gray-50 sticky top-0 z-1">
-          <tr className="bg-gray-2 text-left dark:bg-meta-4">
-            {titlesFiltered.map((title, key) =>
-              key === 0 ? (
-                <th
-                  onClick={handleOrderClick(title)}
-                  id={title.key}
-                  key={key}
-                  className={`px-4 md:py-2 font-medium text-black dark:text-white xl:pl-11 ${
-                    title.order ? "cursor-pointer" : ""
-                  }`}
-                >
-                  {title.label}
-                </th>
-              ) : (
-                <th
-                  onClick={handleOrderClick(title)}
-                  id={title.key}
-                  key={key}
-                  className={`px-4 md:py-2 font-medium text-black dark:text-white ${
-                    title.order ? "cursor-pointer" : ""
-                  }`}
-                >
-                  {title.label}
-                </th>
-              )
-            )}
-          </tr>
-        </thead>
-        <tbody className="text-xs">
-          {productFiltered.map((product, key) => (
-            <tr
-              key={key}
-              className="border-b border-gray-200 dark:border-strokedark"
+      {productFiltered.length > 0 ? (
+        <>
+          <div className="flex justify-center items-center mb-4">
+            <CheckBox
+              classLabel="m-2 text-xs text-white"
+              id="preco-custo"
+              checked={viewPriceCost}
+              onChange={(e) => setViewPriceCost(e.target.checked)}
             >
-              <td className="py-4 px-4 text-black dark:text-white xl:pl-11 w-5">
-                <p>{product.id}</p>
-              </td>
-              <td className="py-4 px-4 text-black dark:text-white w-[250px] min-w-[200px]">
-                <p>{product.nome}</p>
-              </td>
-              <td className="py-4 px-4 text-black dark:text-white">
-                <p>{product.descricao}</p>
-              </td>
-              {viewPriceCost && (
-                <td className="py-4 px-4 text-black dark:text-white">
-                  <p className={`text-danger`}>
-                    {product.valorCusto.toLocaleString("pt-BR", {
-                      style: "currency",
-                      currency: "BRL",
-                    })}
-                  </p>
-                </td>
-              )}
-              <td className="py-4 px-4 text-black dark:text-white">
-                <p className={`text-success`}>
-                  {product.valorVenda.toLocaleString("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                  })}
-                </p>
-              </td>
-              <td className="py-4 px-4 text-black dark:text-white">
-                <p>{product.estoque}</p>
-              </td>
-              <td className="py-4 px-4 text-black dark:text-white">
-                <p
-                  className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-xs font-medium ${
-                    product.ativo
-                      ? "bg-success text-success"
-                      : "bg-danger text-danger"
-                  }`}
+              <span className="text-white">Ver preço de custo</span>
+            </CheckBox>
+            <CheckBox
+              classLabel="m-2 text-xs text-white"
+              id="desativados"
+              checked={viewDisableProduts}
+              onChange={(e) => setViewDisableProduts(e.target.checked)}
+            >
+              <span className="text-white">Ver produtos desativados</span>
+            </CheckBox>
+          </div>
+          <table className="w-full table-auto">
+            <thead className="bg-gray-50 sticky top-0 z-1">
+              <tr className="bg-gray-2 text-left dark:bg-meta-4">
+                {titlesFiltered.map((title, key) =>
+                  key === 0 ? (
+                    <th
+                      onClick={handleOrderClick(title)}
+                      id={title.key}
+                      key={key}
+                      className={`px-4 md:py-2 font-medium text-black dark:text-white xl:pl-11 ${
+                        title.order ? "cursor-pointer" : ""
+                      }`}
+                    >
+                      {title.label}
+                    </th>
+                  ) : (
+                    <th
+                      onClick={handleOrderClick(title)}
+                      id={title.key}
+                      key={key}
+                      className={`px-4 md:py-2 font-medium text-black dark:text-white ${
+                        title.order ? "cursor-pointer" : ""
+                      }`}
+                    >
+                      {title.label}
+                    </th>
+                  )
+                )}
+              </tr>
+            </thead>
+            <tbody className="text-xs">
+              {productFiltered.map((product, key) => (
+                <tr
+                  key={key}
+                  className="border-b border-gray-200 dark:border-strokedark"
                 >
-                  {product.ativo ? "Ativo" : "Inativo"}
-                </p>
-              </td>
-              <td className="py-4 px-4 text-black dark:text-white">
-                <div className="flex items-center space-x-3.5">
-                  <ButtonActionEdit
-                    onClick={() => onOpenItemSelect(product.id, "edit")}
-                  />
-                </div>
-              </td>
-
-              <td className="py-4 px-4 text-center text-black dark:text-white">
-                <div className="flex space-x-3">
-                  {product.ativo && (
-                    <ButtonActionUnlink
-                      onClick={() =>
-                        mutateStatus({ id: product.id, ativo: false })
-                      }
-                    />
+                  <td className="py-4 px-4 text-black dark:text-white xl:pl-11 w-5">
+                    <p>{product.id}</p>
+                  </td>
+                  <td className="py-4 px-4 text-black dark:text-white w-[250px] min-w-[200px]">
+                    <p>{product.nome}</p>
+                  </td>
+                  <td className="py-4 px-4 text-black dark:text-white">
+                    <p>{product.descricao}</p>
+                  </td>
+                  {viewPriceCost && (
+                    <td className="py-4 px-4 text-black dark:text-white">
+                      <p className={`text-danger`}>
+                        {product.valorCusto.toLocaleString("pt-BR", {
+                          style: "currency",
+                          currency: "BRL",
+                        })}
+                      </p>
+                    </td>
                   )}
-                </div>
-              </td>
+                  <td className="py-4 px-4 text-black dark:text-white">
+                    <p className={`text-success`}>
+                      {product.valorVenda.toLocaleString("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                      })}
+                    </p>
+                  </td>
+                  <td className="py-4 px-4 text-black dark:text-white">
+                    <p>{product.estoque}</p>
+                  </td>
+                  <td className="py-4 px-4 text-black dark:text-white">
+                    <p
+                      className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-xs font-medium ${
+                        product.ativo
+                          ? "bg-success text-success"
+                          : "bg-danger text-danger"
+                      }`}
+                    >
+                      {product.ativo ? "Ativo" : "Inativo"}
+                    </p>
+                  </td>
+                  <td className="py-4 px-4 text-black dark:text-white">
+                    <div className="flex items-center space-x-3.5">
+                      <ButtonActionEdit
+                        onClick={() => onOpenItemSelect(product.id, "edit")}
+                      />
+                    </div>
+                  </td>
 
-              <td className="py-4 px-4 text-center text-black dark:text-white">
-                <div className="flex space-x-3">
-                  {!product.ativo && (
-                    <ButtonActionAdd
-                      onClick={() =>
-                        mutateStatus({ id: product.id, ativo: true })
-                      }
-                    />
-                  )}
-                </div>
-              </td>
+                  <td className="py-4 px-4 text-center text-black dark:text-white">
+                    <div className="flex space-x-3">
+                      {product.ativo && (
+                        <ButtonActionUnlink
+                          onClick={() =>
+                            mutateStatus({ id: product.id, ativo: false })
+                          }
+                        />
+                      )}
+                    </div>
+                  </td>
 
-              <td className="py-4 px-4 text-black dark:text-white">
-                <div className="flex items-center space-x-3.5">
-                  <ButtonActionDelete
-                    onClick={() => onOpenItemSelect(product.id, "delete")}
-                  />
-                </div>
-              </td>
+                  <td className="py-4 px-4 text-center text-black dark:text-white">
+                    <div className="flex space-x-3">
+                      {!product.ativo && (
+                        <ButtonActionAdd
+                          onClick={() =>
+                            mutateStatus({ id: product.id, ativo: true })
+                          }
+                        />
+                      )}
+                    </div>
+                  </td>
 
-              <td className="py-4 px-4 text-black dark:text-white">
-                <div className="flex items-center space-x-3.5">
-                  <ButtonActionPayment
-                    onClick={() => onOpenItemSelect(product.id, "sell")}
-                  />
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                  <td className="py-4 px-4 text-black dark:text-white">
+                    <div className="flex items-center space-x-3.5">
+                      <ButtonActionDelete
+                        onClick={() => onOpenItemSelect(product.id, "delete")}
+                      />
+                    </div>
+                  </td>
+
+                  <td className="py-4 px-4 text-black dark:text-white">
+                    <div className="flex items-center space-x-3.5">
+                      <ButtonActionPayment
+                        onClick={() => onOpenItemSelect(product.id, "sell")}
+                      />
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      ) : (
+        <div className="flex flex-col items-center justify-center py-10">
+          <p className="text-gray-500 dark:text-gray-400">
+            Nenhum produto encontrado
+          </p>
+        </div>
+      )}
     </DefaultTableContainer>
   );
 };

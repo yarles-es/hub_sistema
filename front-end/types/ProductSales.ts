@@ -1,5 +1,6 @@
 export type ProductSales = {
   id: number;
+  produto: { nome: string };
   productId: number;
   quantidade: number;
   valorCusto: number;
@@ -31,6 +32,9 @@ export type GetProductSales = {
 
 export type GetProductSalesResponseWithPagination = {
   data: ProductSales[];
+  totalVendas: number;
+  totalCusto: number;
+  totalLucro: number;
   total: number;
   page: number;
   limit: number;

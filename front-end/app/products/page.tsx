@@ -54,22 +54,11 @@ const ProductPage = () => {
         </HeaderTable>
       </div>
       <div className="flex flex-col gap-4">
-        {products && products.length > 0 ? (
-          <div className="mt-1.5 xl:mt-3">
-            <PageTransition>
-              <ProductTable
-                products={products}
-                onOpenItemSelect={onOpenModal}
-              />
-            </PageTransition>
-          </div>
-        ) : (
-          <div className="w-full h-96 flex items-center justify-center">
-            <p className="text-gray-500 dark:text-gray-400">
-              Nenhum produto cadastrado.
-            </p>
-          </div>
-        )}
+        <div className="mt-1.5 xl:mt-3">
+          <PageTransition>
+            <ProductTable products={products} onOpenItemSelect={onOpenModal} />
+          </PageTransition>
+        </div>
       </div>
 
       {modals === "create" && (

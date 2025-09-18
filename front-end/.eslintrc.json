@@ -1,11 +1,10 @@
 {
-  "extends": "next/core-web-vitals",
+  "extends": ["next/core-web-vitals", "plugin:import/recommended"],
+  "plugins": ["import"],
   "rules": {
     "prefer-arrow-callback": "error",
     "no-console": ["warn", { "allow": ["warn", "error"] }],
-
     "sort-imports": "off",
-
     "import/order": [
       "error",
       {
@@ -25,5 +24,11 @@
         "alphabetize": { "order": "asc", "caseInsensitive": true }
       }
     ]
+  },
+  "settings": {
+    "import/resolver": {
+      "node": { "extensions": [".js", ".jsx", ".ts", ".tsx"] },
+      "typescript": true
+    }
   }
 }

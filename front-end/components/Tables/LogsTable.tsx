@@ -8,7 +8,7 @@ import { isNotNull } from "@/utils/tableGuardType";
 import DefaultTableContainer from "./DefaultTableContainer";
 
 type Props = {
-  logs: Log[];
+  logs?: Log[];
   onOpenItemSelect: (id: number, type: ModalLogType) => void;
 };
 
@@ -37,61 +37,69 @@ const LogsTable: React.FC<Props> = ({ logs, onOpenItemSelect }) => {
 
   return (
     <DefaultTableContainer>
-      <table className="w-full table-auto">
-        <thead className="bg-gray-50 sticky top-0 z-1">
-          <tr className="bg-gray-2 text-left dark:bg-meta-4">
-            {titlesFiltered.map((title, key) =>
-              key === 0 ? (
-                <th
-                  onClick={handleOrderClick(title)}
-                  id={title.key}
-                  key={key}
-                  className={`px-4 md:py-2 font-medium text-black dark:text-white xl:pl-11 ${
-                    title.order ? "cursor-pointer" : ""
-                  }`}
-                >
-                  {title.label}
-                </th>
-              ) : (
-                <th
-                  onClick={handleOrderClick(title)}
-                  id={title.key}
-                  key={key}
-                  className={`px-4 md:py-2 font-medium text-black dark:text-white ${
-                    title.order ? "cursor-pointer" : ""
-                  }`}
-                >
-                  {title.label}
-                </th>
-              )
-            )}
-          </tr>
-        </thead>
-        <tbody className="text-xs">
-          {logsOrders.map((log, key) => (
-            <tr
-              key={key}
-              className="border-b border-gray-200 dark:border-strokedark"
-            >
-              <td className="py-4 px-4 text-black dark:text-white xl:pl-11 w-[30px]">
-                <p>{log.id}</p>
-              </td>
-              <td className="py-4 px-4 text-primary dark:text-secondary max-w-[80px] font-bold">
-                <p>{log.nomeUsuario}</p>
-              </td>
-              <td className="py-4 px-4 text-warning dark:text-warning max-w-[100px] font-medium">
-                <p>{log.acao}</p>
-              </td>
-              <td className="py-4 px-4 text-primary dark:text-secondary max-w-[80px] font-bold">
-                <p>{log.nomeCliente ?? ""}</p>
-              </td>
-              <td className="py-4 px-4 text-black dark:text-white">
-                <p>{formatDateWithHours(new Date(log.dataHora))}</p>
-              </td>
+      {logsOrders.length > 0 ? (
+        <table className="w-full table-auto">
+          <thead className="bg-gray-50 sticky top-0 z-1">
+            <tr className="bg-gray-2 text-left dark:bg-meta-4">
+              {titlesFiltered.map((title, key) =>
+                key === 0 ? (
+                  <th
+                    onClick={handleOrderClick(title)}
+                    id={title.key}
+                    key={key}
+                    className={`px-4 md:py-2 font-medium text-black dark:text-white xl:pl-11 ${
+                      title.order ? "cursor-pointer" : ""
+                    }`}
+                  >
+                    {title.label}
+                  </th>
+                ) : (
+                  <th
+                    onClick={handleOrderClick(title)}
+                    id={title.key}
+                    key={key}
+                    className={`px-4 md:py-2 font-medium text-black dark:text-white ${
+                      title.order ? "cursor-pointer" : ""
+                    }`}
+                  >
+                    {title.label}
+                  </th>
+                )
+              )}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="text-xs">
+            {logsOrders.map((log, key) => (
+              <tr
+                key={key}
+                className="border-b border-gray-200 dark:border-strokedark"
+              >
+                <td className="py-4 px-4 text-black dark:text-white xl:pl-11 w-[30px]">
+                  <p>{log.id}</p>
+                </td>
+                <td className="py-4 px-4 text-primary dark:text-secondary max-w-[80px] font-bold">
+                  <p>{log.nomeUsuario}</p>
+                </td>
+                <td className="py-4 px-4 text-warning dark:text-warning max-w-[100px] font-medium">
+                  <p>{log.acao}</p>
+                </td>
+                <td className="py-4 px-4 text-primary dark:text-secondary max-w-[80px] font-bold">
+                  <p>{log.nomeCliente ?? ""}</p>
+                </td>
+                <td className="py-4 px-4 text-black dark:text-white">
+                  <p>{formatDateWithHours(new Date(log.dataHora))}</p>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <div className="flex flex-col items-center justify-center py-10">
+          <p className="text-gray-500 dark:text-gray-400">
+            Nenhum log encontrado
+          </p>
+        </div>
+      )}
     </DefaultTableContainer>
   );
 };

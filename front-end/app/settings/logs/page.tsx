@@ -72,18 +72,18 @@ const LogsPage = () => {
       </div>
 
       <div className="flex flex-col gap-4">
-        {logs ? (
-          <div className="mt-1.5 xl:mt-3">
-            <PageTransition>
-              <LogsTable logs={logs.data} onOpenItemSelect={onOpenModal} />
-            </PageTransition>
+        <div className="mt-1.5 xl:mt-3">
+          <PageTransition>
+            <LogsTable logs={logs?.data} onOpenItemSelect={onOpenModal} />
+          </PageTransition>
+          {logs && logs.data.length > 0 && (
             <Pagination
               limit={logs.limit}
               page={logs.page}
               total={logs.total}
             />
-          </div>
-        ) : null}
+          )}
+        </div>
 
         {modals === "search" && (
           <ModalSearchLog
