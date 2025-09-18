@@ -22,6 +22,9 @@ export type UpdateVendaProdutoResponse = VendaProduto;
 
 export type GetAllVendaProdutoResponse = {
   data: GetVendaProduto[];
+  totalVendas: number;
+  totalCusto: number;
+  totalLucro: number;
   total: number;
   page: number;
   limit: number;

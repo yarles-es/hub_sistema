@@ -63,7 +63,7 @@ export class VendaProdutoModel {
       where.dataVenda = dataHora;
     }
 
-    const [data, total] = await Promise.all([
+    const [data, total, totalVendas, totalCusto, totalLucro] = await Promise.all([
       client.vendaProduto.findMany({
         where,
         include: {
@@ -78,11 +78,40 @@ export class VendaProdutoModel {
         },
       }),
       client.vendaProduto.count({ where }),
+      client.vendaProduto
+        .aggregate({
+          _sum: {
+            valorVenda: true,
+          },
+          where,
+        })
+        .then((res) => res._sum.valorVenda ?? 0),
+
+      client.vendaProduto
+        .aggregate({
+          _sum: {
+            valorCusto: true,
+          },
+          where,
+        })
+        .then((res) => res._sum.valorCusto ?? 0),
+      client.vendaProduto
+        .aggregate({
+          _sum: {
+            valorVenda: true,
+            valorCusto: true,
+          },
+          where,
+        })
+        .then((res) => (res._sum.valorVenda ?? 0) - (res._sum.valorCusto ?? 0)),
     ]);
 
     return {
       data,
       total,
+      totalVendas,
+      totalCusto,
+      totalLucro,
       page,
       limit,
     };
