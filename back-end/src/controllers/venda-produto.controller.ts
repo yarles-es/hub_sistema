@@ -48,8 +48,6 @@ export class VendaProdutoController {
     try {
       const { numberPage, limit, initialDate, finalDate, productId } = req.query;
 
-      console.log({ numberPage, limit, initialDate, finalDate, productId });
-
       const pageNumber = safeParseInt(numberPage) || 1;
       const limitNumber = safeParseInt(limit) || 30;
       const productIdNumber = safeParseInt(productId);
