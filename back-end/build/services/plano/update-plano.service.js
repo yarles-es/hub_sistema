@@ -34,7 +34,7 @@ let UpdatePlanoService = class UpdatePlanoService {
     }
     execute(id, data) {
         return __awaiter(this, void 0, void 0, function* () {
-            this.validate(id, data);
+            this._validate(id, data);
             const plan = yield (0, withTransaction_1.withTransaction)((tx) => __awaiter(this, void 0, void 0, function* () {
                 const existingPlan = yield this.planoService.getPlanoById(id, tx);
                 if (!existingPlan) {
@@ -42,14 +42,14 @@ let UpdatePlanoService = class UpdatePlanoService {
                 }
                 const plan = yield this.planoService.updatePlano(id, data);
                 if (data.valor && plan.valor !== existingPlan.valor) {
-                    yield this.modifyValorExistingMonthlyFeePending(id, data.valor, tx);
+                    yield this._modifyValorExistingMonthlyFeePending(id, data.valor, tx);
                 }
                 return plan;
             }));
             return plan;
         });
     }
-    modifyValorExistingMonthlyFeePending(idPlano, newValor, transaction) {
+    _modifyValorExistingMonthlyFeePending(idPlano, newValor, transaction) {
         return __awaiter(this, void 0, void 0, function* () {
             const clientes = yield this.clienteService.getAllClientesWithMensalidadeByPlanId(idPlano, transaction);
             yield Promise.all(clientes.map((cliente) => __awaiter(this, void 0, void 0, function* () {
@@ -60,7 +60,7 @@ let UpdatePlanoService = class UpdatePlanoService {
             })));
         });
     }
-    validate(id, data) {
+    _validate(id, data) {
         if (!id || id <= 0 || isNaN(id)) {
             throw new BadRequestError_1.BadRequestError('ID inválido');
         }

@@ -18,38 +18,59 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateLogService = void 0;
+exports.ProdutoModel = void 0;
 const typedi_1 = require("typedi");
-const _cliente_service_1 = require("../cliente/@cliente.service");
-const _log_sistema_service_1 = require("./@log-sistema.service");
-let CreateLogService = class CreateLogService {
-    constructor(logSistemaService, clienteService) {
-        this.logSistemaService = logSistemaService;
-        this.clienteService = clienteService;
+const client_1 = require("@prisma/client");
+let ProdutoModel = class ProdutoModel {
+    constructor() {
+        this.prisma = new client_1.PrismaClient();
     }
-    execute(usuarioId, acao, clienteId) {
+    getAll(ativo, transaction) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this._validate(usuarioId, acao, clienteId);
-            const result = yield this.logSistemaService.createLog(usuarioId, acao, clienteId);
-            return result;
+            const whereClause = ativo ? { ativo: true } : {};
+            const prisma = transaction || this.prisma;
+            return yield prisma.produto.findMany({
+                where: whereClause,
+                orderBy: { nome: 'asc' },
+            });
         });
     }
-    _validate(usuarioId, acao, clienteId) {
+    create(data, transaction) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (clienteId && !(yield this.clienteService.getClienteById(clienteId))) {
-                console.error('erro ao registrar log, cliente não encontrado');
-                return;
-            }
-            if (!usuarioId || !acao) {
-                console.error('erro ao registrar log, usuário ID e ação são obrigatórios');
-                return;
-            }
+            const prisma = transaction || this.prisma;
+            return yield prisma.produto.create({
+                data,
+            });
+        });
+    }
+    getById(id, transaction) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const prisma = transaction || this.prisma;
+            return yield prisma.produto.findUnique({
+                where: { id },
+            });
+        });
+    }
+    update(id, data, transaction) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const prisma = transaction || this.prisma;
+            return yield prisma.produto.update({
+                where: { id },
+                data,
+            });
+        });
+    }
+    delete(id, transaction) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const prisma = transaction || this.prisma;
+            return yield prisma.produto.delete({
+                where: { id },
+            });
         });
     }
 };
-exports.CreateLogService = CreateLogService;
-exports.CreateLogService = CreateLogService = __decorate([
+exports.ProdutoModel = ProdutoModel;
+exports.ProdutoModel = ProdutoModel = __decorate([
     (0, typedi_1.Service)(),
-    __metadata("design:paramtypes", [_log_sistema_service_1.LogSistemaService,
-        _cliente_service_1.ClienteService])
-], CreateLogService);
+    __metadata("design:paramtypes", [])
+], ProdutoModel);

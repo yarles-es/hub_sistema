@@ -42,7 +42,7 @@ let UpdateClienteService = class UpdateClienteService {
             if (data.planoId && cliente.planoId !== data.planoId) {
                 yield this.editMonthlyFeeIfPlanIdIsChanged(id, data.planoId);
             }
-            const transformedData = this.transformData(data);
+            const transformedData = this._transformData(data);
             if (transformedData.isento) {
                 yield this.cancelMonthlyFeeIfCustomerIsExempt(id);
             }
@@ -59,7 +59,7 @@ let UpdateClienteService = class UpdateClienteService {
             return this.clienteService.updateCliente(id, updatedData);
         });
     }
-    transformData(data) {
+    _transformData(data) {
         if (!data.dataNascimento) {
             throw new BadRequestError_1.BadRequestError('Data de nascimento é obrigatória.');
         }

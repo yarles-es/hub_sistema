@@ -50,7 +50,7 @@ let GetAllClientesByNameService = class GetAllClientesByNameService {
                     status = 'DESATIVADO';
                 }
                 else if (pendente) {
-                    status = this.isDataNoPassado(pendente.vencimento) ? 'VENCIDO' : 'ATIVO';
+                    status = this._isDataNoPassado(pendente.vencimento) ? 'VENCIDO' : 'ATIVO';
                 }
                 else {
                     status = 'MENSALIDADE_AUSENTE';
@@ -60,7 +60,7 @@ let GetAllClientesByNameService = class GetAllClientesByNameService {
             return clientesFormatted;
         });
     }
-    isDataNoPassado(data) {
+    _isDataNoPassado(data) {
         const hoje = new Date();
         hoje.setHours(0, 0, 0, 0);
         const dataComparar = new Date(data);

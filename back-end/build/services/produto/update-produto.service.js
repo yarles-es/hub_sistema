@@ -18,39 +18,42 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreatePagamentoAvulsoService = void 0;
-const client_1 = require("@prisma/client");
+exports.UpdateProdutoService = void 0;
 const typedi_1 = require("typedi");
+const _produto_service_1 = require("./@produto.service");
 const BadRequestError_1 = require("../../errors/BadRequestError");
-const _pagamento_avulso_service_1 = require("./@pagamento-avulso.service");
-let CreatePagamentoAvulsoService = class CreatePagamentoAvulsoService {
-    constructor(pagamentoAvulsoService) {
-        this.pagamentoAvulsoService = pagamentoAvulsoService;
+let UpdateProdutoService = class UpdateProdutoService {
+    constructor(produtoService) {
+        this.produtoService = produtoService;
     }
-    execute(data) {
+    execute(id, data) {
         return __awaiter(this, void 0, void 0, function* () {
+            if (!id || isNaN(id) || id <= 0)
+                throw new BadRequestError_1.BadRequestError('ID inválido');
             this._validate(data);
-            return this.pagamentoAvulsoService.createPagamentoAvulso(data);
+            return yield this.produtoService.update(id, data);
         });
     }
     _validate(data) {
-        const { formaPagamento, nomeCliente, observacao, valor } = data;
-        if (!formaPagamento || client_1.FormPagamento[formaPagamento] === undefined) {
-            throw new BadRequestError_1.BadRequestError('Forma de pagamento inválida');
+        if (data.nome !== undefined && typeof data.nome !== 'string') {
+            throw new BadRequestError_1.BadRequestError('Nome deve ser string');
         }
-        if (nomeCliente && nomeCliente.trim() === '') {
-            throw new BadRequestError_1.BadRequestError('Nome do cliente está inválido');
+        if (data.valorVenda !== undefined && typeof data.valorVenda !== 'number') {
+            throw new BadRequestError_1.BadRequestError('Valor de venda deve ser número');
         }
-        if (observacao && observacao.trim() === '') {
-            throw new BadRequestError_1.BadRequestError('Observação está inválida');
+        if (data.valorCusto !== undefined && typeof data.valorCusto !== 'number') {
+            throw new BadRequestError_1.BadRequestError('Valor de custo deve ser número');
         }
-        if (valor === undefined || valor <= 0 || isNaN(valor)) {
-            throw new BadRequestError_1.BadRequestError('Valor deve ser um número válido maior que zero');
+        if (data.estoque !== undefined && typeof data.estoque !== 'number') {
+            throw new BadRequestError_1.BadRequestError('Estoque deve ser número');
+        }
+        if (data.ativo !== undefined && typeof data.ativo !== 'boolean') {
+            throw new BadRequestError_1.BadRequestError('Ativo deve ser booleano');
         }
     }
 };
-exports.CreatePagamentoAvulsoService = CreatePagamentoAvulsoService;
-exports.CreatePagamentoAvulsoService = CreatePagamentoAvulsoService = __decorate([
+exports.UpdateProdutoService = UpdateProdutoService;
+exports.UpdateProdutoService = UpdateProdutoService = __decorate([
     (0, typedi_1.Service)(),
-    __metadata("design:paramtypes", [_pagamento_avulso_service_1.PagamentoAvulsoService])
-], CreatePagamentoAvulsoService);
+    __metadata("design:paramtypes", [_produto_service_1.ProdutoService])
+], UpdateProdutoService);

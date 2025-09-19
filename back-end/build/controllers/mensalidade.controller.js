@@ -149,7 +149,6 @@ let MensalidadeController = class MensalidadeController {
                 const statusQuery = (0, safeTypes_1.safeParseStatusMensalidadeArray)(status);
                 const formaPagamentoQuery = (0, safeTypes_1.safeParseFormPagamentoArray)(formaPagamento);
                 const { startAtUtc, endAtUtc } = (0, date_range_1.buildUtcRange)(initialDate, finalDate);
-                console.log(startAtUtc, endAtUtc);
                 const mensalidades = yield this.getAllMensalidadesService.execute(page, limitNumber, {
                     clienteId: clienteIdQuery,
                     initialDate: startAtUtc,

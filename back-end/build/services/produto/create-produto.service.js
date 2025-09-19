@@ -18,39 +18,46 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreatePagamentoAvulsoService = void 0;
-const client_1 = require("@prisma/client");
+exports.CreateProdutoService = void 0;
 const typedi_1 = require("typedi");
+const _produto_service_1 = require("./@produto.service");
 const BadRequestError_1 = require("../../errors/BadRequestError");
-const _pagamento_avulso_service_1 = require("./@pagamento-avulso.service");
-let CreatePagamentoAvulsoService = class CreatePagamentoAvulsoService {
-    constructor(pagamentoAvulsoService) {
-        this.pagamentoAvulsoService = pagamentoAvulsoService;
+let CreateProdutoService = class CreateProdutoService {
+    constructor(produtoService) {
+        this.produtoService = produtoService;
     }
     execute(data) {
         return __awaiter(this, void 0, void 0, function* () {
             this._validate(data);
-            return this.pagamentoAvulsoService.createPagamentoAvulso(data);
+            return yield this.produtoService.create(data);
         });
     }
     _validate(data) {
-        const { formaPagamento, nomeCliente, observacao, valor } = data;
-        if (!formaPagamento || client_1.FormPagamento[formaPagamento] === undefined) {
-            throw new BadRequestError_1.BadRequestError('Forma de pagamento inválida');
+        const required = {
+            nome: 'Nome é obrigatório',
+            valorVenda: 'Valor de venda é obrigatório',
+            valorCusto: 'Valor de custo é obrigatório',
+            estoque: 'Estoque é obrigatório',
+        };
+        for (const k in required) {
+            const v = data[k];
+            if (v === undefined || v === null)
+                return new BadRequestError_1.BadRequestError(required[k]);
         }
-        if (nomeCliente && nomeCliente.trim() === '') {
-            throw new BadRequestError_1.BadRequestError('Nome do cliente está inválido');
+        if (typeof data.nome !== 'string')
+            throw new BadRequestError_1.BadRequestError('Nome deve ser string');
+        if (['valorVenda', 'valorCusto', 'estoque'].some((k) => typeof data[k] !== 'number')) {
+            throw new BadRequestError_1.BadRequestError('Valores numéricos inválidos');
         }
-        if (observacao && observacao.trim() === '') {
-            throw new BadRequestError_1.BadRequestError('Observação está inválida');
-        }
-        if (valor === undefined || valor <= 0 || isNaN(valor)) {
-            throw new BadRequestError_1.BadRequestError('Valor deve ser um número válido maior que zero');
+        if (data.estoque < 0)
+            throw new BadRequestError_1.BadRequestError('Estoque não pode ser negativo');
+        if (data.valorVenda < 0 || data.valorCusto < 0) {
+            throw new BadRequestError_1.BadRequestError('Valores não podem ser negativos');
         }
     }
 };
-exports.CreatePagamentoAvulsoService = CreatePagamentoAvulsoService;
-exports.CreatePagamentoAvulsoService = CreatePagamentoAvulsoService = __decorate([
+exports.CreateProdutoService = CreateProdutoService;
+exports.CreateProdutoService = CreateProdutoService = __decorate([
     (0, typedi_1.Service)(),
-    __metadata("design:paramtypes", [_pagamento_avulso_service_1.PagamentoAvulsoService])
-], CreatePagamentoAvulsoService);
+    __metadata("design:paramtypes", [_produto_service_1.ProdutoService])
+], CreateProdutoService);

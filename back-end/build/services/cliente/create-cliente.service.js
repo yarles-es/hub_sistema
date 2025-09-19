@@ -33,7 +33,7 @@ let CreateClienteService = class CreateClienteService {
     }
     execute(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            const transformedData = this.transformData(data);
+            const transformedData = this._transformData(data);
             yield this.validate(transformedData);
             const result = yield this.clienteService.createCliente(transformedData);
             yield this.createMensalidadeService.execute({ clienteId: result.id });
@@ -67,7 +67,7 @@ let CreateClienteService = class CreateClienteService {
             }
         });
     }
-    transformData(data) {
+    _transformData(data) {
         var _a;
         if (!data.dataNascimento) {
             throw new BadRequestError_1.BadRequestError('Data de nascimento é obrigatória.');

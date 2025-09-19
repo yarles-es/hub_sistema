@@ -29,11 +29,11 @@ let CreateUsuarioService = class CreateUsuarioService {
     }
     execute(usuario) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.validate(usuario);
+            yield this._validate(usuario);
             return yield this.usuarioService.create(usuario);
         });
     }
-    validate(usuario) {
+    _validate(usuario) {
         return __awaiter(this, void 0, void 0, function* () {
             if (usuario.email.length < 5 || !(0, validate_email_1.validateEmail)(usuario.email)) {
                 throw new BadRequestError_1.BadRequestError('Email inválido');

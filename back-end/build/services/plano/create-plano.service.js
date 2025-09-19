@@ -28,11 +28,11 @@ let CreatePlanoService = class CreatePlanoService {
     }
     execute(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.validate(data);
+            yield this._validate(data);
             return this.planoService.createPlano(data);
         });
     }
-    validate(data) {
+    _validate(data) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!data.nome || data.nome.trim() === '') {
                 throw new BadRequestError_1.BadRequestError('Nome do plano é obrigatório');

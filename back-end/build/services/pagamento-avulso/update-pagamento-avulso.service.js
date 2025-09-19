@@ -29,11 +29,11 @@ let UpdatePagamentoAvulsoService = class UpdatePagamentoAvulsoService {
     }
     execute(id, data) {
         return __awaiter(this, void 0, void 0, function* () {
-            this.validate(id, data);
+            this._validate(id, data);
             return this.pagamentoAvulsoService.updatePagamentoAvulso(id, data);
         });
     }
-    validate(id, data) {
+    _validate(id, data) {
         if (!id || isNaN(id) || id <= 0) {
             throw new BadRequestError_1.BadRequestError('ID inválido');
         }

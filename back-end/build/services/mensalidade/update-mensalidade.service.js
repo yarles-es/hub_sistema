@@ -32,14 +32,14 @@ let UpdateMensalidadeService = class UpdateMensalidadeService {
             if (!id || isNaN(id) || id <= 0) {
                 throw new BadRequestError_1.BadRequestError('ID inválido.');
             }
-            yield this.validate(id, data.formaPagamento === null ? undefined : data.formaPagamento, data.status === null ? undefined : data.status);
+            yield this._validate(id, data.formaPagamento === null ? undefined : data.formaPagamento, data.status === null ? undefined : data.status);
             if (data.valorPago === undefined) {
                 data.valorPago = null;
             }
             return yield this.mensalidadeService.updateMensalidade(id, data, transaction);
         });
     }
-    validate(id, formaPagamento, status) {
+    _validate(id, formaPagamento, status) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!id || isNaN(id) || id <= 0) {
                 throw new BadRequestError_1.BadRequestError('ID inválido');

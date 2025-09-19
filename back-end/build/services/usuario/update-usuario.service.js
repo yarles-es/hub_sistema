@@ -32,24 +32,24 @@ let UpdateUsuarioService = class UpdateUsuarioService {
         return __awaiter(this, void 0, void 0, function* () {
             if (!id || isNaN(id) || id <= 0)
                 throw new BadRequestError_1.BadRequestError('ID inválido.');
-            yield this.validate(usuario);
+            yield this._validate(usuario);
             const existingUser = yield this.usuarioService.findById(id);
             if (!existingUser)
                 throw new NotFoundError_1.NotFoundError('Usuário não encontrado.');
             return yield this.usuarioService.update(id, usuario);
         });
     }
-    validate(usuario) {
+    _validate(usuario) {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a, _b, _c;
+            var _a, _b;
+            if ((usuario.senha || '').trim() === '') {
+                usuario.senha = undefined;
+            }
             if (((_a = usuario.email) === null || _a === void 0 ? void 0 : _a.trim()) !== '' && !(0, validate_email_1.validateEmail)(usuario.email || '')) {
                 throw new BadRequestError_1.BadRequestError('Email inválido.');
             }
             if (((_b = usuario.nome) === null || _b === void 0 ? void 0 : _b.trim()) === '') {
                 throw new BadRequestError_1.BadRequestError('Nome não pode ser vazio.');
-            }
-            if (usuario.senha === '' || ((_c = usuario.senha) === null || _c === void 0 ? void 0 : _c.trim()) === '') {
-                throw new BadRequestError_1.BadRequestError('Senha não pode ser vazia.');
             }
             if (usuario.senha !== undefined && usuario.senha.length < 6)
                 throw new BadRequestError_1.BadRequestError('Senha deve ter pelo menos 6 caracteres.');

@@ -32,11 +32,11 @@ let CreateRegistroAcessoService = class CreateRegistroAcessoService {
     }
     execute(registro) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.validate(registro);
+            yield this._validate(registro);
             return yield this.registroAcessoService.createRegistroAcesso(registro);
         });
     }
-    validate(registro) {
+    _validate(registro) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!registro.clienteId) {
                 throw new BadRequestError_1.BadRequestError('Cliente ID é obrigatório');

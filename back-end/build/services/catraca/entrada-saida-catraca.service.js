@@ -35,24 +35,24 @@ let EntradasaidaCatracaService = class EntradasaidaCatracaService {
     }
     execute(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            const cliente = yield this.getClienteForCommand(data);
+            const cliente = yield this._getClienteForCommand(data);
             if (!cliente) {
                 yield (0, bloquear_entrada_catraca_1.bloquearEntradaCatraca)();
                 return;
             }
             const [clienteFormatado] = (0, formatador_cliente_1.formatadorCliente)([cliente]);
             if (!clienteFormatado.ativo) {
-                yield this.bloqueioClienteInativo(cliente.id);
+                yield this._bloqueioClienteInativo(cliente.id);
                 return;
             }
             if (this.TRAVAR.includes(clienteFormatado.status)) {
-                yield this.bloqueioClienteInativo(cliente.id);
+                yield this._bloqueioClienteInativo(cliente.id);
                 return;
             }
-            yield this.entradaSaidaCatraca(cliente.id);
+            yield this._entradaSaidaCatraca(cliente.id);
         });
     }
-    bloqueioClienteInativo(clienteId) {
+    _bloqueioClienteInativo(clienteId) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.registroAcessoService.createRegistroAcesso({
                 clienteId,
@@ -63,7 +63,7 @@ let EntradasaidaCatracaService = class EntradasaidaCatracaService {
             return;
         });
     }
-    getClienteForCommand(body) {
+    _getClienteForCommand(body) {
         return __awaiter(this, void 0, void 0, function* () {
             const command = body.command;
             if (command === 774) {
@@ -72,7 +72,7 @@ let EntradasaidaCatracaService = class EntradasaidaCatracaService {
             }
             if (command === 771) {
                 const data = body.response.identification.data;
-                const date = yield this.transformDate(data);
+                const date = yield this._transformDate(data);
                 if (date) {
                     return yield this.clienteService.findByDataNascimento(date);
                 }
@@ -80,7 +80,7 @@ let EntradasaidaCatracaService = class EntradasaidaCatracaService {
             return null;
         });
     }
-    transformDate(data) {
+    _transformDate(data) {
         const strData = data.toString().padStart(8, '0');
         if (!/^\d{8}$/.test(strData))
             return null;
@@ -92,7 +92,7 @@ let EntradasaidaCatracaService = class EntradasaidaCatracaService {
             return null;
         return `${ano}-${mes}-${dia}`;
     }
-    entradaSaidaCatraca(clienteId) {
+    _entradaSaidaCatraca(clienteId) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a, _b;
             const registrosAcesso = yield this.registroAcessoService.findAllRegistrosByClienteId(clienteId);

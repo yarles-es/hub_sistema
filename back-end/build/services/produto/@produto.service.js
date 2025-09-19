@@ -18,39 +18,41 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreatePagamentoAvulsoService = void 0;
-const client_1 = require("@prisma/client");
+exports.ProdutoService = void 0;
 const typedi_1 = require("typedi");
-const BadRequestError_1 = require("../../errors/BadRequestError");
-const _pagamento_avulso_service_1 = require("./@pagamento-avulso.service");
-let CreatePagamentoAvulsoService = class CreatePagamentoAvulsoService {
-    constructor(pagamentoAvulsoService) {
-        this.pagamentoAvulsoService = pagamentoAvulsoService;
+const produto_model_1 = require("../../models/produto.model");
+let ProdutoService = class ProdutoService {
+    constructor(produtoModel) {
+        this.produtoModel = produtoModel;
     }
-    execute(data) {
+    getAll(ativo, transaction) {
         return __awaiter(this, void 0, void 0, function* () {
-            this._validate(data);
-            return this.pagamentoAvulsoService.createPagamentoAvulso(data);
+            return yield this.produtoModel.getAll(ativo, transaction);
         });
     }
-    _validate(data) {
-        const { formaPagamento, nomeCliente, observacao, valor } = data;
-        if (!formaPagamento || client_1.FormPagamento[formaPagamento] === undefined) {
-            throw new BadRequestError_1.BadRequestError('Forma de pagamento inválida');
-        }
-        if (nomeCliente && nomeCliente.trim() === '') {
-            throw new BadRequestError_1.BadRequestError('Nome do cliente está inválido');
-        }
-        if (observacao && observacao.trim() === '') {
-            throw new BadRequestError_1.BadRequestError('Observação está inválida');
-        }
-        if (valor === undefined || valor <= 0 || isNaN(valor)) {
-            throw new BadRequestError_1.BadRequestError('Valor deve ser um número válido maior que zero');
-        }
+    create(data, transaction) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.produtoModel.create(data, transaction);
+        });
+    }
+    getById(id, transaction) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.produtoModel.getById(id, transaction);
+        });
+    }
+    update(id, data, transaction) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.produtoModel.update(id, data, transaction);
+        });
+    }
+    delete(id, transaction) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.produtoModel.delete(id, transaction);
+        });
     }
 };
-exports.CreatePagamentoAvulsoService = CreatePagamentoAvulsoService;
-exports.CreatePagamentoAvulsoService = CreatePagamentoAvulsoService = __decorate([
+exports.ProdutoService = ProdutoService;
+exports.ProdutoService = ProdutoService = __decorate([
     (0, typedi_1.Service)(),
-    __metadata("design:paramtypes", [_pagamento_avulso_service_1.PagamentoAvulsoService])
-], CreatePagamentoAvulsoService);
+    __metadata("design:paramtypes", [produto_model_1.ProdutoModel])
+], ProdutoService);

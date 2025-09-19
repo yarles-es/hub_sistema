@@ -1,0 +1,14 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.produtoRoute = void 0;
+const express_1 = require("express");
+const typedi_1 = require("typedi");
+const produto_controller_1 = require("../controllers/produto.controller");
+const router = (0, express_1.Router)();
+const produtoController = typedi_1.Container.get(produto_controller_1.ProdutoController);
+router.post('/create', produtoController.create.bind(produtoController));
+router.get('/get-all', produtoController.getAll.bind(produtoController));
+router.get('/get-by-id/:id', produtoController.getById.bind(produtoController));
+router.put('/update/:id', produtoController.update.bind(produtoController));
+router.delete('/delete/:id', produtoController.delete.bind(produtoController));
+exports.produtoRoute = router;
