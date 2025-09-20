@@ -48,6 +48,12 @@ const MonthlyFeeTable: React.FC<Props> = ({
       type: "string",
       order: true,
     },
+    {
+      key: "dataPagamento",
+      label: "Data pagamento",
+      type: "date",
+      order: true,
+    },
     { key: "valorPago", label: "Valor pago", type: "number", order: true },
     { key: "cancel", label: "Cancelar", type: "actions", order: false },
     { key: "pay", label: "Pagar", type: "actions", order: false },
@@ -152,6 +158,22 @@ const MonthlyFeeTable: React.FC<Props> = ({
                         {monthlyFee.formaPagamento}
                       </p>
                     ) : null}
+                  </td>
+                  <td className="py-4 px-4 text-black dark:text-white">
+                    {monthlyFee.dataPagamento && (
+                      <p>
+                        {new Date(
+                          monthlyFee.dataPagamento
+                        ).toLocaleDateString()}{" "}
+                        {new Date(monthlyFee.dataPagamento).toLocaleTimeString(
+                          [],
+                          {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          }
+                        )}
+                      </p>
+                    )}
                   </td>
                   <td className="py-4 px-4 text-black dark:text-white">
                     {monthlyFee.valorPago && (

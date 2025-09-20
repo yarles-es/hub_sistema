@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 
@@ -18,6 +20,8 @@ type Props = {
 type FormValues = {
   initialDate: string;
   finalDate: string;
+  initialPaymentDate: string;
+  finalPaymentDate: string;
   clientId: number | undefined;
   formaPagamento: PaymentType[];
   status: MonthlyFeeStatus[];
@@ -28,11 +32,17 @@ const FormSearchMonthlyFee = ({ onClose }: Props) => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const { handleSubmit, formState, control, register, watch, setValue } =
+  const [visionSearchDate, setVisionSearchDate] = useState<
+    "PAYMENT-DATE" | "DUE-DATE"
+  >("PAYMENT-DATE");
+
+  const { handleSubmit, formState, control, register, setValue } =
     useForm<FormValues>({
       defaultValues: {
         initialDate: "",
         finalDate: "",
+        initialPaymentDate: "",
+        finalPaymentDate: "",
         clientId: undefined,
         formaPagamento: [],
         status: [],
@@ -59,6 +69,17 @@ const FormSearchMonthlyFee = ({ onClose }: Props) => {
     onClose();
   };
 
+  const setVisionSearchDateState = (value: "PAYMENT-DATE" | "DUE-DATE") => {
+    if (value === "DUE-DATE") {
+      setValue("initialPaymentDate", "");
+      setValue("finalPaymentDate", "");
+    } else {
+      setValue("initialDate", "");
+      setValue("finalDate", "");
+    }
+    setVisionSearchDate(value);
+  };
+
   return (
     <DefaultFormatContainerForm title="Consultar Mensalidades">
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -73,26 +94,68 @@ const FormSearchMonthlyFee = ({ onClose }: Props) => {
               />
             </div>
           </div>
-          <div className="mb-4.5 flex gap-6 xl:flex-row flex-col">
-            <div className="w-full xl:w-1/2">
-              <Input
-                {...register("initialDate")}
-                type="date"
-                label="Data vencimento Inicial:"
-                placeholder="Digite a data de vencimento inicial"
-                error={errors.initialDate?.message}
-              />
-            </div>
-            <div className="w-full xl:w-1/2">
-              <Input
-                {...register("finalDate")}
-                type="date"
-                label="Data vencimento final:"
-                placeholder="Digite a data de vencimento final"
-                error={errors.finalDate?.message}
-              />
+          <div className="mb-6.5 flex flex-col gap-6 xl:flex-row justify-center items-center">
+            <div className="flex flex-col xl:flex-row justify-normal items-start xl:items-center gap-4">
+              <CheckBox
+                id="PAYMENT-DATE"
+                checked={visionSearchDate === "PAYMENT-DATE"}
+                onChange={() => setVisionSearchDateState("PAYMENT-DATE")}
+              >
+                <p>Data pagamento</p>
+              </CheckBox>
+              <CheckBox
+                id="DUE-DATE"
+                checked={visionSearchDate === "DUE-DATE"}
+                onChange={() => setVisionSearchDateState("DUE-DATE")}
+              >
+                <p>Data vencimento</p>
+              </CheckBox>
             </div>
           </div>
+
+          {visionSearchDate === "DUE-DATE" ? (
+            <div className="mb-4.5 flex gap-6 xl:flex-row flex-col">
+              <div className="w-full xl:w-1/2">
+                <Input
+                  {...register("initialDate")}
+                  type="date"
+                  label="Data vencimento Inicial:"
+                  placeholder="Digite a data de vencimento inicial"
+                  error={errors.initialDate?.message}
+                />
+              </div>
+              <div className="w-full xl:w-1/2">
+                <Input
+                  {...register("finalDate")}
+                  type="date"
+                  label="Data vencimento final:"
+                  placeholder="Digite a data de vencimento final"
+                  error={errors.finalDate?.message}
+                />
+              </div>
+            </div>
+          ) : (
+            <div className="mb-4.5 flex gap-6 xl:flex-row flex-col">
+              <div className="w-full xl:w-1/2">
+                <Input
+                  {...register("initialPaymentDate")}
+                  type="date"
+                  label="Data pagamento Inicial:"
+                  placeholder="Digite a data de pagamento inicial"
+                  error={errors.initialPaymentDate?.message}
+                />
+              </div>
+              <div className="w-full xl:w-1/2">
+                <Input
+                  {...register("finalPaymentDate")}
+                  type="date"
+                  label="Data pagamento final:"
+                  placeholder="Digite a data de pagamento final"
+                  error={errors.finalPaymentDate?.message}
+                />
+              </div>
+            </div>
+          )}
           <span className="mb-2.5 text-black dark:text-white flex items-center justify-center">
             Forma de pagamento:
           </span>

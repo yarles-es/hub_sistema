@@ -13,6 +13,8 @@ export type GetAllMonthlyFees = {
   clienteId?: number;
   initialDate?: string;
   finalDate?: string;
+  initialPaymentDate?: string;
+  finalPaymentDate?: string;
   status?: MonthlyFeeStatus[];
   formaPagamento?: PaymentType[];
 };

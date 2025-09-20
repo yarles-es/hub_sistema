@@ -41,6 +41,8 @@ const MonthlyFeePage = () => {
       limit: Number(searchParams.get("limit")) || LIMIT_WITH_PAGE,
       initialDate: searchParams.get("initialDate") || undefined,
       finalDate: searchParams.get("finalDate") || undefined,
+      initialPaymentDate: searchParams.get("initialPaymentDate") || undefined,
+      finalPaymentDate: searchParams.get("finalPaymentDate") || undefined,
       clienteId: searchParams.get("clientId")
         ? Number(searchParams.get("clientId"))
         : undefined,
