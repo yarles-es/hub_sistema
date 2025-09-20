@@ -9,7 +9,7 @@ export class UpdateMensalidadeService {
 
   public async execute(
     id: number,
-    data: Partial<Pick<Mensalidade, 'formaPagamento' | 'status' | 'valorPago'>>,
+    data: Partial<Pick<Mensalidade, 'formaPagamento' | 'status' | 'valorPago' | 'dataPagamento'>>,
     transaction?: Prisma.TransactionClient,
   ): Promise<Mensalidade> {
     if (!id || isNaN(id) || id <= 0) {

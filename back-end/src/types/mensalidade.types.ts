@@ -12,6 +12,8 @@ export type MensalidadeFilter = {
   status?: StatusMensalidade[];
   clienteId?: number;
   formaPagamento?: FormPagamento[];
+  initialPaymentDate?: Date;
+  finalPaymentDate?: Date;
 };
 
 export type MensalidadeWithCliente = Mensalidade & {

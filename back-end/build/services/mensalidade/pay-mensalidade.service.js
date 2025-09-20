@@ -46,6 +46,7 @@ let PayMensalidadeService = class PayMensalidadeService {
                     status: client_1.StatusMensalidade.PAGO,
                     formaPagamento,
                     valorPago,
+                    dataPagamento: new Date(),
                 }, tx);
                 yield this.createMensalidadeService.execute({
                     clienteId: mensalidade.clienteId,

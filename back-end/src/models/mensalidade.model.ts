@@ -93,6 +93,14 @@ export class MensalidadeModel {
     const where: Prisma.MensalidadeWhereInput = {};
 
     const vencimento: Prisma.DateTimeFilter = {};
+    const dataPagamento: Prisma.DateTimeFilter = {};
+
+    if (filter?.initialPaymentDate) dataPagamento.gte = filter.initialPaymentDate;
+    if (filter?.finalPaymentDate) dataPagamento.lte = filter.finalPaymentDate;
+
+    if (Object.keys(dataPagamento).length > 0) {
+      where.dataPagamento = dataPagamento;
+    }
 
     if (filter?.initialDate) vencimento.gte = filter.initialDate;
     if (filter?.finalDate) vencimento.lte = filter.finalDate;

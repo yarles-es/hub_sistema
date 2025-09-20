@@ -87,6 +87,14 @@ let MensalidadeModel = class MensalidadeModel {
             const client = transaction || this.prisma;
             const where = {};
             const vencimento = {};
+            const dataPagamento = {};
+            if (filter === null || filter === void 0 ? void 0 : filter.initialPaymentDate)
+                dataPagamento.gte = filter.initialPaymentDate;
+            if (filter === null || filter === void 0 ? void 0 : filter.finalPaymentDate)
+                dataPagamento.lte = filter.finalPaymentDate;
+            if (Object.keys(dataPagamento).length > 0) {
+                where.dataPagamento = dataPagamento;
+            }
             if (filter === null || filter === void 0 ? void 0 : filter.initialDate)
                 vencimento.gte = filter.initialDate;
             if (filter === null || filter === void 0 ? void 0 : filter.finalDate)

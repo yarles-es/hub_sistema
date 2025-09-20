@@ -140,16 +140,33 @@ export class MensalidadeController {
 
   async getAll(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { numberPage, limit, clienteId, initialDate, finalDate, status, formaPagamento } = req.query;
+      const {
+        numberPage,
+        limit,
+        clienteId,
+        initialDate,
+        finalDate,
+        status,
+        formaPagamento,
+        initialPaymentDate,
+        finalPaymentDate,
+      } = req.query;
       const page = safeParseInt(numberPage) || 1;
       const limitNumber = safeParseInt(limit) || 30;
       const clienteIdQuery = safeParseInt(clienteId);
       const statusQuery = safeParseStatusMensalidadeArray(status);
       const formaPagamentoQuery = safeParseFormPagamentoArray(formaPagamento);
 
+      // data de vencimento formatada
       const { startAtUtc, endAtUtc } = buildUtcRange(
         initialDate as string | undefined,
         finalDate as string | undefined,
+      );
+
+      // data de pagamento formatada
+      const { startAtUtc: initialPayment, endAtUtc: finalPayment } = buildUtcRange(
+        initialPaymentDate as string | undefined,
+        finalPaymentDate as string | undefined,
       );
 
       const mensalidades = await this.getAllMensalidadesService.execute(page, limitNumber, {
@@ -158,6 +175,8 @@ export class MensalidadeController {
         finalDate: endAtUtc,
         status: statusQuery,
         formaPagamento: formaPagamentoQuery,
+        initialPaymentDate: initialPayment,
+        finalPaymentDate: finalPayment,
       });
 
       res.status(200).json(mensalidades);

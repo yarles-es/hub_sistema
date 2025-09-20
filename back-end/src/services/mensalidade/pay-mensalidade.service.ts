@@ -36,6 +36,7 @@ export class PayMensalidadeService {
           status: StatusMensalidade.PAGO,
           formaPagamento,
           valorPago,
+          dataPagamento: new Date(),
         },
         tx,
       );

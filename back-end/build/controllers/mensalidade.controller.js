@@ -142,19 +142,24 @@ let MensalidadeController = class MensalidadeController {
     getAll(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { numberPage, limit, clienteId, initialDate, finalDate, status, formaPagamento } = req.query;
+                const { numberPage, limit, clienteId, initialDate, finalDate, status, formaPagamento, initialPaymentDate, finalPaymentDate, } = req.query;
                 const page = (0, safeTypes_1.safeParseInt)(numberPage) || 1;
                 const limitNumber = (0, safeTypes_1.safeParseInt)(limit) || 30;
                 const clienteIdQuery = (0, safeTypes_1.safeParseInt)(clienteId);
                 const statusQuery = (0, safeTypes_1.safeParseStatusMensalidadeArray)(status);
                 const formaPagamentoQuery = (0, safeTypes_1.safeParseFormPagamentoArray)(formaPagamento);
+                // data de vencimento formatada
                 const { startAtUtc, endAtUtc } = (0, date_range_1.buildUtcRange)(initialDate, finalDate);
+                // data de pagamento formatada
+                const { startAtUtc: initialPayment, endAtUtc: finalPayment } = (0, date_range_1.buildUtcRange)(initialPaymentDate, finalPaymentDate);
                 const mensalidades = yield this.getAllMensalidadesService.execute(page, limitNumber, {
                     clienteId: clienteIdQuery,
                     initialDate: startAtUtc,
                     finalDate: endAtUtc,
                     status: statusQuery,
                     formaPagamento: formaPagamentoQuery,
+                    initialPaymentDate: initialPayment,
+                    finalPaymentDate: finalPayment,
                 });
                 res.status(200).json(mensalidades);
             }
