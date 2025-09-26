@@ -1,4 +1,4 @@
-import { Mensalidade, Prisma, PrismaClient, StatusMensalidade } from '@prisma/client';
+import { Mensalidade, Prisma, PrismaClient, StatusMensalidade, FormPagamento } from '@prisma/client';
 import { Service } from 'typedi';
 import {
   CreateMensalidade,
@@ -123,7 +123,7 @@ export class MensalidadeModel {
       where.formaPagamento = { in: filter.formaPagamento };
     }
 
-    const [data, total] = await Promise.all([
+    const [data, total, totalPago, totalPix, totalCartao, totalDinheiro] = await Promise.all([
       client.mensalidade.findMany({
         where,
         skip: (page - 1) * limit,
@@ -141,9 +141,37 @@ export class MensalidadeModel {
         },
       }),
       client.mensalidade.count({ where }),
+      client.mensalidade.aggregate({
+        where,
+        _sum: {
+          valorPago: true,
+        },
+      }),
+      client.mensalidade.aggregate({
+        where: { ...where, formaPagamento: FormPagamento.PIX },
+        _sum: {
+          valorPago: true,
+        },
+      }),
+      client.mensalidade.aggregate({
+        where: { ...where, formaPagamento: FormPagamento.CARTAO },
+        _sum: {
+          valorPago: true,
+        },
+      }),
+      client.mensalidade.aggregate({
+        where: { ...where, formaPagamento: FormPagamento.DINHEIRO },
+        _sum: {
+          valorPago: true,
+        },
+      }),
     ]);
 
     return {
+      totalPago: totalPago._sum.valorPago ?? 0,
+      totalPix: totalPix._sum.valorPago ?? 0,
+      totalCartao: totalCartao._sum.valorPago ?? 0,
+      totalDinheiro: totalDinheiro._sum.valorPago ?? 0,
       data,
       total,
       page,

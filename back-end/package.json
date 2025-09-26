@@ -31,7 +31,6 @@
     "bcrypt": "^6.0.0",
     "buffer": "^6.0.3",
     "cors": "^2.8.5",
-    "cros": "^1.1.0",
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",

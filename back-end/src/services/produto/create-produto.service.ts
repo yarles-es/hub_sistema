@@ -23,7 +23,7 @@ export class CreateProdutoService {
 
     for (const k in required) {
       const v = (data as any)[k];
-      if (v === undefined || v === null) return new BadRequestError((required as any)[k]);
+      if (v === undefined || v === null) throw new BadRequestError((required as any)[k]);
     }
 
     if (typeof data.nome !== 'string') throw new BadRequestError('Nome deve ser string');

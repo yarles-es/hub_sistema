@@ -23,6 +23,10 @@ export type MensalidadeWithCliente = Mensalidade & {
 export type MensalidadeResponseGetAll = {
   data: MensalidadeWithCliente[];
   total: number;
+  totalPago: number;
+  totalPix: number;
+  totalCartao: number;
+  totalDinheiro: number;
   page: number;
   limit: number;
 };

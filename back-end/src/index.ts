@@ -30,27 +30,27 @@ app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
   asyncError.errorHandling(err, req, res, next);
 });
 
-// faz a primeira conexão com a catraca na inicialização
-conectarCatraca()
-  .then(() => {
-    console.log('Catraca connected successfully');
-  })
-  .catch((err) => {
-    if (err.status === 400) {
-      console.log('catraca já conectada!');
-    } else {
-      console.error('Erro ao conectar a catraca:', err);
-    }
-  });
+// // faz a primeira conexão com a catraca na inicialização
+// conectarCatraca()
+//   .then(() => {
+//     console.log('Catraca connected successfully');
+//   })
+//   .catch((err) => {
+//     if (err.status === 400) {
+//       console.log('catraca já conectada!');
+//     } else {
+//       console.error('Erro ao conectar a catraca:', err);
+//     }
+//   });
 
-// faz registro do webhook na inicialização
-registrarWebhookCatraca()
-  .then(() => {
-    console.log('Webhook registered successfully');
-  })
-  .catch((err) => {
-    console.error('erro:', err);
-  });
+// // faz registro do webhook na inicialização
+// registrarWebhookCatraca()
+//   .then(() => {
+//     console.log('Webhook registered successfully');
+//   })
+//   .catch((err) => {
+//     console.error('erro:', err);
+//   });
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is running on port ${PORT}`);
