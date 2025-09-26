@@ -1,6 +1,9 @@
+import { useState } from "react";
+
 import ButtonActionDelete from "../Buttons/ButtonActionDelete";
 import ButtonActionPayment from "../Buttons/ButtonActionPayment";
 import ButtonActionUnlink from "../Buttons/ButtonactionUnlink";
+import CheckBox from "../CheckBox/CheckBox";
 
 import { useMonthlyFeesByClientId } from "@/hooks/queries/monthlyFees/useMonthlyFeesByClientId";
 import useOrderTable from "@/hooks/useOrderTable";
@@ -19,6 +22,10 @@ type Props = {
   secundary?: boolean;
   MonthlyFees?: MonthlyFeeWithClient[];
   onOpenItemSelect: (id: number, type: ModalMonthlyFeeType) => void;
+  totalPaid?: number;
+  totalPix?: number;
+  totalCard?: number;
+  totalMoney?: number;
 };
 
 const MonthlyFeeTable: React.FC<Props> = ({
@@ -26,8 +33,14 @@ const MonthlyFeeTable: React.FC<Props> = ({
   onOpenItemSelect,
   clientId,
   secundary,
+  totalPaid,
+  totalPix,
+  totalCard,
+  totalMoney,
 }) => {
   const administration = useViewPermission();
+
+  const [viewReport, setViewReport] = useState(false);
 
   const { data: monthlyFeeData } = useMonthlyFeesByClientId(clientId);
 
@@ -84,8 +97,71 @@ const MonthlyFeeTable: React.FC<Props> = ({
     <TableContainer>
       {monthlyFeesOrder && monthlyFeesOrder.length > 0 ? (
         <>
+          {administration && (
+            <div className="flex items-center gap-2 2xsm:gap-4 justify-center sticky top-0 z-20 bg-white dark:bg-boxdark">
+              <div className="flex justify-center items-center">
+                <CheckBox
+                  classLabel="m-2 text-xs text-white"
+                  id="view-report"
+                  checked={viewReport}
+                  onChange={(e) => setViewReport(e.target.checked)}
+                >
+                  <span className="text-white">
+                    Ver relatório de pagamentos
+                  </span>
+                </CheckBox>
+              </div>
+              {viewReport && (
+                <>
+                  <div
+                    className={`inline-flex cursor-pointer select-none rounded-full bg-opacity-10 py-1 px-3 text-xs font-medium transition-[transform,opacity] hover:opacity-90 active:scale-95 bg-success text-success`}
+                  >
+                    pix:{" "}
+                    {totalPix?.toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    }) ?? "R$ 0,00"}
+                  </div>
+
+                  <div
+                    className={`inline-flex cursor-pointer select-none rounded-full bg-opacity-10 py-1 px-3 text-xs font-medium transition-[transform,opacity] hover:opacity-90 active:scale-95 bg-success text-success`}
+                  >
+                    cartão:{" "}
+                    {totalCard?.toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    }) ?? "R$ 0,00"}
+                  </div>
+
+                  <div
+                    className={`inline-flex cursor-pointer select-none rounded-full bg-opacity-10 py-1 px-3 text-xs font-medium transition-[transform,opacity] hover:opacity-90 active:scale-95 bg-success text-success`}
+                  >
+                    dinheiro:{" "}
+                    {totalMoney?.toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    }) ?? "R$ 0,00"}
+                  </div>
+
+                  <div
+                    className={`inline-flex cursor-pointer select-none rounded-full bg-opacity-10 py-1 px-3 text-xs font-medium transition-[transform,opacity] hover:opacity-90 active:scale-95 bg-success text-success`}
+                  >
+                    total:{" "}
+                    {totalPaid?.toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    }) ?? "R$ 0,00"}
+                  </div>
+                </>
+              )}
+            </div>
+          )}
           <table className="w-full table-auto">
-            <thead className="bg-gray-50 sticky top-0 z-1">
+            <thead
+              className={`bg-gray-50 sticky z-10 ${
+                administration && !secundary ? "top-10" : "top-0"
+              }`}
+            >
               <tr className="bg-gray-2 text-left dark:bg-meta-4">
                 {titlesFiltered.map((title, key) =>
                   key === 0 ? (

@@ -65,6 +65,7 @@ const FormNewUser: React.FC<FormNewUserProps> = ({ onClose }) => {
             <div className="w-full xl:w-1/2">
               <Input
                 {...register("email")}
+                autoComplete="email"
                 type="text"
                 label="E-mail:"
                 placeholder="Digite o e-mail"
@@ -76,6 +77,7 @@ const FormNewUser: React.FC<FormNewUserProps> = ({ onClose }) => {
             <div className="w-full xl:w-1/2">
               <Input
                 {...register("senha")}
+                autoComplete="new-password"
                 label="Senha:"
                 type="password"
                 placeholder="Digite a senha do usuário"

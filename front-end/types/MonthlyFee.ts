@@ -42,6 +42,10 @@ export type getAllMonthlyFeesResponse = {
   page: number;
   limit: number;
   total: number;
+  totalPago: number;
+  totalPix: number;
+  totalCartao: number;
+  totalDinheiro: number;
 };
 
 export type PaymentMonthlyFee = {

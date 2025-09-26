@@ -101,6 +101,10 @@ const MonthlyFeePage = () => {
             <MonthlyFeeTable
               MonthlyFees={monthlyFees?.data}
               onOpenItemSelect={onOpenModal}
+              totalPaid={monthlyFees?.totalPago}
+              totalPix={monthlyFees?.totalPix}
+              totalCard={monthlyFees?.totalCartao}
+              totalMoney={monthlyFees?.totalDinheiro}
             />
             {monthlyFees && monthlyFees?.data.length > 0 && (
               <Pagination
