@@ -84,6 +84,7 @@ let MensalidadeModel = class MensalidadeModel {
     }
     findAll(page, limit, filter, transaction) {
         return __awaiter(this, void 0, void 0, function* () {
+            var _a, _b, _c, _d;
             const client = transaction || this.prisma;
             const where = {};
             const vencimento = {};
@@ -114,7 +115,7 @@ let MensalidadeModel = class MensalidadeModel {
             if ((filter === null || filter === void 0 ? void 0 : filter.formaPagamento) && filter.formaPagamento.length > 0) {
                 where.formaPagamento = { in: filter.formaPagamento };
             }
-            const [data, total] = yield Promise.all([
+            const [data, total, totalPago, totalPix, totalCartao, totalDinheiro] = yield Promise.all([
                 client.mensalidade.findMany({
                     where,
                     skip: (page - 1) * limit,
@@ -132,8 +133,36 @@ let MensalidadeModel = class MensalidadeModel {
                     },
                 }),
                 client.mensalidade.count({ where }),
+                client.mensalidade.aggregate({
+                    where,
+                    _sum: {
+                        valorPago: true,
+                    },
+                }),
+                client.mensalidade.aggregate({
+                    where: Object.assign(Object.assign({}, where), { formaPagamento: client_1.FormPagamento.PIX }),
+                    _sum: {
+                        valorPago: true,
+                    },
+                }),
+                client.mensalidade.aggregate({
+                    where: Object.assign(Object.assign({}, where), { formaPagamento: client_1.FormPagamento.CARTAO }),
+                    _sum: {
+                        valorPago: true,
+                    },
+                }),
+                client.mensalidade.aggregate({
+                    where: Object.assign(Object.assign({}, where), { formaPagamento: client_1.FormPagamento.DINHEIRO }),
+                    _sum: {
+                        valorPago: true,
+                    },
+                }),
             ]);
             return {
+                totalPago: (_a = totalPago._sum.valorPago) !== null && _a !== void 0 ? _a : 0,
+                totalPix: (_b = totalPix._sum.valorPago) !== null && _b !== void 0 ? _b : 0,
+                totalCartao: (_c = totalCartao._sum.valorPago) !== null && _c !== void 0 ? _c : 0,
+                totalDinheiro: (_d = totalDinheiro._sum.valorPago) !== null && _d !== void 0 ? _d : 0,
                 data,
                 total,
                 page,
