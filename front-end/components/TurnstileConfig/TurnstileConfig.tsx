@@ -15,6 +15,7 @@ import {
   setClockwiseDirection,
   setDurationInteraction,
   setFirstMessage,
+  setFlowControlType,
   setMessageBloq,
   setSecondMessage,
 } from "@/api/turnstile/turnstile.api";
@@ -30,6 +31,7 @@ const TurnstileConfig = () => {
       duracaoInteracao: 0,
       mensagemBloqueio: "",
       tipoFluxoBiometria: "",
+      tipoFluxoCatraca: "",
     },
   });
 
@@ -126,6 +128,16 @@ const TurnstileConfig = () => {
     },
   });
 
+  const { mutate: turnstileFlowType } = useMutation({
+    mutationFn: setFlowControlType,
+    onSuccess: () => {
+      alert("Tipo de fluxo biométrico atualizado com sucesso!", "success");
+    },
+    onError: () => {
+      alert("Erro ao atualizar o tipo de fluxo biométrico.", "error");
+    },
+  });
+
   const { mutate: restart } = useMutation({
     mutationFn: restartTurnstile,
     onSuccess: () => {
@@ -179,6 +191,20 @@ const TurnstileConfig = () => {
       return;
     }
     biometryFlowType(Number(data));
+  };
+
+  const handleSetTurnstileFlowType = async (data: string) => {
+    if (
+      isNaN(Number(data)) ||
+      (Number(data) !== 0 &&
+        Number(data) !== 1 &&
+        Number(data) !== 2 &&
+        Number(data) !== 3)
+    ) {
+      alert("O tipo de fluxo da catraca deve ser entre 0 e 3.", "error");
+      return;
+    }
+    turnstileFlowType(Number(data));
   };
 
   const handleRestartTurnstile = () => {
@@ -357,12 +383,74 @@ const TurnstileConfig = () => {
                   </Button>
                 </div>
               </div>
+            </div>
+
+            <div className="mb-4.5 flex gap-6 xl:flex-row flex-col items-center justify-center text-center">
+              <div className="w-full flex flex-col justify-center items-center m-5">
+                <p
+                  className={`mb-2.5 block text-black dark:text-white text-sm`}
+                >
+                  <strong>Tipo fluxo catraca:</strong>{" "}
+                  {"(aplicação usa 3 - controla entrada e saida)"}
+                </p>
+                <p className={`mb-2.5 block text-black dark:text-white`}>
+                  0 - Livre
+                </p>
+                <p className={`mb-2.5 block text-black dark:text-white`}>
+                  1 - controla entrada com saida liberada
+                </p>
+                <p className={`mb-2.5 block text-black dark:text-white`}>
+                  2 - controla saída com entrada liberada
+                </p>
+                <p className={`mb-2.5 block text-black dark:text-white`}>
+                  3 - controla entrada e saida
+                </p>
+                <div className="flex justify-center items-center gap-1 flex-col">
+                  <Controller
+                    control={control}
+                    name="tipoFluxoCatraca"
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        type="number"
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          if (value === "") {
+                            field.onChange("");
+                          } else if (
+                            value === "0" ||
+                            value === "1" ||
+                            value === "2" ||
+                            value === "3"
+                          ) {
+                            field.onChange(Number(value));
+                          }
+                        }}
+                        value={field.value}
+                        placeholder="0 a 3"
+                        error={errors.tipoFluxoCatraca?.message}
+                        className="text-center"
+                      />
+                    )}
+                  />
+                  <Button
+                    type="button"
+                    className={`flex w-full lg:w-30 justify-center p-3 rounded`}
+                    primary
+                    onClick={() =>
+                      handleSetBiometryFlowType(watch("tipoFluxoCatraca"))
+                    }
+                  >
+                    enviar
+                  </Button>
+                </div>
+              </div>
 
               {/* <div className="w-full flex flex-col justify-center items-center m-5">
                 <p
                   className={`mb-2.5 block text-black dark:text-white text-sm`}
                 >
-                  Tipo biometria:
+                  Tipo biometria: {"(Aparentemente não funciona)"}
                 </p>
                 <p className={`mb-2.5 block text-black dark:text-white`}>
                   0 - biometria dependente de app
