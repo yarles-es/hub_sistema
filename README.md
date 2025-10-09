@@ -298,3 +298,15 @@ Nesta versão, o sistema foi projetado para operar **uma única catraca por inst
 Para testes e demonstrações, também é possível executar o projeto **sem a catraca** utilizando valores fictícios (modo demonstração).
 
 Contribuições, sugestões e correções são bem-vindas via **Issues** e **Pull Requests**.
+
+---
+
+## Branding / Logomarca
+
+Este repositório contém **apenas um placeholder de logomarca** em `frontend/public/images/logo`.
+A logomarca utilizada anteriormente pertencia a uma academia específica e **não faz parte deste projeto**.
+**Qualquer uso em produção deve substituir o placeholder por uma marca própria** (com direitos de uso válidos).
+
+> Importante: a licença do código **não** concede direitos sobre marcas, nomes comerciais, logotipos ou identidade visual de terceiros.
+
+---
