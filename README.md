@@ -72,11 +72,15 @@ Edite **ambos** os arquivos `appsettings.Development.json` e `appsettings.json` 
 
 ### 3) Restaurar dependências (opcional)
 
+```bash
 dotnet restore
+```
 
 ### 4) Rodar a API (modo desenvolvimento)
 
+```bash
 dotnet run
+```
 
 A API iniciará e ficará acessível em:
 
