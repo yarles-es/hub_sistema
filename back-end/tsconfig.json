@@ -3,6 +3,7 @@
     "allowJs": true,
     "checkJs": false,
     "target": "ES6",
+    "types": ["node"],
     "module": "commonjs",
     "esModuleInterop": true,
     "rootDir": "./src",
@@ -14,6 +15,6 @@
     "experimentalDecorators": true,
     "typeRoots": ["./node_modules/@types", "./src/types"]
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "prisma/seeders/*.ts"],
   "exclude": ["build", "node_modules"]
 }

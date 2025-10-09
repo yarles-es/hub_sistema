@@ -1,4 +1,4 @@
-import z from "zod";
+import { z } from "zod";
 
 const createPlanSchema = z.object({
   nome: z.string().min(3, "O nome do plano é obrigatório"),
