@@ -5,7 +5,7 @@ import { RegistroAcessoController } from '../controllers/registro-acesso.control
 const router = Router();
 const registroAcessoController = Container.get(RegistroAcessoController);
 
+router.get('/acessos-por-filtro', registroAcessoController.getAllByFilter.bind(registroAcessoController));
 router.get('/acessos-por-dia/:id', registroAcessoController.getAllForDay.bind(registroAcessoController));
-router.get('/get-all', registroAcessoController.getAllByFilter.bind(registroAcessoController));
 
 export const registroAcessoRoute = router;

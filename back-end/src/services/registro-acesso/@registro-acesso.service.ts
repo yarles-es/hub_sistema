@@ -3,7 +3,7 @@ import { Service } from 'typedi';
 import { RegistroAcessoModel } from '../../models/registro-acesso.model';
 import {
   CreateRegistroAcesso,
-  GetAllRegistroAcessoResponse,
+  FindAllRegisters,
   RegistroAcessoFilter,
 } from '../../types/registro-acesso.types';
 
@@ -25,7 +25,7 @@ export class RegistroAcessoService {
   public async findAllRegistrosByFilter(
     filter: RegistroAcessoFilter,
     transaction?: Prisma.TransactionClient,
-  ): Promise<GetAllRegistroAcessoResponse> {
+  ): Promise<FindAllRegisters[]> {
     return await this.registroAcessoModel.findAllByFilter(filter, transaction);
   }
 

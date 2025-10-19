@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.buildUtcRange = buildUtcRange;
-const SP_OFFSET_HOURS = 0;
+const SP_OFFSET_HOURS = 3;
 function toUtcDayStart(dateStr) {
     const [y, m, d] = dateStr.split('-').map(Number);
     return new Date(Date.UTC(y, m - 1, d, SP_OFFSET_HOURS, 0, 0, 0));

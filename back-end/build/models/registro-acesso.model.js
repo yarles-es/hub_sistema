@@ -71,11 +71,7 @@ let RegistroAcessoModel = class RegistroAcessoModel {
             where.dataHora = dataHora;
             const registros = yield client.registroAcesso.findMany({
                 where,
-                select: {
-                    id: true,
-                    tipoCatraca: true,
-                    clienteId: true,
-                    dataHora: true,
+                include: {
                     cliente: {
                         select: {
                             nome: true,
@@ -84,7 +80,11 @@ let RegistroAcessoModel = class RegistroAcessoModel {
                 },
                 orderBy: { dataHora: 'asc' },
             });
-            return registros;
+            return registros.map((registro) => {
+                var _a;
+                const { cliente } = registro, rest = __rest(registro, ["cliente"]);
+                return Object.assign(Object.assign({}, rest), { nomeCliente: (_a = cliente === null || cliente === void 0 ? void 0 : cliente.nome) !== null && _a !== void 0 ? _a : 'NÃO IDENTIFICADO' });
+            });
         });
     }
     findAllForDay(id, transaction) {
