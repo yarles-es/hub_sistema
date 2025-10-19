@@ -35,6 +35,11 @@ let RegistroAcessoService = class RegistroAcessoService {
             return yield this.registroAcessoModel.findAll(transaction);
         });
     }
+    findAllRegistrosByFilter(filter, transaction) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.registroAcessoModel.findAllByFilter(filter, transaction);
+        });
+    }
     findAllRegistrosForDay(id, transaction) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield this.registroAcessoModel.findAllForDay(id, transaction);

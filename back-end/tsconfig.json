@@ -15,6 +15,6 @@
     "experimentalDecorators": true,
     "typeRoots": ["./node_modules/@types", "./src/types"]
   },
-  "include": ["src/**/*", "prisma/seeders/*.ts"],
-  "exclude": ["build", "node_modules"]
+  "include": ["src/**/*", "prisma/seeders/**/*.ts"],
+  "exclude": ["node_modules", "build", "prisma/seeders/**/*"]
 }

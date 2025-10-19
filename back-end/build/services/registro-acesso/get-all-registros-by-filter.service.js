@@ -18,34 +18,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GetAllClientesService = void 0;
+exports.GetAllRegistrosByFilterService = void 0;
 const typedi_1 = require("typedi");
-const _cliente_service_1 = require("./@cliente.service");
-const formatador_cliente_1 = require("../../utils/formatador-cliente");
-let GetAllClientesService = class GetAllClientesService {
-    constructor(clienteService) {
-        this.clienteService = clienteService;
+const _registro_acesso_service_1 = require("./@registro-acesso.service");
+let GetAllRegistrosByFilterService = class GetAllRegistrosByFilterService {
+    constructor(registroAcessoService) {
+        this.registroAcessoService = registroAcessoService;
     }
-    execute(page, limit, filter) {
+    execute(filter, transaction) {
         return __awaiter(this, void 0, void 0, function* () {
-            const dates = {
-                dataInicialMensalidade: (filter === null || filter === void 0 ? void 0 : filter.status) === 'ATIVO' ? new Date() : undefined,
-                dataFinalMensalidade: (filter === null || filter === void 0 ? void 0 : filter.status) === 'VENCIDO' ? new Date() : undefined,
-            };
-            filter === null || filter === void 0 ? true : delete filter.status;
-            const response = yield this.clienteService.getAllClientes(page, limit, dates, filter);
-            const clientesFormatted = (0, formatador_cliente_1.formatadorCliente)(response.data);
-            return {
-                data: clientesFormatted,
-                total: response.total,
-                page: response.page,
-                limit: response.limit,
-            };
+            return yield this.registroAcessoService.findAllRegistrosByFilter(filter, transaction);
         });
     }
 };
-exports.GetAllClientesService = GetAllClientesService;
-exports.GetAllClientesService = GetAllClientesService = __decorate([
+exports.GetAllRegistrosByFilterService = GetAllRegistrosByFilterService;
+exports.GetAllRegistrosByFilterService = GetAllRegistrosByFilterService = __decorate([
     (0, typedi_1.Service)(),
-    __metadata("design:paramtypes", [_cliente_service_1.ClienteService])
-], GetAllClientesService);
+    __metadata("design:paramtypes", [_registro_acesso_service_1.RegistroAcessoService])
+], GetAllRegistrosByFilterService);

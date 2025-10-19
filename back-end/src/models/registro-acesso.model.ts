@@ -1,6 +1,11 @@
 import { Prisma, PrismaClient, RegistroAcesso } from '@prisma/client';
 import { Service } from 'typedi';
-import { CreateRegistroAcesso, FindAllForDay } from '../types/registro-acesso.types';
+import {
+  CreateRegistroAcesso,
+  FindAllForDay,
+  GetAllRegistroAcessoResponse,
+  RegistroAcessoFilter,
+} from '../types/registro-acesso.types';
 import { toIntOrNull } from '../utils/toIntOrNull';
 
 @Service()
@@ -28,6 +33,46 @@ export class RegistroAcessoModel {
     return client.registroAcesso.findMany({
       orderBy: { id: 'desc' },
     });
+  }
+
+  public async findAllByFilter(
+    filter: RegistroAcessoFilter,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<GetAllRegistroAcessoResponse> {
+    const client = transaction || this.prisma;
+    const where: Prisma.RegistroAcessoWhereInput = {};
+    const dataHora: Prisma.DateTimeFilter = {};
+
+    if (filter.clienteId !== undefined) {
+      where.clienteId = filter.clienteId;
+    }
+
+    if (filter?.initialDate) dataHora.gte = filter.initialDate;
+    if (filter?.finalDate) dataHora.lte = filter.finalDate;
+
+    if (Object.keys(dataHora).length > 0) {
+      where.dataHora = dataHora;
+    }
+
+    where.dataHora = dataHora;
+
+    const registros = await client.registroAcesso.findMany({
+      where,
+      select: {
+        id: true,
+        tipoCatraca: true,
+        clienteId: true,
+        dataHora: true,
+        cliente: {
+          select: {
+            nome: true,
+          },
+        },
+      },
+      orderBy: { dataHora: 'asc' },
+    });
+
+    return registros;
   }
 
   public async findAllForDay(id?: number, transaction?: Prisma.TransactionClient): Promise<FindAllForDay> {

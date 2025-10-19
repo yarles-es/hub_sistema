@@ -22,10 +22,14 @@ exports.RegistroAcessoController = void 0;
 const typedi_1 = require("typedi");
 const get_all_registro_acesso_service_1 = require("../services/registro-acesso/get-all-registro-acesso.service");
 const get_all_registro_acesso_for_day_service_1 = require("../services/registro-acesso/get-all-registro-acesso-for-day.service");
+const get_all_registros_by_filter_service_1 = require("../services/registro-acesso/get-all-registros-by-filter.service");
+const date_range_1 = require("../utils/date-range");
+const safeTypes_1 = require("../utils/safeTypes");
 let RegistroAcessoController = class RegistroAcessoController {
-    constructor(getAllRegistroAcessoService, getAllRegistroAcessoForDayService) {
+    constructor(getAllRegistroAcessoService, getAllRegistroAcessoForDayService, getAllRegistrosByFilterService) {
         this.getAllRegistroAcessoService = getAllRegistroAcessoService;
         this.getAllRegistroAcessoForDayService = getAllRegistroAcessoForDayService;
+        this.getAllRegistrosByFilterService = getAllRegistrosByFilterService;
     }
     getAll(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -50,10 +54,29 @@ let RegistroAcessoController = class RegistroAcessoController {
             }
         });
     }
+    getAllByFilter(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { initialDate, finalDate, clientId } = req.query;
+                const clienteIdQuery = (0, safeTypes_1.safeParseInt)(clientId);
+                const { startAtUtc, endAtUtc } = (0, date_range_1.buildUtcRange)(initialDate, finalDate);
+                const registros = yield this.getAllRegistrosByFilterService.execute({
+                    clienteId: clienteIdQuery,
+                    initialDate: startAtUtc,
+                    finalDate: endAtUtc,
+                });
+                res.status(200).json(registros);
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+    }
 };
 exports.RegistroAcessoController = RegistroAcessoController;
 exports.RegistroAcessoController = RegistroAcessoController = __decorate([
     (0, typedi_1.Service)(),
     __metadata("design:paramtypes", [get_all_registro_acesso_service_1.GetAllRegistroAcessoService,
-        get_all_registro_acesso_for_day_service_1.GetAllRegistroAcessoForDayService])
+        get_all_registro_acesso_for_day_service_1.GetAllRegistroAcessoForDayService,
+        get_all_registros_by_filter_service_1.GetAllRegistrosByFilterService])
 ], RegistroAcessoController);

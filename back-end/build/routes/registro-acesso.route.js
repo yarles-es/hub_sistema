@@ -10,4 +10,5 @@ const registro_acesso_controller_1 = require("../controllers/registro-acesso.con
 const router = (0, express_1.Router)();
 const registroAcessoController = typedi_1.default.get(registro_acesso_controller_1.RegistroAcessoController);
 router.get('/acessos-por-dia/:id', registroAcessoController.getAllForDay.bind(registroAcessoController));
+router.get('/get-all', registroAcessoController.getAllByFilter.bind(registroAcessoController));
 exports.registroAcessoRoute = router;

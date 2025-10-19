@@ -53,6 +53,40 @@ let RegistroAcessoModel = class RegistroAcessoModel {
             });
         });
     }
+    findAllByFilter(filter, transaction) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const client = transaction || this.prisma;
+            const where = {};
+            const dataHora = {};
+            if (filter.clienteId !== undefined) {
+                where.clienteId = filter.clienteId;
+            }
+            if (filter === null || filter === void 0 ? void 0 : filter.initialDate)
+                dataHora.gte = filter.initialDate;
+            if (filter === null || filter === void 0 ? void 0 : filter.finalDate)
+                dataHora.lte = filter.finalDate;
+            if (Object.keys(dataHora).length > 0) {
+                where.dataHora = dataHora;
+            }
+            where.dataHora = dataHora;
+            const registros = yield client.registroAcesso.findMany({
+                where,
+                select: {
+                    id: true,
+                    tipoCatraca: true,
+                    clienteId: true,
+                    dataHora: true,
+                    cliente: {
+                        select: {
+                            nome: true,
+                        },
+                    },
+                },
+                orderBy: { dataHora: 'asc' },
+            });
+            return registros;
+        });
+    }
     findAllForDay(id, transaction) {
         return __awaiter(this, void 0, void 0, function* () {
             const client = transaction || this.prisma;
