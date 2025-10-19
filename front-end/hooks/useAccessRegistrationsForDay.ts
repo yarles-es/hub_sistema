@@ -5,13 +5,13 @@ import { useQuery } from "@tanstack/react-query";
 import { getAllAccessRegistrationsForDay } from "@/api/accessRegistration/accessRegistration.api";
 import { AccessRegistration } from "@/types/AccessRegistration";
 
-export function UseAccessRegistrations() {
+export function useAccessRegistrationsForDay() {
   const [lastId, setLastId] = useState<number | null>(null);
   const [items, setItems] = useState<AccessRegistration[]>([]);
   const seenIds = useRef<Set<number>>(new Set());
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ["accessRegistrations", lastId],
+    queryKey: ["accessRegistrationsForDay", lastId],
     queryFn: () => getAllAccessRegistrationsForDay(lastId),
     refetchInterval: 3000,
     retry: 0,

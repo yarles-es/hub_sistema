@@ -1,11 +1,22 @@
-import { UseAccessRegistrations } from "@/hooks/useAccessRegistrations";
+import Button from "../Buttons/Button";
+
+import { useAccessRegistrationsForDay } from "@/hooks/useAccessRegistrationsForDay";
+import { AccessRegistration } from "@/types/AccessRegistration";
 import { Title } from "@/types/Tables";
 import { formatDateWithHours } from "@/utils/formatStringDate";
 import { isNotNull } from "@/utils/tableGuardType";
 
-const AccessRegistrationTable = () => {
-  const { items } = UseAccessRegistrations();
+type Props = {
+  viewModalSearch?: () => void;
+  items: AccessRegistration[] | undefined;
+  enableActions?: boolean;
+};
 
+const AccessRegistrationTable = ({
+  viewModalSearch,
+  items,
+  enableActions = false,
+}: Props) => {
   const titles: Array<Title | null> = [
     {
       key: "nomeCliente",
@@ -26,9 +37,22 @@ const AccessRegistrationTable = () => {
 
   return (
     <>
-      <p className="m-5 text-center text-base font-bold text-black dark:text-white">
+      <p className="m-3 text-center text-base font-bold text-black dark:text-white">
         Registros de Acesso
       </p>
+
+      {enableActions && (
+        <div className="flex justify-center items-center">
+          <Button
+            className="flex w-full lg:w-30 justify-center rounded p-1 text-xs m-1"
+            primary
+            onClick={viewModalSearch}
+          >
+            Pesquisar
+          </Button>
+        </div>
+      )}
+
       <div className="rounded-sm border border-stroke bg-white px-1.5 shadow-default dark:border-strokedark dark:bg-boxdark text-xs overflow-y-auto h-[calc(100dvh-175px)] md:h-[calc(100vh-200px)]  overscroll-none">
         <table className="w-full table-auto">
           <thead className="bg-gray-50 sticky top-0 z-1">
