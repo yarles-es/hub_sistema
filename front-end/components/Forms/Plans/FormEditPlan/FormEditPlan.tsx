@@ -6,6 +6,7 @@ import DefaultFormatContainerForm from "../../DefaultFormatContainerForm";
 import Button from "@/components/Buttons/Button";
 import Input from "@/components/Inputs/Input";
 import MoneyInput from "@/components/Inputs/InputMoney";
+import SelectTypePlano from "@/components/Selects/SelectTypePlano";
 import { useUpdatePlan } from "@/hooks/queries/plans/useUpdatePlan";
 import useAlert from "@/hooks/useAlert";
 import { updatePlanSchema } from "@/schemas/planSchemas";
@@ -30,6 +31,7 @@ const FormEditPlan: React.FC<Props> = ({ onClose, plan }) => {
             ? plan.valor.toFixed(2).replace(".", ",")
             : undefined,
           descricao: plan.descricao ?? "",
+          tipo: plan.tipo ?? "",
         }
       : undefined,
   });
@@ -82,7 +84,7 @@ const FormEditPlan: React.FC<Props> = ({ onClose, plan }) => {
             </div>
           </div>
           <div className="mb-4.5 flex gap-6 xl:flex-row flex-col">
-            <div className="w-full xl:w-1/3">
+            <div className="w-full xl:w-1/2">
               <Controller
                 control={control}
                 name="nome"
@@ -98,7 +100,7 @@ const FormEditPlan: React.FC<Props> = ({ onClose, plan }) => {
                 )}
               />
             </div>
-            <div className="w-full xl:w-1/3">
+            <div className="w-full xl:w-1/2">
               <Controller
                 control={control}
                 name="descricao"
@@ -114,7 +116,9 @@ const FormEditPlan: React.FC<Props> = ({ onClose, plan }) => {
                 )}
               />
             </div>
-            <div className="w-full xl:w-1/3">
+          </div>
+          <div className="mb-4.5 flex gap-6 xl:flex-row flex-col">
+            <div className="w-full xl:w-1/2">
               <Controller
                 control={control}
                 name="valor"
@@ -124,6 +128,22 @@ const FormEditPlan: React.FC<Props> = ({ onClose, plan }) => {
                     externalValue={field.value}
                     label="Valor:"
                     error={errors.valor?.message}
+                  />
+                )}
+              />
+            </div>
+            <div className="w-full xl:w-1/2">
+              <Controller
+                control={control}
+                name="tipo"
+                render={({ field }) => (
+                  <SelectTypePlano
+                    firstOption={false}
+                    {...field}
+                    value={field.value?.toString() || ""}
+                    label="Tipo:"
+                    error={errors.tipo?.message}
+                    onChange={(e) => field.onChange(e.target.value)}
                   />
                 )}
               />

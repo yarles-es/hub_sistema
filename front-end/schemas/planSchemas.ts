@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { TypePlano, typePlanos } from "@/types/Plano";
+
 const createPlanSchema = z.object({
   nome: z.string().min(3, "O nome do plano é obrigatório"),
   descricao: z.string().optional(),
@@ -12,6 +14,9 @@ const createPlanSchema = z.object({
       message: "Valor deve ser um número positivo",
     }
   ),
+  tipo: z.nativeEnum(typePlanos, {
+    errorMap: () => ({ message: "Tipo do plano é obrigatório" }),
+  }),
 });
 
 const updatePlanSchema = createPlanSchema.extend({
