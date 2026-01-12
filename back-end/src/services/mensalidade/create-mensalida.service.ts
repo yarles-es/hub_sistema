@@ -1,4 +1,4 @@
-import { Mensalidade, Prisma, StatusMensalidade } from '@prisma/client';
+import { Mensalidade, Plano, Prisma, StatusMensalidade, TipoPlano } from '@prisma/client';
 import { Service } from 'typedi';
 import { BadRequestError } from '../../errors/BadRequestError';
 import { ClienteService } from '../cliente/@cliente.service';
@@ -67,8 +67,7 @@ export class CreateMensalidadeService {
 
     if (dataVencimentoAnterior) {
       vencimento = new Date(dataVencimentoAnterior);
-      vencimento.setMonth(vencimento.getMonth() + 1);
-      vencimento.setDate(cliente.diaMensalidade ?? vencimento.getDate());
+      vencimento = this.calculateTypePlanDate(vencimento, plano);
       vencimento.setHours(3, 0, 0, 0);
     } else {
       const now = new Date();
@@ -76,7 +75,6 @@ export class CreateMensalidadeService {
         Date.UTC(now.getFullYear(), now.getMonth(), cliente.diaMensalidade ?? now.getDate(), 3, 0, 0, 0),
       );
     }
-
     const mensalidade = await this.mensalidadeService.createMensalidade(
       {
         clienteId: cliente.id,
@@ -91,5 +89,22 @@ export class CreateMensalidadeService {
     }
 
     return mensalidade;
+  }
+
+  calculateTypePlanDate(vencimento: Date, plano: Plano): Date {
+    const novaData = new Date(vencimento);
+
+    switch (plano.tipo) {
+      case TipoPlano.MENSAL:
+        novaData.setMonth(novaData.getMonth() + 1);
+        break;
+      case TipoPlano.QUINZENAL:
+        novaData.setDate(novaData.getDate() + 15);
+        break;
+      case TipoPlano.SEMANAL:
+        novaData.setDate(novaData.getDate() + 7);
+        break;
+    }
+    return novaData;
   }
 }

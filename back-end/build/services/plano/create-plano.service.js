@@ -19,6 +19,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreatePlanoService = void 0;
+const client_1 = require("@prisma/client");
 const typedi_1 = require("typedi");
 const BadRequestError_1 = require("../../errors/BadRequestError");
 const _plano_service_1 = require("./@plano.service");
@@ -49,6 +50,9 @@ let CreatePlanoService = class CreatePlanoService {
             }
             if (data.valor < 0) {
                 throw new BadRequestError_1.BadRequestError('Preço não pode ser negativo');
+            }
+            if (data.tipo && !Object.values(client_1.TipoPlano).includes(data.tipo)) {
+                throw new BadRequestError_1.BadRequestError('Tipo de plano inválido');
             }
         });
     }

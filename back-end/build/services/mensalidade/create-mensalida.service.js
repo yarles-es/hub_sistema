@@ -33,7 +33,7 @@ let CreateMensalidadeService = class CreateMensalidadeService {
     }
     execute(data, transaction) {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a, _b, _c;
+            var _a, _b;
             const { clienteId, dataVencimentoAnterior } = data;
             const cliente = yield this.clienteService.getClienteById(clienteId, transaction);
             if (!cliente) {
@@ -61,13 +61,12 @@ let CreateMensalidadeService = class CreateMensalidadeService {
             let vencimento;
             if (dataVencimentoAnterior) {
                 vencimento = new Date(dataVencimentoAnterior);
-                vencimento.setMonth(vencimento.getMonth() + 1);
-                vencimento.setDate((_b = cliente.diaMensalidade) !== null && _b !== void 0 ? _b : vencimento.getDate());
+                vencimento = this.calculateTypePlanDate(vencimento, plano);
                 vencimento.setHours(3, 0, 0, 0);
             }
             else {
                 const now = new Date();
-                vencimento = new Date(Date.UTC(now.getFullYear(), now.getMonth(), (_c = cliente.diaMensalidade) !== null && _c !== void 0 ? _c : now.getDate(), 3, 0, 0, 0));
+                vencimento = new Date(Date.UTC(now.getFullYear(), now.getMonth(), (_b = cliente.diaMensalidade) !== null && _b !== void 0 ? _b : now.getDate(), 3, 0, 0, 0));
             }
             const mensalidade = yield this.mensalidadeService.createMensalidade({
                 clienteId: cliente.id,
@@ -79,6 +78,21 @@ let CreateMensalidadeService = class CreateMensalidadeService {
             }
             return mensalidade;
         });
+    }
+    calculateTypePlanDate(vencimento, plano) {
+        const novaData = new Date(vencimento);
+        switch (plano.tipo) {
+            case client_1.TipoPlano.MENSAL:
+                novaData.setMonth(novaData.getMonth() + 1);
+                break;
+            case client_1.TipoPlano.QUINZENAL:
+                novaData.setDate(novaData.getDate() + 15);
+                break;
+            case client_1.TipoPlano.SEMANAL:
+                novaData.setDate(novaData.getDate() + 7);
+                break;
+        }
+        return novaData;
     }
 };
 exports.CreateMensalidadeService = CreateMensalidadeService;

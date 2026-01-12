@@ -20,6 +20,7 @@ export class MensalidadeModel {
     transaction?: Prisma.TransactionClient,
   ): Promise<Mensalidade> {
     const client = transaction || this.prisma;
+    console.log('Creating mensalidade with data:', mensalidade);
     return client.mensalidade.create({
       data: { ...mensalidade },
     });

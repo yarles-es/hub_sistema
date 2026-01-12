@@ -8,6 +8,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum TipoPlano {
+  MENSAL
+  SEMANAL
+  QUINZENAL
+}
+
 enum TipoCatraca {
   ENTRADA
   SAIDA
@@ -68,13 +74,14 @@ model Usuario {
 }
 
 model Plano {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
+  tipo      TipoPlano @default(MENSAL) @map("periodo")
   nome      String
   descricao String?
   valor     Float
-  ativo     Boolean  @default(true)
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  ativo     Boolean   @default(true)
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
 
   Cliente Cliente[]
 

@@ -1,4 +1,4 @@
-import { Plano } from '@prisma/client';
+import { Plano, TipoPlano } from '@prisma/client';
 import { Service } from 'typedi';
 import { BadRequestError } from '../../errors/BadRequestError';
 import { CreatePlano } from '../../types/plano.types';
@@ -34,6 +34,10 @@ export class CreatePlanoService {
 
     if (data.valor < 0) {
       throw new BadRequestError('Preço não pode ser negativo');
+    }
+
+    if (data.tipo && !Object.values(TipoPlano).includes(data.tipo)) {
+      throw new BadRequestError('Tipo de plano inválido');
     }
   }
 }

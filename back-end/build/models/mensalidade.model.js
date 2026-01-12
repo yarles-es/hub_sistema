@@ -28,6 +28,7 @@ let MensalidadeModel = class MensalidadeModel {
     create(mensalidade, transaction) {
         return __awaiter(this, void 0, void 0, function* () {
             const client = transaction || this.prisma;
+            console.log('Creating mensalidade with data:', mensalidade);
             return client.mensalidade.create({
                 data: Object.assign({}, mensalidade),
             });

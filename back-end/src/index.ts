@@ -43,7 +43,7 @@ conectarCatraca()
     }
   });
 
-// // faz registro do webhook na inicialização
+// faz registro do webhook na inicialização
 registrarWebhookCatraca()
   .then(() => {
     console.log('Webhook registered successfully');

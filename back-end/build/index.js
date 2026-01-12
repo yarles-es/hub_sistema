@@ -37,7 +37,7 @@ app.use((err, req, res, next) => {
         console.error('Erro ao conectar a catraca:', err);
     }
 });
-// // faz registro do webhook na inicialização
+// faz registro do webhook na inicialização
 (0, registrar_webhook_catraca_1.registrarWebhookCatraca)()
     .then(() => {
     console.log('Webhook registered successfully');
