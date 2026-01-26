@@ -1,0 +1,16 @@
+build para dev:
+dotnet build -c Release
+
+Gerar executável “de produção”:
+
+A - precisa do .NET instalado na máquina:
+dotnet publish -c Release -r win-x64 --self-contained false
+
+B - não precisa instalar .NET:
+dotnet publish -c Release -r win-x64 --self-contained true
+
+O executável vai sair em algo como:
+bin\Release\net9.0\win-x64\publish\
+
+Se você quiser um arquivo único (single-file):
+dotnet publish -c Release -r win-x64 --self-contained true /p:PublishSingleFile=true
