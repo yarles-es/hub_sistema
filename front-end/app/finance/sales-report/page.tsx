@@ -15,6 +15,7 @@ import ProductSalesTable from "@/components/Tables/ProductSalesTable";
 import { useGetAllProductSales } from "@/hooks/queries/productSales/useGetAllProductSales";
 import useAlert from "@/hooks/useAlert";
 import { LIMIT_WITH_PAGE, NUMBER_PAGE } from "@/schemas/paginationSchemas";
+import { PaymentType } from "@/types/Daily";
 import { ModalSalesReportType } from "@/types/ModalTypes";
 import { GetProductSales } from "@/types/ProductSales";
 
@@ -33,6 +34,9 @@ const SalesReportPage = () => {
       initialDate: searchParams.get("initialDate") || undefined,
       finalDate: searchParams.get("finalDate") ?? undefined,
       productId: Number(searchParams.get("productId")),
+      formaPagamento: searchParams
+        .getAll("formaPagamento")
+        .map((value) => value as PaymentType),
     }),
     [searchParams]
   );

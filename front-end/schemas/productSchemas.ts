@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { PaymentType } from "@/types/Daily";
+
 export const createProductSchema = z.object({
   nome: z.string().min(3, "O nome deve ter no mínimo 3 caracteres"),
   descricao: z.string().optional(),
@@ -64,4 +66,29 @@ export const updateProductSchema = z.object({
       message: "Estoque deve ser um número positivo",
     }
   ),
+});
+
+export const createProductSalesSchema = z.object({
+  produtoId: z.number().int().positive("Produto inválido"),
+  quantidade: z.string().refine(
+    (value) => {
+      const parsedValue = parseInt(value, 10);
+      return !isNaN(parsedValue) && parsedValue > 0;
+    },
+    {
+      message: "Quantidade deve ser maior que zero",
+    }
+  ),
+  valorVenda: z.string().refine(
+    (value) => {
+      const parsedValue = parseFloat(value.replace(/,/g, "."));
+      return !isNaN(parsedValue) && parsedValue > 0;
+    },
+    {
+      message: "Valor de venda deve ser maior que zero",
+    }
+  ),
+  formaPagamento: z.nativeEnum(PaymentType, {
+    message: "Forma de pagamento inválida",
+  }),
 });

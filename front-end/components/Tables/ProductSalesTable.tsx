@@ -43,6 +43,12 @@ const ProductSalesTable: React.FC<Props> = ({
         }
       : null,
     { key: "valorVenda", label: "Valor de Venda", type: "number", order: true },
+    {
+      key: "formaPagamento",
+      label: "Forma de Pagamento",
+      type: "string",
+      order: true,
+    },
     { key: "dataVenda", label: "Data da Venda", type: "string", order: true },
     { key: "delete", label: "Deletar", type: "actions", order: false },
   ];
@@ -170,6 +176,13 @@ const ProductSalesTable: React.FC<Props> = ({
                         style: "currency",
                         currency: "BRL",
                       })}
+                    </p>
+                  </td>
+                  <td className="py-5 px-4 dark:border-strokedark">
+                    <p
+                      className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-xs font-medium text-success bg-success`}
+                    >
+                      {productSale.formaPagamento}
                     </p>
                   </td>
 

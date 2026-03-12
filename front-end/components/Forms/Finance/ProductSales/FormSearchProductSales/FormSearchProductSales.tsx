@@ -1,10 +1,12 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 
 import Button from "@/components/Buttons/Button";
+import CheckBox from "@/components/CheckBox/CheckBox";
 import DefaultFormatContainerForm from "@/components/Forms/DefaultFormatContainerForm";
 import Input from "@/components/Inputs/Input";
 import InputGetProductByName from "@/components/Inputs/InputGetProductByName";
+import { PaymentType } from "@/types/Daily";
 import { createFullUrlFromParamsBrowser } from "@/utils/generateURLpaginateOrFilter";
 
 type Props = {
@@ -15,6 +17,7 @@ type FormValues = {
   initialDate: string;
   finalDate: string;
   productId: number | undefined;
+  formaPagamento: PaymentType[];
 };
 
 const FormSearchProductSales = ({ onClose }: Props) => {
@@ -28,6 +31,7 @@ const FormSearchProductSales = ({ onClose }: Props) => {
         initialDate: "",
         finalDate: "",
         productId: undefined,
+        formaPagamento: [],
       },
     });
 
@@ -82,6 +86,34 @@ const FormSearchProductSales = ({ onClose }: Props) => {
                 placeholder="Digite a data de vencimento final"
                 error={errors.finalDate?.message}
               />
+            </div>
+          </div>
+          <span className="mb-2.5 flex items-center justify-center text-black dark:text-white">
+            Forma de pagamento:
+          </span>
+          <div className="mb-6.5 flex flex-col items-center justify-center gap-6 xl:flex-row">
+            <div className="flex flex-col items-start justify-normal gap-4 xl:flex-row xl:items-center">
+              {Object.values(PaymentType).map((status) => (
+                <Controller
+                  key={status}
+                  control={control}
+                  name="formaPagamento"
+                  render={({ field }) => (
+                    <CheckBox
+                      id={status}
+                      checked={field.value.includes(status)}
+                      onChange={(e) => {
+                        const newStatus = e.target.checked
+                          ? [...field.value, status]
+                          : field.value.filter((s) => s !== status);
+                        field.onChange(newStatus);
+                      }}
+                    >
+                      <p>{status}</p>
+                    </CheckBox>
+                  )}
+                />
+              ))}
             </div>
           </div>
           <div className="flex justify-center items-center">

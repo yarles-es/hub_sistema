@@ -1,5 +1,6 @@
 import React from "react";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 
 import DefaultFormatContainerForm from "../../DefaultFormatContainerForm";
@@ -7,8 +8,11 @@ import DefaultFormatContainerForm from "../../DefaultFormatContainerForm";
 import Button from "@/components/Buttons/Button";
 import Input from "@/components/Inputs/Input";
 import MoneyInput from "@/components/Inputs/InputMoney";
+import SelectTypePayment from "@/components/Selects/SelectTypePayment";
 import { useCreateProductSales } from "@/hooks/queries/productSales/useCreateProductSales";
 import useAlert from "@/hooks/useAlert";
+import { createProductSalesSchema } from "@/schemas/productSchemas";
+import { PaymentType } from "@/types/Daily";
 import { Product } from "@/types/product";
 import {
   CreateProductSales,
@@ -24,10 +28,12 @@ const FormSellProduct: React.FC<Props> = ({ onClose, product }) => {
   const { handleSubmit, formState, control } = useForm<CreateProductSalesInput>(
     {
       mode: "onBlur",
+      resolver: zodResolver(createProductSalesSchema),
       defaultValues: {
         produtoId: product?.id,
         quantidade: "",
         valorVenda: "",
+        formaPagamento: PaymentType.DINHEIRO,
       },
     }
   );
@@ -53,6 +59,7 @@ const FormSellProduct: React.FC<Props> = ({ onClose, product }) => {
       produtoId: data.produtoId!,
       quantidade: Number(data.quantidade),
       valorVenda: parseFloat(data.valorVenda.replace(/,/g, ".")),
+      formaPagamento: data.formaPagamento,
     };
   };
 
@@ -100,7 +107,7 @@ const FormSellProduct: React.FC<Props> = ({ onClose, product }) => {
             </div>
           </div>
           <div className="mb-4.5 flex gap-6 xl:flex-row flex-col justify-center">
-            <div className="w-full xl:w-1/4">
+            <div className="w-full xl:w-1/3">
               <Controller
                 name="quantidade"
                 control={control}
@@ -115,7 +122,7 @@ const FormSellProduct: React.FC<Props> = ({ onClose, product }) => {
                 )}
               />
             </div>
-            <div className="w-full xl:w-1/4">
+            <div className="w-full xl:w-1/3">
               <Controller
                 name="valorVenda"
                 control={control}
@@ -125,6 +132,20 @@ const FormSellProduct: React.FC<Props> = ({ onClose, product }) => {
                     label="Valor total de venda:"
                     externalValue={field.value}
                     error={errors.valorVenda?.message}
+                  />
+                )}
+              />
+            </div>
+            <div className="w-full xl:w-1/3">
+              <Controller
+                name="formaPagamento"
+                control={control}
+                render={({ field }) => (
+                  <SelectTypePayment
+                    {...field}
+                    value={field.value ?? PaymentType.DINHEIRO}
+                    label="Forma de pagamento:"
+                    error={errors.formaPagamento?.message}
                   />
                 )}
               />
