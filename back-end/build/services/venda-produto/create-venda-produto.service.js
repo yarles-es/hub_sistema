@@ -19,6 +19,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateVendaProdutoService = void 0;
+const client_1 = require("@prisma/client");
 const typedi_1 = require("typedi");
 const _venda_produto_service_1 = require("./@venda-produto.service");
 const _produto_service_1 = require("../produto/@produto.service");
@@ -51,6 +52,9 @@ let CreateVendaProdutoService = class CreateVendaProdutoService {
                 throw new BadRequestError_1.BadRequestError('Valor de venda deve ser maior que zero');
             if (data.quantidade <= 0)
                 throw new BadRequestError_1.BadRequestError('Quantidade deve ser maior que zero');
+            if (!data.formaPagamento || !Object.values(client_1.FormPagamento).includes(data.formaPagamento)) {
+                throw new BadRequestError_1.BadRequestError('Forma de pagamento inválida');
+            }
             return { produto, valorCusto };
         });
     }

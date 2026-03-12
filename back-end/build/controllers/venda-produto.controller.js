@@ -41,7 +41,8 @@ let VendaProdutoController = class VendaProdutoController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const user = req.user;
-                const vendaProduto = yield this.createVendaProdutoService.execute(req.body);
+                const data = req.body;
+                const vendaProduto = yield this.createVendaProdutoService.execute(data);
                 yield this.log.execute(user.id, `Criou uma venda de produto com ID ${vendaProduto.id}`);
                 res.status(201).json(vendaProduto);
             }
@@ -67,15 +68,17 @@ let VendaProdutoController = class VendaProdutoController {
     getAll(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { numberPage, limit, initialDate, finalDate, productId } = req.query;
+                const { numberPage, limit, initialDate, finalDate, productId, formaPagamento } = req.query;
                 const pageNumber = (0, safeTypes_1.safeParseInt)(numberPage) || 1;
                 const limitNumber = (0, safeTypes_1.safeParseInt)(limit) || 30;
                 const productIdNumber = (0, safeTypes_1.safeParseInt)(productId);
+                const formaPagamentoValue = (0, safeTypes_1.safeParseFormPagamentoArray)(formaPagamento);
                 const { startAtUtc, endAtUtc } = (0, date_range_1.buildUtcRange)(initialDate, finalDate);
                 const vendaProdutos = yield this.getAllVendaProdutoService.execute(pageNumber, limitNumber, {
                     productId: productIdNumber,
                     initialDate: startAtUtc,
                     finalDate: endAtUtc,
+                    formaPagamento: formaPagamentoValue,
                 });
                 res.status(200).json(vendaProdutos);
             }

@@ -7,6 +7,7 @@ import {
   DeleteVendaProdutoResponse,
   GetAllVendaProdutoResponse,
   GetAllVendasProductInput,
+  GetVendaProdutoByProductIdResponse,
   GetVendaProdutoByIdResponse,
   UpdateVendaProduto,
   UpdateVendaProdutoResponse,
@@ -57,6 +58,10 @@ export class VendaProdutoModel {
 
     if (filters?.productId) {
       where.produtoId = filters.productId;
+    }
+
+    if (filters?.formaPagamento && filters.formaPagamento.length > 0) {
+      where.formaPagamento = { in: filters.formaPagamento };
     }
 
     if (Object.keys(dataHora).length > 0) {
@@ -132,7 +137,7 @@ export class VendaProdutoModel {
   async getByProductId(
     productId: number,
     transaction?: Prisma.TransactionClient,
-  ): Promise<GetVendaProdutoByIdResponse[]> {
+  ): Promise<GetVendaProdutoByProductIdResponse> {
     return await (transaction || this.prisma).vendaProduto.findMany({
       where: { produtoId: productId },
       include: {

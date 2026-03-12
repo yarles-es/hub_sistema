@@ -24,7 +24,7 @@ app.use('/api', _routes_1.routes);
 app.use((err, req, res, next) => {
     asyncError.errorHandling(err, req, res, next);
 });
-// // faz a primeira conexão com a catraca na inicialização
+// faz a primeira conexão com a catraca na inicialização
 (0, conectar_catraca_1.conectarCatraca)()
     .then(() => {
     console.log('Catraca connected successfully');

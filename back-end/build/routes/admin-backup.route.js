@@ -83,16 +83,23 @@ router.post('/download', (req, res) => __awaiter(void 0, void 0, void 0, functio
     }
 }));
 router.post('/restore', upload.single('file'), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b;
+    var _a, _b, _c;
+    const uploadedPath = (_a = req.file) === null || _a === void 0 ? void 0 : _a.path;
     try {
-        if (!((_a = req.file) === null || _a === void 0 ? void 0 : _a.path))
+        if (!uploadedPath || !((_b = req.file) === null || _b === void 0 ? void 0 : _b.filename)) {
             return res.status(400).json({ ok: false, error: 'Arquivo é obrigatório' });
-        yield (0, pgsql_backup_1.restorePostgresFromFile)(req.file.path, { dropAndRecreatePublic: true });
+        }
+        yield (0, pgsql_backup_1.restorePostgresFromFile)(uploadedPath, { dropAndRecreatePublic: true });
         return res.json({ ok: true, restoredFrom: req.file.filename });
     }
     catch (e) {
         console.error('[POST /admin/backup/restore] ERRO:', e === null || e === void 0 ? void 0 : e.message);
-        return res.status(500).json({ ok: false, error: (_b = e === null || e === void 0 ? void 0 : e.message) !== null && _b !== void 0 ? _b : 'Erro na restauração' });
+        return res.status(500).json({ ok: false, error: (_c = e === null || e === void 0 ? void 0 : e.message) !== null && _c !== void 0 ? _c : 'Erro na restauração' });
+    }
+    finally {
+        if (uploadedPath) {
+            yield (0, promises_1.unlink)(uploadedPath).catch(() => { });
+        }
     }
 }));
 exports.backupRoute = router;

@@ -54,6 +54,9 @@ let VendaProdutoModel = class VendaProdutoModel {
             if (filters === null || filters === void 0 ? void 0 : filters.productId) {
                 where.produtoId = filters.productId;
             }
+            if ((filters === null || filters === void 0 ? void 0 : filters.formaPagamento) && filters.formaPagamento.length > 0) {
+                where.formaPagamento = { in: filters.formaPagamento };
+            }
             if (Object.keys(dataHora).length > 0) {
                 where.dataVenda = dataHora;
             }

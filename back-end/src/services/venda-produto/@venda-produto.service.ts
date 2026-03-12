@@ -6,6 +6,7 @@ import {
   DeleteVendaProdutoResponse,
   GetAllVendaProdutoResponse,
   GetAllVendasProductInput,
+  GetVendaProdutoByProductIdResponse,
   GetVendaProdutoByIdResponse,
   UpdateVendaProduto,
   UpdateVendaProdutoResponse,
@@ -53,7 +54,7 @@ export class VendaProdutoService {
   async getByProductId(
     productId: number,
     transaction?: Prisma.TransactionClient,
-  ): Promise<GetVendaProdutoByIdResponse[]> {
+  ): Promise<GetVendaProdutoByProductIdResponse> {
     return await this.vendaProdutoModel.getByProductId(productId, transaction);
   }
 

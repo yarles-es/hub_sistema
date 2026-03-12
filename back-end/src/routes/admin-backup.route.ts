@@ -76,13 +76,22 @@ router.post('/download', async (req, res) => {
 });
 
 router.post('/restore', upload.single('file'), async (req, res) => {
+  const uploadedPath = req.file?.path;
+
   try {
-    if (!req.file?.path) return res.status(400).json({ ok: false, error: 'Arquivo é obrigatório' });
-    await restorePostgresFromFile(req.file.path, { dropAndRecreatePublic: true });
+    if (!uploadedPath || !req.file?.filename) {
+      return res.status(400).json({ ok: false, error: 'Arquivo é obrigatório' });
+    }
+
+    await restorePostgresFromFile(uploadedPath, { dropAndRecreatePublic: true });
     return res.json({ ok: true, restoredFrom: req.file.filename });
   } catch (e: any) {
     console.error('[POST /admin/backup/restore] ERRO:', e?.message);
     return res.status(500).json({ ok: false, error: e?.message ?? 'Erro na restauração' });
+  } finally {
+    if (uploadedPath) {
+      await unlink(uploadedPath).catch(() => {});
+    }
   }
 });
 

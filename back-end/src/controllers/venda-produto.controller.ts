@@ -7,7 +7,8 @@ import { GetAllVendaProdutoService } from '../services/venda-produto/get-all-ven
 import { GetByIdVendaProdutoService } from '../services/venda-produto/get-by-id-venda-produto.service';
 import { CreateLogService } from '../services/log-sistema/create-log.service';
 import { GetVendaProdutosByProdutoIdService } from '../services/venda-produto/get-venda-produtos-by-produto-id.service';
-import { safeParseInt } from '../utils/safeTypes';
+import { CreateVendaProduto } from '../types/venda-produto.types';
+import { safeParseFormPagamentoArray, safeParseInt } from '../utils/safeTypes';
 import { buildUtcRange } from '../utils/date-range';
 
 @Service()
@@ -24,7 +25,8 @@ export class VendaProdutoController {
   async create(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
       const user = req.user!;
-      const vendaProduto = await this.createVendaProdutoService.execute(req.body);
+      const data: CreateVendaProduto = req.body;
+      const vendaProduto = await this.createVendaProdutoService.execute(data);
       await this.log.execute(user.id, `Criou uma venda de produto com ID ${vendaProduto.id}`);
       res.status(201).json(vendaProduto);
     } catch (error) {
@@ -46,11 +48,12 @@ export class VendaProdutoController {
 
   async getAll(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { numberPage, limit, initialDate, finalDate, productId } = req.query;
+      const { numberPage, limit, initialDate, finalDate, productId, formaPagamento } = req.query;
 
       const pageNumber = safeParseInt(numberPage) || 1;
       const limitNumber = safeParseInt(limit) || 30;
       const productIdNumber = safeParseInt(productId);
+      const formaPagamentoValue = safeParseFormPagamentoArray(formaPagamento);
 
       const { startAtUtc, endAtUtc } = buildUtcRange(
         initialDate as string | undefined,
@@ -61,6 +64,7 @@ export class VendaProdutoController {
         productId: productIdNumber,
         initialDate: startAtUtc,
         finalDate: endAtUtc,
+        formaPagamento: formaPagamentoValue,
       });
 
       res.status(200).json(vendaProdutos);

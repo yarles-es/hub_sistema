@@ -1,3 +1,4 @@
+import { FormPagamento } from '@prisma/client';
 import { Service } from 'typedi';
 import { VendaProdutoService } from './@venda-produto.service';
 import { ProdutoService } from '../produto/@produto.service';
@@ -45,6 +46,10 @@ export class CreateVendaProdutoService {
     if (data.valorVenda <= 0) throw new BadRequestError('Valor de venda deve ser maior que zero');
 
     if (data.quantidade <= 0) throw new BadRequestError('Quantidade deve ser maior que zero');
+
+    if (!data.formaPagamento || !Object.values(FormPagamento).includes(data.formaPagamento)) {
+      throw new BadRequestError('Forma de pagamento inválida');
+    }
 
     return { produto, valorCusto };
   }

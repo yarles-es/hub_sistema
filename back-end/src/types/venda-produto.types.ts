@@ -1,10 +1,14 @@
-import { Prisma, VendaProduto } from '@prisma/client';
+import { FormPagamento, Prisma, VendaProduto } from '@prisma/client';
 
-export type CreateVendaProduto = Pick<VendaProduto, 'produtoId' | 'valorVenda' | 'quantidade'>;
+export type CreateVendaProduto = Pick<VendaProduto, 'produtoId' | 'valorVenda' | 'quantidade'> & {
+  formaPagamento: FormPagamento;
+};
 export type CreateVendaProdutoModel = Pick<
   VendaProduto,
   'produtoId' | 'valorVenda' | 'quantidade' | 'valorCusto'
->;
+> & {
+  formaPagamento: FormPagamento;
+};
 
 export type UpdateVendaProduto = { id: number } & Partial<CreateVendaProduto>;
 
@@ -13,6 +17,7 @@ export type GetVendaProduto = Prisma.VendaProdutoGetPayload<{
 }>;
 
 export type GetVendaProdutoByIdResponse = GetVendaProduto | null;
+export type GetVendaProdutoByProductIdResponse = GetVendaProduto[];
 
 export type DeleteVendaProdutoResponse = VendaProduto;
 
@@ -34,4 +39,5 @@ export type GetAllVendasProductInput = {
   productId?: number;
   initialDate?: Date;
   finalDate?: Date;
+  formaPagamento?: FormPagamento[];
 };
