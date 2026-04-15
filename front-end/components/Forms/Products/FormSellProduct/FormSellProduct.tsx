@@ -31,6 +31,7 @@ const FormSellProduct: React.FC<Props> = ({ onClose, product }) => {
       resolver: zodResolver(createProductSalesSchema),
       defaultValues: {
         produtoId: product?.id,
+        nomeCliente: undefined,
         quantidade: "",
         valorVenda: "",
         formaPagamento: PaymentType.DINHEIRO,
@@ -57,6 +58,7 @@ const FormSellProduct: React.FC<Props> = ({ onClose, product }) => {
   ): CreateProductSales => {
     return {
       produtoId: data.produtoId!,
+      nomeCliente: data.nomeCliente?.trim() || undefined,
       quantidade: Number(data.quantidade),
       valorVenda: parseFloat(data.valorVenda.replace(/,/g, ".")),
       formaPagamento: data.formaPagamento,
@@ -107,6 +109,27 @@ const FormSellProduct: React.FC<Props> = ({ onClose, product }) => {
             </div>
           </div>
           <div className="mb-4.5 flex gap-6 xl:flex-row flex-col justify-center">
+            <div className="w-full xl:w-1/3">
+              <Controller
+                name="nomeCliente"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    value={field.value ?? ""}
+                    onChange={(e) =>
+                      field.onChange(
+                        e.target.value === "" ? undefined : e.target.value
+                      )
+                    }
+                    type="text"
+                    label="Nome do cliente:"
+                    placeholder="Digite o nome do cliente"
+                    error={errors.nomeCliente?.message}
+                  />
+                )}
+              />
+            </div>
             <div className="w-full xl:w-1/3">
               <Controller
                 name="quantidade"

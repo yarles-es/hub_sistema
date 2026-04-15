@@ -33,6 +33,7 @@ const ProductSalesTable: React.FC<Props> = ({
   const titles: Array<Title | null> = [
     { key: "id", label: "ID", type: "number", order: true },
     { key: "produto.nome", label: "Produto", type: "string", order: true },
+    { key: "nomeCliente", label: "Cliente", type: "string", order: true },
     { key: "quantidade", label: "Quantidade", type: "number", order: true },
     viewPriceCost
       ? {
@@ -156,6 +157,9 @@ const ProductSalesTable: React.FC<Props> = ({
                   </td>
                   <td className="py-4 px-4 text-black dark:text-white w-[250px] min-w-[200px]">
                     <p>{productSale.produto.nome}</p>
+                  </td>
+                  <td className="py-4 px-4 text-black dark:text-white w-[250px] min-w-[200px]">
+                    <p>{productSale.nomeCliente ?? "-"}</p>
                   </td>
                   <td className="py-4 px-4 text-black dark:text-white w-[250px] min-w-[200px]">
                     <p>{productSale.quantidade}</p>

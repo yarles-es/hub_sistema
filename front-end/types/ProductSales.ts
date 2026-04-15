@@ -4,6 +4,7 @@ export type ProductSales = {
   id: number;
   produto: { nome: string };
   productId: number;
+  nomeCliente?: string | null;
   quantidade: number;
   valorCusto: number;
   valorVenda: number;
@@ -15,6 +16,7 @@ export type ProductSales = {
 
 export type CreateProductSales = {
   produtoId: number;
+  nomeCliente?: string;
   quantidade: number;
   valorVenda: number;
   formaPagamento: PaymentType;
@@ -22,6 +24,7 @@ export type CreateProductSales = {
 
 export type CreateProductSalesInput = {
   produtoId: number;
+  nomeCliente?: string;
   quantidade: string;
   valorVenda: string;
   formaPagamento: PaymentType;

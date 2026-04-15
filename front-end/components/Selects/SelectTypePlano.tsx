@@ -14,11 +14,10 @@ type Props = {
 
 const SelectTypePlano = forwardRef<HTMLSelectElement, Props>(
   ({ value, onChange, label, error, firstOption = true }, ref) => {
-    const formattedOptions = [
-      { value: typePlanos.MENSAL, label: typePlanos.MENSAL },
-      { value: typePlanos.SEMANAL, label: typePlanos.SEMANAL },
-      { value: typePlanos.QUINZENAL, label: typePlanos.QUINZENAL },
-    ];
+    const formattedOptions = Object.values(typePlanos).map((tipoPlano) => ({
+      value: tipoPlano,
+      label: tipoPlano,
+    }));
 
     return (
       <>

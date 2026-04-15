@@ -4,13 +4,18 @@ import { Controller, useForm } from "react-hook-form";
 import DefaultFormatContainerForm from "../../DefaultFormatContainerForm";
 
 import Button from "@/components/Buttons/Button";
+import CheckBox from "@/components/CheckBox/CheckBox";
 import Input from "@/components/Inputs/Input";
 import MoneyInput from "@/components/Inputs/InputMoney";
 import SelectTypePlano from "@/components/Selects/SelectTypePlano";
 import { useUpdatePlan } from "@/hooks/queries/plans/useUpdatePlan";
 import useAlert from "@/hooks/useAlert";
 import { updatePlanSchema } from "@/schemas/planSchemas";
-import { Plano, UpdatePlano } from "@/types/Plano";
+import {
+  MAX_DIAS_VALIDOS_SEMANA,
+  Plano,
+  UpdatePlano,
+} from "@/types/Plano";
 
 type Props = {
   onClose: () => void;
@@ -20,7 +25,7 @@ type Props = {
 const FormEditPlan: React.FC<Props> = ({ onClose, plan }) => {
   const alert = useAlert();
 
-  const { handleSubmit, formState, control } = useForm<UpdatePlano>({
+  const { handleSubmit, formState, control, watch } = useForm<UpdatePlano>({
     mode: "onBlur",
     resolver: zodResolver(updatePlanSchema),
     defaultValues: plan
@@ -32,11 +37,14 @@ const FormEditPlan: React.FC<Props> = ({ onClose, plan }) => {
             : undefined,
           descricao: plan.descricao ?? "",
           tipo: plan.tipo ?? "",
+          validarDiasSemana: plan.validarDiasSemana ?? false,
+          diasValidosSemana: plan.diasValidosSemana ?? null,
         }
       : undefined,
   });
 
   const { errors, isSubmitting } = formState;
+  const validarDiasSemana = watch("validarDiasSemana");
 
   const { mutate } = useUpdatePlan({
     onSuccess: () => {
@@ -49,7 +57,7 @@ const FormEditPlan: React.FC<Props> = ({ onClose, plan }) => {
     },
   });
 
-  const handleSubmitData = (data: any) => {
+  const handleSubmitData = (data: UpdatePlano) => {
     mutate(data);
   };
 
@@ -147,6 +155,80 @@ const FormEditPlan: React.FC<Props> = ({ onClose, plan }) => {
                   />
                 )}
               />
+            </div>
+          </div>
+          <div className="mb-4.5 flex flex-col gap-4">
+            <div className="flex flex-col gap-4 xl:flex-row xl:items-start">
+              <div className="w-full xl:flex-1 xl:max-w-[calc(100%-240px)]">
+                <Controller
+                  control={control}
+                  name="validarDiasSemana"
+                  render={({ field }) => (
+                    <CheckBox
+                      id="validarDiasSemana-edit-plan"
+                      checked={field.value ?? false}
+                      onChange={(e) => field.onChange(e.target.checked)}
+                    >
+                      <span className="text-black dark:text-white">
+                        Validar limite de dias por semana
+                      </span>
+                    </CheckBox>
+                  )}
+                />
+
+                <p className="mt-4 text-xs text-gray-500 dark:text-gray-400">
+                  Quando ativo, o sistema exige um limite entre 1 e{" "}
+                  {MAX_DIAS_VALIDOS_SEMANA} dias por semana. Domingos ficam
+                  livres dessa contagem.
+                </p>
+              </div>
+
+              <div className="w-full xl:ml-auto xl:w-[224px] xl:flex-none">
+                <Controller
+                  control={control}
+                  name="diasValidosSemana"
+                  render={({ field }) => (
+                    <div
+                      className={`transition-opacity duration-150 ${
+                        validarDiasSemana
+                          ? "opacity-100"
+                          : "pointer-events-none opacity-0"
+                      }`}
+                    >
+                      <div className="flex min-h-[44px] items-center justify-end gap-3 whitespace-nowrap">
+                        <label
+                          htmlFor="diasValidosSemana-edit-plan"
+                          className="text-xs font-medium text-black dark:text-white"
+                        >
+                          Dias válidos:
+                        </label>
+                        <input
+                          id="diasValidosSemana-edit-plan"
+                          value={field.value?.toString() ?? ""}
+                          onChange={(e) => {
+                            const value = e.target.value.replace(/\D/g, "");
+                            field.onChange(value === "" ? null : Number(value));
+                          }}
+                          type="text"
+                          inputMode="numeric"
+                          disabled={!validarDiasSemana}
+                          placeholder="1 a 6"
+                          className="w-[72px] rounded border-[1.5px] border-stroke bg-transparent px-3 py-2 text-center font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                        />
+                      </div>
+                      <p
+                        className={`mt-1 min-h-[16px] text-right text-xs text-meta-7 ${
+                          errors.diasValidosSemana?.message
+                            ? "visible"
+                            : "invisible"
+                        }`}
+                      >
+                        {errors.diasValidosSemana?.message || "erro"}
+                      </p>
+                    </div>
+                  )}
+                />
+              </div>
             </div>
           </div>
           <div className="flex justify-center items-center">

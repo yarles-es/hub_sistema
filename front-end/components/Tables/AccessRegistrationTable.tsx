@@ -17,6 +17,18 @@ const AccessRegistrationTable = ({
   items,
   enableActions = false,
 }: Props) => {
+  const getAccessTypeStyles = (tipoCatraca: AccessRegistration["tipoCatraca"]) => {
+    if (tipoCatraca === "ENTRADA") {
+      return "bg-success text-success";
+    }
+
+    if (tipoCatraca === "SAIDA") {
+      return "bg-warning text-warning";
+    }
+
+    return "bg-danger text-danger";
+  };
+
   const titles: Array<Title | null> = [
     {
       key: "nomeCliente",
@@ -93,13 +105,9 @@ const AccessRegistrationTable = ({
                 </td>
                 <td className="py-4 px-4 text-black dark:text-white">
                   <p
-                    className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-xs font-medium ${
-                      item.tipoCatraca === "ENTRADA"
-                        ? "bg-success text-success"
-                        : item.tipoCatraca === "SAIDA"
-                        ? "bg-warning text-warning"
-                        : "bg-danger text-danger"
-                    }`}
+                    className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-xs font-medium ${getAccessTypeStyles(
+                      item.tipoCatraca
+                    )}`}
                   >
                     {item.tipoCatraca}
                   </p>

@@ -10,6 +10,10 @@ export const createPlan = async (data: CreatePlano) => {
   const formatedData = {
     ...data,
     valor: parseFloat(data.valor.replace(",", ".")),
+    validarDiasSemana: data.validarDiasSemana ?? false,
+    diasValidosSemana: data.validarDiasSemana
+      ? data.diasValidosSemana ?? null
+      : null,
   };
   return await genericRequest<Plano>("post", "plano/create", {
     body: formatedData,
@@ -20,6 +24,8 @@ export const updatePlan = async (data: UpdatePlano) => {
   const { id, ...rest } = {
     ...data,
     valor: data.valor ? parseFloat(data.valor.replace(",", ".")) : undefined,
+    diasValidosSemana:
+      data.validarDiasSemana === false ? null : data.diasValidosSemana,
   };
   return await genericRequest<Plano>("put", `plano/update/${id}`, {
     body: rest,

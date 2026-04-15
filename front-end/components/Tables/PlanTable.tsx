@@ -28,6 +28,18 @@ const PlanTable: React.FC<Props> = ({ plans, onOpenItemSelect }) => {
     { key: "descricao", label: "Descrição", type: "string", order: true },
     { key: "status", label: "Status", type: "boolean", order: true },
     { key: "tipo", label: "Tipo", type: "string", order: false },
+    {
+      key: "validarDiasSemana",
+      label: "Valida Dias/Semana",
+      type: "boolean",
+      order: true,
+    },
+    {
+      key: "diasValidosSemana",
+      label: "Dias Válidos/Semana",
+      type: "number",
+      order: true,
+    },
     { key: "edit", label: "Editar", type: "actions", order: false },
     { key: "disable", label: "Desativar", type: "actions", order: false },
     { key: "active", label: "Ativar", type: "actions", order: false },
@@ -147,6 +159,25 @@ const PlanTable: React.FC<Props> = ({ plans, onOpenItemSelect }) => {
                 <td className="py-4 px-4 text-black dark:text-white">
                   <p className="inline-flex text-center rounded-full bg-opacity-20 p-1 text-xs px-2 font-bold text-meta-5 bg-meta-5">
                     {plan.tipo}
+                  </p>
+                </td>
+                <td className="py-4 px-4 text-black dark:text-white">
+                  <p
+                    className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-xs font-medium ${
+                      plan.validarDiasSemana
+                        ? "bg-success text-success"
+                        : "bg-danger text-danger"
+                    }`}
+                  >
+                    {plan.validarDiasSemana ? "SIM" : "NÃO"}
+                  </p>
+                </td>
+                <td className="py-4 px-4 text-black dark:text-white">
+                  <p>
+                    {plan.diasValidosSemana !== null &&
+                    plan.diasValidosSemana !== undefined
+                      ? plan.diasValidosSemana
+                      : "-"}
                   </p>
                 </td>
 

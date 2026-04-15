@@ -70,6 +70,12 @@ export const updateProductSchema = z.object({
 
 export const createProductSalesSchema = z.object({
   produtoId: z.number().int().positive("Produto inválido"),
+  nomeCliente: z
+    .string()
+    .optional()
+    .refine((value) => value === undefined || value.trim().length > 0, {
+      message: "Nome do cliente está inválido",
+    }),
   quantidade: z.string().refine(
     (value) => {
       const parsedValue = parseInt(value, 10);
