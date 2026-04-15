@@ -21,6 +21,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ClienteModel = void 0;
 const client_1 = require("@prisma/client");
 const typedi_1 = require("typedi");
+const planoSelect = {
+    id: true,
+    nome: true,
+    valor: true,
+    tipo: true,
+    validarDiasSemana: true,
+    diasValidosSemana: true,
+};
 let ClienteModel = class ClienteModel {
     constructor() {
         this.prisma = new client_1.PrismaClient();
@@ -75,11 +83,7 @@ let ClienteModel = class ClienteModel {
                 include: {
                     Mensalidade: true,
                     plano: {
-                        select: {
-                            id: true,
-                            nome: true,
-                            valor: true,
-                        },
+                        select: planoSelect,
                     },
                 },
             });
@@ -101,7 +105,7 @@ let ClienteModel = class ClienteModel {
                 where: { id: { in: ids.map((r) => r.id) } },
                 include: {
                     Mensalidade: true,
-                    plano: { select: { id: true, nome: true, valor: true } },
+                    plano: { select: planoSelect },
                 },
                 orderBy: { dataNascimento: 'asc' },
             });
@@ -130,13 +134,10 @@ let ClienteModel = class ClienteModel {
                 include: {
                     Mensalidade: {
                         where: { status: client_1.StatusMensalidade.PENDENTE },
+                        orderBy: { vencimento: 'asc' },
                     },
                     plano: {
-                        select: {
-                            id: true,
-                            nome: true,
-                            valor: true,
-                        },
+                        select: planoSelect,
                     },
                 },
             });
@@ -227,7 +228,7 @@ let ClienteModel = class ClienteModel {
                             where: includeMensalidadeWhere,
                             orderBy: { vencimento: 'asc' },
                         },
-                        plano: { select: { id: true, nome: true, valor: true } },
+                        plano: { select: planoSelect },
                     },
                 }),
                 client.cliente.count({ where }),
@@ -286,13 +287,10 @@ let ClienteModel = class ClienteModel {
                         where: {
                             status: client_1.StatusMensalidade.PENDENTE,
                         },
+                        orderBy: { vencimento: 'asc' },
                     },
                     plano: {
-                        select: {
-                            id: true,
-                            nome: true,
-                            valor: true,
-                        },
+                        select: planoSelect,
                     },
                 },
                 orderBy: { id: 'desc' },
@@ -307,13 +305,10 @@ let ClienteModel = class ClienteModel {
                 include: {
                     Mensalidade: {
                         where: { status: client_1.StatusMensalidade.PENDENTE },
+                        orderBy: { vencimento: 'asc' },
                     },
                     plano: {
-                        select: {
-                            id: true,
-                            nome: true,
-                            valor: true,
-                        },
+                        select: planoSelect,
                     },
                 },
             });

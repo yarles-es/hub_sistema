@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient, RegistroAcesso } from '@prisma/client';
+import { Prisma, PrismaClient, RegistroAcesso, TipoCatraca } from '@prisma/client';
 import { Service } from 'typedi';
 import { CreateRegistroAcesso, FindAllRegisters, RegistroAcessoFilter } from '../types/registro-acesso.types';
 import { toIntOrNull } from '../utils/toIntOrNull';
@@ -134,6 +134,27 @@ export class RegistroAcessoModel {
     return client.registroAcesso.findMany({
       where,
       orderBy: { dataHora: 'desc' },
+    });
+  }
+
+  public async findEntradasByClienteIdAndPeriod(
+    clienteId: number,
+    initialDate: Date,
+    finalDate: Date,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<RegistroAcesso[]> {
+    const client = transaction || this.prisma;
+
+    return client.registroAcesso.findMany({
+      where: {
+        clienteId,
+        tipoCatraca: TipoCatraca.ENTRADA,
+        dataHora: {
+          gte: initialDate,
+          lte: finalDate,
+        },
+      },
+      orderBy: { dataHora: 'asc' },
     });
   }
 }

@@ -12,12 +12,16 @@ enum TipoPlano {
   MENSAL
   SEMANAL
   QUINZENAL
+  SEMESTRAL
+  ANUAL
 }
 
 enum TipoCatraca {
   ENTRADA
   SAIDA
   BLOQUEIO
+  BLOQUEIO_ATRASO
+  BLOQUEIO_LIMITE_ACESSO
 }
 
 enum StatusMensalidade {
@@ -74,14 +78,16 @@ model Usuario {
 }
 
 model Plano {
-  id        Int       @id @default(autoincrement())
-  tipo      TipoPlano @default(MENSAL) @map("periodo")
-  nome      String
-  descricao String?
-  valor     Float
-  ativo     Boolean   @default(true)
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @updatedAt @map("updated_at")
+  id          Int       @id @default(autoincrement())
+  tipo        TipoPlano @default(MENSAL) @map("periodo")
+  nome        String
+  descricao   String?
+  valor       Float
+  ativo       Boolean   @default(true)
+  validarDiasSemana Boolean   @default(false) @map("validar_dias")
+  diasValidosSemana Int?      @map("dias_validos")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
 
   Cliente Cliente[]
 
@@ -187,15 +193,16 @@ model Produto {
 }
 
 model VendaProduto {
-  id            Int            @id @default(autoincrement())
-  produtoId     Int            @map("produto_id")
-  quantidade    Int
+  id             Int            @id @default(autoincrement())
+  nomeCliente    String?        @map("nome_cliente")
+  produtoId      Int            @map("produto_id")
+  quantidade     Int
   formaPagamento FormPagamento? @map("forma_pagamento")
-  valorCusto    Float          @map("valor_custo")
-  valorVenda    Float          @map("valor_venda")
-  dataVenda     DateTime       @default(now()) @map("data_venda")
-  createdAt     DateTime       @default(now()) @map("created_at")
-  updatedAt     DateTime       @updatedAt @map("updated_at")
+  valorCusto     Float          @map("valor_custo")
+  valorVenda     Float          @map("valor_venda")
+  dataVenda      DateTime       @default(now()) @map("data_venda")
+  createdAt      DateTime       @default(now()) @map("created_at")
+  updatedAt      DateTime       @updatedAt @map("updated_at")
 
   produto Produto @relation(fields: [produtoId], references: [id])
 

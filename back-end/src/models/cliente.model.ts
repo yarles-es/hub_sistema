@@ -8,7 +8,15 @@ import {
   CreateCliente,
   UpdateClient,
 } from '../types/cliente.types';
-import { Console } from 'node:console';
+
+const planoSelect = {
+  id: true,
+  nome: true,
+  valor: true,
+  tipo: true,
+  validarDiasSemana: true,
+  diasValidosSemana: true,
+} as const;
 
 @Service()
 export class ClienteModel {
@@ -68,11 +76,7 @@ export class ClienteModel {
       include: {
         Mensalidade: true,
         plano: {
-          select: {
-            id: true,
-            nome: true,
-            valor: true,
-          },
+          select: planoSelect,
         },
       },
     });
@@ -97,7 +101,7 @@ export class ClienteModel {
       where: { id: { in: ids.map((r) => r.id) } },
       include: {
         Mensalidade: true,
-        plano: { select: { id: true, nome: true, valor: true } },
+        plano: { select: planoSelect },
       },
       orderBy: { dataNascimento: 'asc' },
     });
@@ -134,13 +138,10 @@ export class ClienteModel {
       include: {
         Mensalidade: {
           where: { status: StatusMensalidade.PENDENTE },
+          orderBy: { vencimento: 'asc' },
         },
         plano: {
-          select: {
-            id: true,
-            nome: true,
-            valor: true,
-          },
+          select: planoSelect,
         },
       },
     });
@@ -244,7 +245,7 @@ export class ClienteModel {
             where: includeMensalidadeWhere,
             orderBy: { vencimento: 'asc' },
           },
-          plano: { select: { id: true, nome: true, valor: true } },
+          plano: { select: planoSelect },
         },
       }),
       client.cliente.count({ where }),
@@ -311,13 +312,10 @@ export class ClienteModel {
           where: {
             status: StatusMensalidade.PENDENTE,
           },
+          orderBy: { vencimento: 'asc' },
         },
         plano: {
-          select: {
-            id: true,
-            nome: true,
-            valor: true,
-          },
+          select: planoSelect,
         },
       },
       orderBy: { id: 'desc' },
@@ -334,13 +332,10 @@ export class ClienteModel {
       include: {
         Mensalidade: {
           where: { status: StatusMensalidade.PENDENTE },
+          orderBy: { vencimento: 'asc' },
         },
         plano: {
-          select: {
-            id: true,
-            nome: true,
-            valor: true,
-          },
+          select: planoSelect,
         },
       },
     });

@@ -50,6 +50,11 @@ let RegistroAcessoService = class RegistroAcessoService {
             return yield this.registroAcessoModel.findAllByClienteId(clienteId, transaction);
         });
     }
+    findEntradasByClienteIdAndPeriod(clienteId, initialDate, finalDate, transaction) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.registroAcessoModel.findEntradasByClienteIdAndPeriod(clienteId, initialDate, finalDate, transaction);
+        });
+    }
 };
 exports.RegistroAcessoService = RegistroAcessoService;
 exports.RegistroAcessoService = RegistroAcessoService = __decorate([

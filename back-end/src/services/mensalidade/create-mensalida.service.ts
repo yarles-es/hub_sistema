@@ -96,15 +96,31 @@ export class CreateMensalidadeService {
 
     switch (plano.tipo) {
       case TipoPlano.MENSAL:
-        novaData.setMonth(novaData.getMonth() + 1);
-        break;
+        return this.addMonthsPreservingDay(novaData, 1);
+      case TipoPlano.SEMESTRAL:
+        return this.addMonthsPreservingDay(novaData, 6);
+      case TipoPlano.ANUAL:
+        return this.addMonthsPreservingDay(novaData, 12);
       case TipoPlano.QUINZENAL:
         novaData.setDate(novaData.getDate() + 15);
-        break;
+        return novaData;
       case TipoPlano.SEMANAL:
         novaData.setDate(novaData.getDate() + 7);
-        break;
+        return novaData;
+      default:
+        throw new BadRequestError('Tipo de plano inválido para cálculo do vencimento.');
     }
-    return novaData;
+  }
+
+  private addMonthsPreservingDay(date: Date, months: number): Date {
+    const diaOriginal = date.getDate();
+
+    date.setDate(1);
+    date.setMonth(date.getMonth() + months);
+
+    const ultimoDiaDoMes = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+    date.setDate(Math.min(diaOriginal, ultimoDiaDoMes));
+
+    return date;
   }
 }

@@ -40,7 +40,7 @@ export type ClienteGetAll = Cliente & { status: StatusCliente; nomePlano?: strin
 
 export type ClienteGetAllWithMensalidade = Cliente & {
   Mensalidade: Mensalidade[];
-  plano: Pick<Plano, 'id' | 'nome' | 'valor'>;
+  plano: Pick<Plano, 'id' | 'nome' | 'valor' | 'tipo' | 'validarDiasSemana' | 'diasValidosSemana'>;
 };
 
 export type ClienteResponseGetAll = {

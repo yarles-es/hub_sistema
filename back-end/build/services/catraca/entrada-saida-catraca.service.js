@@ -27,43 +27,49 @@ const client_1 = require("@prisma/client");
 const formatador_cliente_1 = require("../../utils/formatador-cliente");
 const liberar_entrada_catraca_1 = require("../../api/catraca/liberar-entrada-catraca");
 const liberar_saida_catraca_1 = require("../../api/catraca/liberar-saida-catraca");
+const plano_periodo_1 = require("../../utils/plano-periodo");
 let EntradasaidaCatracaService = class EntradasaidaCatracaService {
     constructor(registroAcessoService, clienteService) {
         this.registroAcessoService = registroAcessoService;
         this.clienteService = clienteService;
         this.TRAVAR = ['DESATIVADO', 'VENCIDO', 'MENSALIDADE_AUSENTE'];
+        this.TIPOS_BLOQUEIO = [
+            client_1.TipoCatraca.BLOQUEIO,
+            client_1.TipoCatraca.BLOQUEIO_ATRASO,
+            client_1.TipoCatraca.BLOQUEIO_LIMITE_ACESSO,
+        ];
     }
     execute(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            const cliente = yield this._getClienteForCommand(data);
+            const cliente = yield this._obterClienteParaComando(data);
             if (!cliente) {
                 yield (0, bloquear_entrada_catraca_1.bloquearEntradaCatraca)();
                 return;
             }
             const [clienteFormatado] = (0, formatador_cliente_1.formatadorCliente)([cliente]);
             if (!clienteFormatado.ativo) {
-                yield this._bloqueioClienteInativo(cliente.id);
+                yield this._bloquearCliente(cliente.id, client_1.TipoCatraca.BLOQUEIO);
                 return;
             }
             if (this.TRAVAR.includes(clienteFormatado.status)) {
-                yield this._bloqueioClienteInativo(cliente.id);
+                yield this._bloquearCliente(cliente.id, this._obterTipoBloqueioPorStatus(clienteFormatado.status));
                 return;
             }
-            yield this._entradaSaidaCatraca(cliente.id);
+            yield this._entradaSaidaCatraca(cliente);
         });
     }
-    _bloqueioClienteInativo(clienteId) {
+    _bloquearCliente(clienteId, tipoCatraca) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.registroAcessoService.createRegistroAcesso({
                 clienteId,
-                tipoCatraca: client_1.TipoCatraca.BLOQUEIO,
+                tipoCatraca,
                 dataHora: new Date(),
             });
             yield (0, bloquear_entrada_catraca_1.bloquearEntradaCatraca)();
             return;
         });
     }
-    _getClienteForCommand(body) {
+    _obterClienteParaComando(body) {
         return __awaiter(this, void 0, void 0, function* () {
             const command = body.command;
             if (command === 774) {
@@ -72,15 +78,15 @@ let EntradasaidaCatracaService = class EntradasaidaCatracaService {
             }
             if (command === 771) {
                 const data = body.response.identification.data;
-                const date = yield this._transformDate(data);
-                if (date) {
-                    return yield this.clienteService.findByDataNascimento(date);
+                const dataFormatada = this._transformarData(data);
+                if (dataFormatada) {
+                    return yield this.clienteService.findByDataNascimento(dataFormatada);
                 }
             }
             return null;
         });
     }
-    _transformDate(data) {
+    _transformarData(data) {
         const strData = data.toString().padStart(8, '0');
         if (!/^\d{8}$/.test(strData))
             return null;
@@ -92,14 +98,19 @@ let EntradasaidaCatracaService = class EntradasaidaCatracaService {
             return null;
         return `${ano}-${mes}-${dia}`;
     }
-    _entradaSaidaCatraca(clienteId) {
+    _entradaSaidaCatraca(cliente) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a, _b;
-            const registrosAcesso = yield this.registroAcessoService.findAllRegistrosByClienteId(clienteId);
-            const registrosAcessoFiltrado = registrosAcesso.filter((r) => r.tipoCatraca !== client_1.TipoCatraca.BLOQUEIO);
+            const registrosAcesso = yield this.registroAcessoService.findAllRegistrosByClienteId(cliente.id);
+            const registrosAcessoFiltrado = registrosAcesso.filter((r) => !this.TIPOS_BLOQUEIO.includes(r.tipoCatraca));
             if (registrosAcessoFiltrado.length === 0) {
+                const podeEntrar = yield this._podeClienteEntrarPorDiasValidosSemana(cliente);
+                if (!podeEntrar) {
+                    yield this._bloquearCliente(cliente.id, client_1.TipoCatraca.BLOQUEIO_LIMITE_ACESSO);
+                    return;
+                }
                 yield this.registroAcessoService.createRegistroAcesso({
-                    clienteId,
+                    clienteId: cliente.id,
                     tipoCatraca: client_1.TipoCatraca.ENTRADA,
                     dataHora: new Date(),
                 });
@@ -107,8 +118,13 @@ let EntradasaidaCatracaService = class EntradasaidaCatracaService {
                 return;
             }
             if (((_a = registrosAcessoFiltrado[0]) === null || _a === void 0 ? void 0 : _a.tipoCatraca) === client_1.TipoCatraca.SAIDA) {
+                const podeEntrar = yield this._podeClienteEntrarPorDiasValidosSemana(cliente);
+                if (!podeEntrar) {
+                    yield this._bloquearCliente(cliente.id, client_1.TipoCatraca.BLOQUEIO_LIMITE_ACESSO);
+                    return;
+                }
                 yield this.registroAcessoService.createRegistroAcesso({
-                    clienteId,
+                    clienteId: cliente.id,
                     tipoCatraca: client_1.TipoCatraca.ENTRADA,
                     dataHora: new Date(),
                 });
@@ -117,7 +133,7 @@ let EntradasaidaCatracaService = class EntradasaidaCatracaService {
             }
             if (((_b = registrosAcessoFiltrado[0]) === null || _b === void 0 ? void 0 : _b.tipoCatraca) === client_1.TipoCatraca.ENTRADA) {
                 yield this.registroAcessoService.createRegistroAcesso({
-                    clienteId,
+                    clienteId: cliente.id,
                     tipoCatraca: client_1.TipoCatraca.SAIDA,
                     dataHora: new Date(),
                 });
@@ -126,6 +142,44 @@ let EntradasaidaCatracaService = class EntradasaidaCatracaService {
             }
             return;
         });
+    }
+    _podeClienteEntrarPorDiasValidosSemana(cliente) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!cliente.plano.validarDiasSemana) {
+                return true;
+            }
+            const diasValidos = cliente.plano.diasValidosSemana;
+            if (!diasValidos || diasValidos <= 0) {
+                return false;
+            }
+            const agora = new Date();
+            if ((0, plano_periodo_1.isDomingo)(agora)) {
+                return true;
+            }
+            const { inicioSemana, fimSemana } = (0, plano_periodo_1.obterIntervaloSemanaAtual)(agora);
+            const entradas = yield this.registroAcessoService.findEntradasByClienteIdAndPeriod(cliente.id, inicioSemana, fimSemana);
+            const diasUtilizados = new Set(entradas
+                .filter((entrada) => !(0, plano_periodo_1.isDomingo)(entrada.dataHora))
+                .map((entrada) => this._obterChaveDia(entrada.dataHora)));
+            const chaveHoje = this._obterChaveDia(agora);
+            if (diasUtilizados.has(chaveHoje)) {
+                return true;
+            }
+            return diasUtilizados.size < diasValidos;
+        });
+    }
+    _obterChaveDia(data) {
+        const dataAtual = new Date(data);
+        const ano = dataAtual.getFullYear();
+        const mes = String(dataAtual.getMonth() + 1).padStart(2, '0');
+        const dia = String(dataAtual.getDate()).padStart(2, '0');
+        return `${ano}-${mes}-${dia}`;
+    }
+    _obterTipoBloqueioPorStatus(status) {
+        if (status === 'VENCIDO') {
+            return client_1.TipoCatraca.BLOQUEIO_ATRASO;
+        }
+        return client_1.TipoCatraca.BLOQUEIO;
     }
 };
 exports.EntradasaidaCatracaService = EntradasaidaCatracaService;

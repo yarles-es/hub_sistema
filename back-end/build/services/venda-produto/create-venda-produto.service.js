@@ -31,9 +31,10 @@ let CreateVendaProdutoService = class CreateVendaProdutoService {
     }
     execute(data) {
         return __awaiter(this, void 0, void 0, function* () {
+            var _a;
             const { produto, valorCusto } = yield this._validate(data);
             const { estoque } = produto;
-            const newData = Object.assign(Object.assign({}, data), { valorCusto: valorCusto * data.quantidade });
+            const newData = Object.assign(Object.assign({}, data), { nomeCliente: ((_a = data.nomeCliente) === null || _a === void 0 ? void 0 : _a.trim()) || null, valorCusto: valorCusto * data.quantidade });
             const novoEstoque = estoque - data.quantidade;
             yield this.produtoService.update(produto.id, { estoque: novoEstoque });
             const response = yield this.vendaProdutoService.create(newData);
@@ -54,6 +55,9 @@ let CreateVendaProdutoService = class CreateVendaProdutoService {
                 throw new BadRequestError_1.BadRequestError('Quantidade deve ser maior que zero');
             if (!data.formaPagamento || !Object.values(client_1.FormPagamento).includes(data.formaPagamento)) {
                 throw new BadRequestError_1.BadRequestError('Forma de pagamento inválida');
+            }
+            if (data.nomeCliente && data.nomeCliente.trim() === '') {
+                throw new BadRequestError_1.BadRequestError('Nome do cliente está inválido');
             }
             return { produto, valorCusto };
         });

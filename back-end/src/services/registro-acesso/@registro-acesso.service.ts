@@ -42,4 +42,18 @@ export class RegistroAcessoService {
   ): Promise<RegistroAcesso[]> {
     return await this.registroAcessoModel.findAllByClienteId(clienteId, transaction);
   }
+
+  public async findEntradasByClienteIdAndPeriod(
+    clienteId: number,
+    initialDate: Date,
+    finalDate: Date,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<RegistroAcesso[]> {
+    return await this.registroAcessoModel.findEntradasByClienteIdAndPeriod(
+      clienteId,
+      initialDate,
+      finalDate,
+      transaction,
+    );
+  }
 }

@@ -8,10 +8,16 @@ import { ClienteGetAllWithMensalidade, StatusCliente } from '../../types/cliente
 import { liberarEntradaCatraca } from '../../api/catraca/liberar-entrada-catraca';
 import { liberarSaidaCatraca } from '../../api/catraca/liberar-saida-catraca';
 import { WebhookCommand774 } from '../../types/catraca.types';
+import { obterIntervaloSemanaAtual, isDomingo } from '../../utils/plano-periodo';
 
 @Service()
 export class EntradasaidaCatracaService {
   private readonly TRAVAR: StatusCliente[] = ['DESATIVADO', 'VENCIDO', 'MENSALIDADE_AUSENTE'];
+  private readonly TIPOS_BLOQUEIO: TipoCatraca[] = [
+    TipoCatraca.BLOQUEIO,
+    TipoCatraca.BLOQUEIO_ATRASO,
+    TipoCatraca.BLOQUEIO_LIMITE_ACESSO,
+  ];
 
   constructor(
     private readonly registroAcessoService: RegistroAcessoService,
@@ -19,7 +25,7 @@ export class EntradasaidaCatracaService {
   ) {}
 
   async execute(data: WebhookCommand774) {
-    const cliente = await this._getClienteForCommand(data);
+    const cliente = await this._obterClienteParaComando(data);
 
     if (!cliente) {
       await bloquearEntradaCatraca();
@@ -29,22 +35,22 @@ export class EntradasaidaCatracaService {
     const [clienteFormatado] = formatadorCliente([cliente]);
 
     if (!clienteFormatado.ativo) {
-      await this._bloqueioClienteInativo(cliente.id);
+      await this._bloquearCliente(cliente.id, TipoCatraca.BLOQUEIO);
       return;
     }
 
     if (this.TRAVAR.includes(clienteFormatado.status)) {
-      await this._bloqueioClienteInativo(cliente.id);
+      await this._bloquearCliente(cliente.id, this._obterTipoBloqueioPorStatus(clienteFormatado.status));
       return;
     }
 
-    await this._entradaSaidaCatraca(cliente.id);
+    await this._entradaSaidaCatraca(cliente);
   }
 
-  private async _bloqueioClienteInativo(clienteId: number) {
+  private async _bloquearCliente(clienteId: number, tipoCatraca: TipoCatraca) {
     await this.registroAcessoService.createRegistroAcesso({
       clienteId,
-      tipoCatraca: TipoCatraca.BLOQUEIO,
+      tipoCatraca,
       dataHora: new Date(),
     });
 
@@ -53,7 +59,7 @@ export class EntradasaidaCatracaService {
     return;
   }
 
-  private async _getClienteForCommand(body: WebhookCommand774): Promise<ClienteGetAllWithMensalidade | null> {
+  private async _obterClienteParaComando(body: WebhookCommand774): Promise<ClienteGetAllWithMensalidade | null> {
     const command = body.command;
     if (command === 774) {
       const id = body.response.identification.id;
@@ -62,15 +68,15 @@ export class EntradasaidaCatracaService {
 
     if (command === 771) {
       const data = body.response.identification.data;
-      const date = await this._transformDate(data);
-      if (date) {
-        return await this.clienteService.findByDataNascimento(date);
+      const dataFormatada = this._transformarData(data);
+      if (dataFormatada) {
+        return await this.clienteService.findByDataNascimento(dataFormatada);
       }
     }
     return null;
   }
 
-  private _transformDate(data: number): string | null {
+  private _transformarData(data: number): string | null {
     const strData = data.toString().padStart(8, '0');
     if (!/^\d{8}$/.test(strData)) return null;
 
@@ -84,13 +90,20 @@ export class EntradasaidaCatracaService {
     return `${ano}-${mes}-${dia}`;
   }
 
-  private async _entradaSaidaCatraca(clienteId: number) {
-    const registrosAcesso = await this.registroAcessoService.findAllRegistrosByClienteId(clienteId);
-    const registrosAcessoFiltrado = registrosAcesso.filter((r) => r.tipoCatraca !== TipoCatraca.BLOQUEIO);
+  private async _entradaSaidaCatraca(cliente: ClienteGetAllWithMensalidade) {
+    const registrosAcesso = await this.registroAcessoService.findAllRegistrosByClienteId(cliente.id);
+    const registrosAcessoFiltrado = registrosAcesso.filter((r) => !this.TIPOS_BLOQUEIO.includes(r.tipoCatraca));
 
     if (registrosAcessoFiltrado.length === 0) {
+      const podeEntrar = await this._podeClienteEntrarPorDiasValidosSemana(cliente);
+
+      if (!podeEntrar) {
+        await this._bloquearCliente(cliente.id, TipoCatraca.BLOQUEIO_LIMITE_ACESSO);
+        return;
+      }
+
       await this.registroAcessoService.createRegistroAcesso({
-        clienteId,
+        clienteId: cliente.id,
         tipoCatraca: TipoCatraca.ENTRADA,
         dataHora: new Date(),
       });
@@ -100,8 +113,15 @@ export class EntradasaidaCatracaService {
     }
 
     if (registrosAcessoFiltrado[0]?.tipoCatraca === TipoCatraca.SAIDA) {
+      const podeEntrar = await this._podeClienteEntrarPorDiasValidosSemana(cliente);
+
+      if (!podeEntrar) {
+        await this._bloquearCliente(cliente.id, TipoCatraca.BLOQUEIO_LIMITE_ACESSO);
+        return;
+      }
+
       await this.registroAcessoService.createRegistroAcesso({
-        clienteId,
+        clienteId: cliente.id,
         tipoCatraca: TipoCatraca.ENTRADA,
         dataHora: new Date(),
       });
@@ -112,7 +132,7 @@ export class EntradasaidaCatracaService {
 
     if (registrosAcessoFiltrado[0]?.tipoCatraca === TipoCatraca.ENTRADA) {
       await this.registroAcessoService.createRegistroAcesso({
-        clienteId,
+        clienteId: cliente.id,
         tipoCatraca: TipoCatraca.SAIDA,
         dataHora: new Date(),
       });
@@ -122,5 +142,62 @@ export class EntradasaidaCatracaService {
     }
 
     return;
+  }
+
+  private async _podeClienteEntrarPorDiasValidosSemana(
+    cliente: ClienteGetAllWithMensalidade,
+  ): Promise<boolean> {
+    if (!cliente.plano.validarDiasSemana) {
+      return true;
+    }
+
+    const diasValidos = cliente.plano.diasValidosSemana;
+
+    if (!diasValidos || diasValidos <= 0) {
+      return false;
+    }
+
+    const agora = new Date();
+
+    if (isDomingo(agora)) {
+      return true;
+    }
+
+    const { inicioSemana, fimSemana } = obterIntervaloSemanaAtual(agora);
+    const entradas = await this.registroAcessoService.findEntradasByClienteIdAndPeriod(
+      cliente.id,
+      inicioSemana,
+      fimSemana,
+    );
+
+    const diasUtilizados = new Set(
+      entradas
+        .filter((entrada) => !isDomingo(entrada.dataHora))
+        .map((entrada) => this._obterChaveDia(entrada.dataHora)),
+    );
+    const chaveHoje = this._obterChaveDia(agora);
+
+    if (diasUtilizados.has(chaveHoje)) {
+      return true;
+    }
+
+    return diasUtilizados.size < diasValidos;
+  }
+
+  private _obterChaveDia(data: Date): string {
+    const dataAtual = new Date(data);
+    const ano = dataAtual.getFullYear();
+    const mes = String(dataAtual.getMonth() + 1).padStart(2, '0');
+    const dia = String(dataAtual.getDate()).padStart(2, '0');
+
+    return `${ano}-${mes}-${dia}`;
+  }
+
+  private _obterTipoBloqueioPorStatus(status: StatusCliente): TipoCatraca {
+    if (status === 'VENCIDO') {
+      return TipoCatraca.BLOQUEIO_ATRASO;
+    }
+
+    return TipoCatraca.BLOQUEIO;
   }
 }

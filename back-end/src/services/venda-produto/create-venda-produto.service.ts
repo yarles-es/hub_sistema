@@ -21,7 +21,11 @@ export class CreateVendaProdutoService {
     const { produto, valorCusto } = await this._validate(data);
     const { estoque } = produto;
 
-    const newData: CreateVendaProdutoModel = { ...data, valorCusto: valorCusto * data.quantidade };
+    const newData: CreateVendaProdutoModel = {
+      ...data,
+      nomeCliente: data.nomeCliente?.trim() || null,
+      valorCusto: valorCusto * data.quantidade,
+    };
 
     const novoEstoque = estoque - data.quantidade;
 
@@ -49,6 +53,10 @@ export class CreateVendaProdutoService {
 
     if (!data.formaPagamento || !Object.values(FormPagamento).includes(data.formaPagamento)) {
       throw new BadRequestError('Forma de pagamento inválida');
+    }
+
+    if (data.nomeCliente && data.nomeCliente.trim() === '') {
+      throw new BadRequestError('Nome do cliente está inválido');
     }
 
     return { produto, valorCusto };

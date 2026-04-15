@@ -7,7 +7,8 @@
     "dev": "nodemon --watch \"./src/**\" --ext \"ts,js\" --exec \"ts-node --files src/index.ts\"",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "build": "npx tsc",
-    "restore:backup": "ts-node src/scripts/restore-backup.ts"
+    "restore:backup": "ts-node src/scripts/restore-backup.ts",
+    "clientes:ativos": "ts-node src/scripts/list-clientes-ativos.ts"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",

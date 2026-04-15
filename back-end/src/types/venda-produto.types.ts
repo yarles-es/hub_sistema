@@ -2,12 +2,14 @@ import { FormPagamento, Prisma, VendaProduto } from '@prisma/client';
 
 export type CreateVendaProduto = Pick<VendaProduto, 'produtoId' | 'valorVenda' | 'quantidade'> & {
   formaPagamento: FormPagamento;
+  nomeCliente?: string | null;
 };
 export type CreateVendaProdutoModel = Pick<
   VendaProduto,
   'produtoId' | 'valorVenda' | 'quantidade' | 'valorCusto'
 > & {
   formaPagamento: FormPagamento;
+  nomeCliente?: string | null;
 };
 
 export type UpdateVendaProduto = { id: number } & Partial<CreateVendaProduto>;

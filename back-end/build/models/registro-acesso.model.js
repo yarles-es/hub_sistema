@@ -137,6 +137,22 @@ let RegistroAcessoModel = class RegistroAcessoModel {
             });
         });
     }
+    findEntradasByClienteIdAndPeriod(clienteId, initialDate, finalDate, transaction) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const client = transaction || this.prisma;
+            return client.registroAcesso.findMany({
+                where: {
+                    clienteId,
+                    tipoCatraca: client_1.TipoCatraca.ENTRADA,
+                    dataHora: {
+                        gte: initialDate,
+                        lte: finalDate,
+                    },
+                },
+                orderBy: { dataHora: 'asc' },
+            });
+        });
+    }
 };
 exports.RegistroAcessoModel = RegistroAcessoModel;
 exports.RegistroAcessoModel = RegistroAcessoModel = __decorate([
